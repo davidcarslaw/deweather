@@ -1,4 +1,4 @@
 # deweather
 Remove the influence of meteorology from atmospheric composition data
 
-**Caveat Emptor! a working version yet**
+**Caveat Emptor! NOT a working version yet**
