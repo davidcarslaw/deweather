@@ -4,5 +4,5 @@
 src/*.o
 src/*.so
 src/*.dll
-openair.Rproj
+deweather.Rproj
 *~
