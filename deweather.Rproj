@@ -11,3 +11,8 @@ Encoding: UTF-8
 
 RnwWeave: knitr
 LaTeX: XeLaTeX
+
+BuildType: Package
+PackageInstallArgs: --no-multiarch --with-keep.source
+PackageBuildArgs: --resave-data
+PackageRoxygenize: rd,collate,namespace

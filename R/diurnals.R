@@ -1,12 +1,28 @@
 ## diurnal changes
-
-diurnal.gbm <- function(mydata, variables = variables, sub.size = 1, pollutant = "nox", test = FALSE,
+##' 
+##'
+##' To add
+##' @title Plot diurnal changes, removing the effect of meteorology
+##' @param mydata A data frame to analyse.
+##' @param variables The explanatory variables used in the model.
+##' @param pollutant Name of teh pollutant to apply meteorological
+##' normalisation to.
+##' @param date A vector of dates, length three. These dates are used
+##' to parition the data into two categories (before/after). The date
+##' format is UK e.g. \code{date = c("19/2/2005", "19/2/2007",
+##' "19/2/2010")}.
+##' @param single Not used.
+##' @import reshape2
+##' @export
+##' @return Some data
+##' @author David Carslaw
+diurnal.gbm <- function(mydata, variables = variables,  pollutant = "nox", 
                         date = c("19/2/2005", "19/2/2007", "19/2/2010"), single = FALSE){
 
     variables <- paste(variables, collapse = "+")
     eq <- formula(paste(pollutant, "~", variables))
 
-    mod1 <- run.gbm(1, selectByDate(mydata, start = date[1], end = date[2]), eq, sub.size = 1,
+    mod1 <- runGbm(1, selectByDate(mydata, start = date[1], end = date[2]), eq, sub.size = 1,
                     pollutant = pollutant)
 
     res1 <- mod1[[2]]
@@ -17,7 +33,7 @@ diurnal.gbm <- function(mydata, variables = variables, sub.size = 1, pollutant =
 
     if (!single) {
 
-        mod2 <- run.gbm(1, selectByDate(mydata, start = date[2], end = date[3]), eq, sub.size = 1,
+        mod2 <- runGbm(1, selectByDate(mydata, start = date[2], end = date[3]), eq, sub.size = 1,
                         pollutant = pollutant)
 
         res2 <- mod2[[2]]
