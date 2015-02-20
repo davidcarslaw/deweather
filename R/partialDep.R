@@ -1,19 +1,15 @@
 
 
-partialDep <- function(dat, eq) {
-    sims <- 100
-
-
+partialDep <- function(dat, eq, vars, B = 100) {
+    
     cl <- makeCluster(4)
     registerDoParallel(cl)
 
-    pred <- foreach (i = 1:sims, .inorder = FALSE, 
+    pred <- foreach (i = 1:B, .inorder = FALSE, 
                      .packages = c("gbm", "plyr")) %dopar%
-    runGbm(dat, eq)
+    runGbm(dat, eq, vars, simulate = TRUE)
 
     stopCluster(cl)
-
-
 
     ## partial dependence plots
     pd <- lapply(pred, "[[", 1)
@@ -26,10 +22,34 @@ partialDep <- function(dat, eq) {
                 lower = quantile(y, probs = c(0.025)),
                 upper = quantile(y, probs = c(0.975)))
 
+    return(resCI)
+
 }
 
+
+##' Function to plot partial dependence plots with bootstrap uncertainties
+##'
+##' 
+##' @title Partial dependence plots with uncertainties.
+##' @param dat Model object from running \code{buildMod}.
+##' @param variable The variable to plot.
+##' @param ylim user-specified \code{ylim}.
+##' @param ... other arguments for plotting.
+##' @export
+##' @return A plot
+##' @author David Carslaw
 plotPD <- function(dat, variable, ylim = NULL, ...) {
 
+    ## extract from deweather object
+    mod <- dat$model
+    dat <- dat$pd
+
+    ## variable modelled
+    ylab <- mod$response.name
+
+    ## check if variable present
+    if (!variable %in% dat$var) stop ("Variable not present in data.")
+    
     ## select variable of interest
     dat <- dat[dat$var == variable, ]
     
@@ -50,7 +70,7 @@ plotPD <- function(dat, variable, ylim = NULL, ...) {
 
         plt <- xyplot(myform, data = dat, type = "l",
                xlab = quickText(variable),
-                      ylab = quickText(pollutant),
+                      ylab = quickText(ylab),
                       ylim = ylim, ..., 
                
                panel = function(x, y, subscripts, ...) {
@@ -74,7 +94,7 @@ plotPD <- function(dat, variable, ylim = NULL, ...) {
         
         plt <- xyplot(myform, data = dat, type = "l",
                xlab = quickText(variable),
-                      ylab = quickText(pollutant), ylim = ylim, ..., 
+                      ylab = quickText(ylab), ylim = ylim, ..., 
                
                       panel = function(x, y, ...) {
                    
@@ -95,7 +115,7 @@ plotPD <- function(dat, variable, ylim = NULL, ...) {
         
         ## change to weekday names
         dat$x <- factor(dat$x)
-        weekday.names <- format(ISOdate(2000, 1, 2:8), "%A")
+        weekday.names <- format(ISOdate(2000, 1, 2:8), "%a")
         levels(dat$x) <- sort(weekday.names)
 
         dat$x <- ordered(dat$x, levels = weekday.names)
@@ -105,7 +125,7 @@ plotPD <- function(dat, variable, ylim = NULL, ...) {
         plt <- xyplot(myform, data = dat, type = "l",
                       scales = list(x = list(at = 1:7, labels = weekday.names)),
                       xlab = quickText(variable),
-                      ylab = quickText(pollutant),
+                      ylab = quickText(ylab),
                       ylim = ylim, ..., 
                       
                       panel = function(x, y, ...) {
@@ -124,17 +144,32 @@ plotPD <- function(dat, variable, ylim = NULL, ...) {
     }
 
     print(plt)
+    return(plt)
     
 }
 
 
-## Two-way intercation plots
-plot2Way <- function(mod, variable = c("ws", "temp")) {
+
+##' Two-way intercation plots
+##'
+##' To add
+##' @title Plot two-way interactions from gbm model
+##' @param dat Model object from running \code{buildMod}.
+##' @param variable The variables to plot. Must be of length two
+##' e.g. \code{variables = c("ws", "wd"}.
+##' @param ... other arguments to send to \code{openair} \code{scatterPlot}.
+##' @export
+##' @return To add
+##' @author David Carslaw
+plot2Way <- function(dat, variable = c("ws", "temp"), ...) {
+
+    ## extract from deweather object
+    mod <- dat$model
 
     res <- plot.gbm(mod, i.var = variable, continuous.resolution = 100,
                     return.grid = TRUE)
 
-    scatterPlot(res, x = variable[1], y = variable[2], z = "y", method = "level")
+    scatterPlot(res, x = variable[1], y = variable[2], z = "y", method = "level", ...)
     
     
 }

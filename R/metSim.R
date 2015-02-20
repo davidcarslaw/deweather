@@ -1,8 +1,22 @@
 
-## function to run random simulations usining random sampling from met data
-metSim <- function(mod, newdata, metVars = c("ws", "wd", "temp"), n.core = 4, B = 200) {
 
- 
+##' Function to run random meteorological simulations on a gbm model
+##'
+##' 
+##' @title Run random meteorology on a gbm model
+##' @param dat 
+##' @param newdata Model object from running \code{buildMod}.
+##' @param metVars Teh variables that should be randomly varied.
+##' @param n.core Number of cores to use
+##' @param B Number of simulations
+##' @export
+##' @return To add
+##' @author David Carslaw
+metSim <- function(dat, newdata, metVars = c("ws", "wd", "temp"), n.core = 4, B = 200) {
+
+    ## extract the model
+    mod <- dat$model
+    
     cl <- makeCluster(n.core)
     registerDoParallel(cl)
 
@@ -11,6 +25,10 @@ metSim <- function(mod, newdata, metVars = c("ws", "wd", "temp"), n.core = 4, B 
     doPred(newdata, mod, metVars)
     
     stopCluster(cl)
+
+    ## Aggregate results
+    prediction <- group_by(prediction, date) %>%
+      summarise(pred = mean(pred))
 
     return(prediction)
 }

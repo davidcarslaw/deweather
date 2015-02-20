@@ -4,24 +4,23 @@
 \alias{diurnal.gbm}
 \title{Plot diurnal changes, removing the effect of meteorology}
 \usage{
-diurnal.gbm(mydata, variables = variables, sub.size = 1,
-  pollutant = "nox", test = FALSE, date = c("19/2/2005", "19/2/2007",
-  "19/2/2010"), single = FALSE)
+diurnal.gbm(mydata, variables = variables, pollutant = "nox",
+  date = c("19/2/2005", "19/2/2007", "19/2/2010"), single = FALSE)
 }
 \arguments{
-\item{mydata}{}
+\item{mydata}{A data frame to analyse.}
 
-\item{variables}{}
+\item{variables}{The explanatory variables used in the model.}
 
-\item{sub.size}{}
+\item{pollutant}{Name of teh pollutant to apply meteorological
+normalisation to.}
 
-\item{pollutant}{}
+\item{date}{A vector of dates, length three. These dates are used
+to parition the data into two categories (before/after). The date
+format is UK e.g. \code{date = c("19/2/2005", "19/2/2007",
+"19/2/2010")}.}
 
-\item{test}{}
-
-\item{date}{}
-
-\item{single}{}
+\item{single}{Not used.}
 }
 \value{
 Some data

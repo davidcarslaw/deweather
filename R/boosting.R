@@ -12,19 +12,42 @@
 ##' @export 
 ##' @return A list of stuff
 ##' @author David Carslaw
-deMet <- function(dat, vars = c("ws", "wd"), pollutant = "nox") {
+buildMod <- function(dat, vars = c("ws", "wd"), pollutant = "nox", partial.dep = TRUE) {
 
+    ## add other variables
     dat <- prepData(dat)
 
-    pollutant <- "nox"
-
-    vars = c("ws", "wd", "temp", "trend", "hour", "weekday", "week", "pressure", "cl")
     variables <- paste(vars, collapse = "+")
     eq <- formula(paste(pollutant, "~", variables))
 
+    ## make sure no NA in response
     id <- which(is.na(dat[[pollutant]]))
     if (length(id) > 0 )
         dat <- dat[-id, ]
+
+    ## Influence plot
+   
+    
+    mod <- runGbm(dat, eq, vars, return.mod = TRUE, simulate = FALSE)
+    mod <- mod[[2]] ## second list item
+    influ <- summary(mod, plotit = FALSE)
+    
+    influ$var <- reorder(influ$var, influ$rel.inf)
+
+  
+    ## partial dependence calculations
+    if (partial.dep) {
+
+        pd <- partialDep(dat, eq, vars)
+
+        return(list(model = mod, influence = influ, pd = pd))
+        
+    } else {
+
+        return(list(model = mod, influence = influ))
+    }
+
+    
 
 }
 
@@ -39,10 +62,12 @@ extractPD <- function(vars, mod) {
 
 
 
-runGbm <- function(dat, eq, return.mod = FALSE) {
-    ## sub-sample the data for bootstrapping
-    dat <- dat[sample(1:nrow(dat), nrow(dat), replace = TRUE), ]
+runGbm <- function(dat, eq, vars, return.mod = FALSE, simulate = FALSE) {
 
+    ## sub-sample the data for bootstrapping
+    if (simulate)
+        dat <- dat[sample(1:nrow(dat), nrow(dat), replace = TRUE), ]
+    
     trees <- 1000
     mod <- gbm(eq, data = dat, distribution = "gaussian", n.trees = trees,
                shrinkage = 0.1, interaction.depth = 10, bag.fraction = 0.7,
