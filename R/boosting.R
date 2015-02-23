@@ -7,12 +7,15 @@
 ##' @param vars Explanatory variables to use
 ##' @param pollutant The name of the variable to apply meteorological
 ##' normalisation to.
+##' @param partial.dep Should the partial dependencies be calculated?
+##' @param B Number of bootstrap simulations for partial dependence plots.
 ##' @import doParallel openair gbm dplyr lattice
 ##' @importFrom plyr ddply ldply dlply llply numcolwise
 ##' @export 
 ##' @return A list of stuff
 ##' @author David Carslaw
-buildMod <- function(dat, vars = c("ws", "wd"), pollutant = "nox", partial.dep = TRUE) {
+buildMod <- function(dat, vars = c("ws", "wd"), pollutant = "nox", partial.dep = TRUE,
+                     B = 100) {
 
     ## add other variables
     dat <- prepData(dat)
@@ -38,13 +41,19 @@ buildMod <- function(dat, vars = c("ws", "wd"), pollutant = "nox", partial.dep =
     ## partial dependence calculations
     if (partial.dep) {
 
-        pd <- partialDep(dat, eq, vars)
+        pd <- partialDep(dat, eq, vars, B)
 
-        return(list(model = mod, influence = influ, pd = pd))
+        result <- list(model = mod, influence = influ, pd = pd)
+        class(result) <- "deweather"
+
+        return(result)
         
     } else {
 
-        return(list(model = mod, influence = influ))
+        result <- list(model = mod, influence = influ)
+        class(result) <- "deweather"
+
+        return(result)
     }
 
     
@@ -81,6 +90,8 @@ runGbm <- function(dat, eq, vars, return.mod = FALSE, simulate = FALSE) {
     ri <- summary(mod, plotit = FALSE)
 
     if (return.mod) {
+
+        result <- list(pd, mod)
         
         return(list(pd, mod))
         

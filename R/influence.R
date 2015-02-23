@@ -3,11 +3,13 @@
 ##'
 ##' 
 ##' @title Influence plot
-##' @param modOb Model object from running \code{buildMod}
+##' @param dat Model object from running \code{buildMod}
 ##' @export
 ##' @return Plot
 ##' @author David Carslaw
-gbmInf <- function(modOb) {
+gbmInf <- function(dat) {
+
+    if (class(dat) != "deweather") stop ("Need to supply a deweather object from buildMod.")
 
     ## extract influence data from object
     influ <- modOb$influence

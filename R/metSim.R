@@ -4,7 +4,7 @@
 ##'
 ##' 
 ##' @title Run random meteorology on a gbm model
-##' @param dat 
+##' @param dat Model object from running \code{buildMod}.
 ##' @param newdata Model object from running \code{buildMod}.
 ##' @param metVars Teh variables that should be randomly varied.
 ##' @param n.core Number of cores to use
@@ -13,6 +13,8 @@
 ##' @return To add
 ##' @author David Carslaw
 metSim <- function(dat, newdata, metVars = c("ws", "wd", "temp"), n.core = 4, B = 200) {
+
+    if (class(dat) != "deweather") stop ("Need to supply a deweather object from buildMod.")
 
     ## extract the model
     mod <- dat$model

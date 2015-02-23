@@ -4,10 +4,10 @@
 \alias{gbmInf}
 \title{Influence plot}
 \usage{
-gbmInf(modOb)
+gbmInf(dat)
 }
 \arguments{
-\item{modOb}{Model object from running \code{buildMod}}
+\item{dat}{Model object from running \code{buildMod}}
 }
 \value{
 Plot

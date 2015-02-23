@@ -7,7 +7,7 @@
 metSim(dat, newdata, metVars = c("ws", "wd", "temp"), n.core = 4, B = 200)
 }
 \arguments{
-\item{dat}{}
+\item{dat}{Model object from running \code{buildMod}.}
 
 \item{newdata}{Model object from running \code{buildMod}.}
 

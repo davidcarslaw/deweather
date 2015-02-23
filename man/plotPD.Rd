@@ -4,7 +4,7 @@
 \alias{plotPD}
 \title{Partial dependence plots with uncertainties.}
 \usage{
-plotPD(dat, variable, ylim = NULL, ...)
+plotPD(dat, variable, ylim = NULL, plotit = TRUE, ...)
 }
 \arguments{
 \item{dat}{Model object from running \code{buildMod}.}

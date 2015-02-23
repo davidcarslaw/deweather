@@ -38,7 +38,9 @@ partialDep <- function(dat, eq, vars, B = 100) {
 ##' @export
 ##' @return A plot
 ##' @author David Carslaw
-plotPD <- function(dat, variable, ylim = NULL, ...) {
+plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE, ...) {
+
+    if (class(dat) != "deweather") stop ("Need to supply a deweather object from buildMod.")
 
     ## extract from deweather object
     mod <- dat$model
@@ -62,8 +64,8 @@ plotPD <- function(dat, variable, ylim = NULL, ...) {
     myform <- formula("mean ~ x")
     
     blues3 <-  RColorBrewer::brewer.pal(3, "Blues")
-
-    if (missing(ylim)) ylim <- rng(dat)
+    
+    if (is.null(ylim)) ylim <- rng(dat)
 
 
     if (!variable %in% c("trend", "weekday")) {
@@ -143,11 +145,56 @@ plotPD <- function(dat, variable, ylim = NULL, ...) {
         
     }
 
-    print(plt)
-    return(plt)
+    if (plotit) print(plt)
+    invisible(plt)
     
 }
 
+##' Function to plot all partial dependencies
+##'
+##' .
+##' @title Plot all partial dependencies
+##' @param dat Model object from running \code{buildMod}.
+##' @param ylim y-axis label. Will default to pollutant name.
+##' @param ... extra plotting arguments.
+##' @export
+##' @return A plot
+##' @author David Carslaw
+plotAllPD <- function(dat, ylim = NULL, ...) {
+    
+    if (class(dat) != "deweather") stop ("Need to supply a deweather object from buildMod.")
+
+    ## names of explanatory variables
+    var.names <- dat$model$var.names
+
+    ## number of variables
+    n <- length(var.names)
+
+    ## dimension of plotting layout
+    n.plot <- ceiling(n ^ 0.5)
+
+    combs <- expand.grid(1:n.plot, 1:n.plot)
+
+    influ <- dat$influence
+    
+    ## plot everything
+    for (i in 1:n) {
+
+        ## the plot
+        plt <- plotPD(dat, variable = influ$var[i], plotit = FALSE,
+                      main = influ$var[i],
+                      sub = paste("Influence", round(influ$rel.inf[i], 1), "%"), ylim, 
+                  ...)
+                    
+
+        if (i == n) more <- FALSE else more <- TRUE
+
+        print(plt, split = c(combs[i, "Var1"], combs[i, "Var2"], n.plot, n.plot), more = more)
+
+    }
+
+    
+}
 
 
 ##' Two-way intercation plots
