@@ -43,14 +43,14 @@ buildMod <- function(dat, vars = c("ws", "wd"), pollutant = "nox", partial.dep =
 
         pd <- partialDep(dat, eq, vars, B)
 
-        result <- list(model = mod, influence = influ, pd = pd)
+        result <- list(model = mod, influence = influ, data = dat, pd = pd)
         class(result) <- "deweather"
 
         return(result)
         
     } else {
 
-        result <- list(model = mod, influence = influ)
+        result <- list(model = mod, influence = influ, data = dat)
         class(result) <- "deweather"
 
         return(result)

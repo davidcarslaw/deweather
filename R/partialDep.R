@@ -44,6 +44,7 @@ plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE, ...) {
 
     ## extract from deweather object
     mod <- dat$model
+    data <- dat$data
     dat <- dat$pd
 
     ## variable modelled
@@ -85,6 +86,9 @@ plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE, ...) {
                    
                    
                    panel.xyplot(x, y, col = blues3[3], lwd = 2, ...)
+                   
+                   panel.rug(x = quantile(data[[as.character(variable)]],
+                                 probs = 0:10 / 10, na.rm = TRUE), col = "firebrick", lwd = 2)
                }
                )
         
@@ -160,7 +164,7 @@ plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE, ...) {
 ##' @export
 ##' @return A plot
 ##' @author David Carslaw
-plotAllPD <- function(dat, ylim = NULL, ...) {
+plotAllPD <- function(dat, ylim = NULL, layout = NULL, ...) {
     
     if (class(dat) != "deweather") stop ("Need to supply a deweather object from buildMod.")
 
@@ -173,23 +177,37 @@ plotAllPD <- function(dat, ylim = NULL, ...) {
     ## dimension of plotting layout
     n.plot <- ceiling(n ^ 0.5)
 
-    combs <- expand.grid(1:n.plot, 1:n.plot)
+    ## Layout of plots
+    if (!is.null(layout)) {
 
-    influ <- dat$influence
+        combs <- expand.grid(1:layout[1], 1:layout[2])
+        
+    } else {
+
+        combs <- expand.grid(1:n.plot, 1:n.plot)
+        layout <- c(n.plot, n.plot)
+        
+    }
+
     
+
+    ## plot most influencial predictor first
+    influ <- dat$influence
+
     ## plot everything
     for (i in 1:n) {
 
         ## the plot
         plt <- plotPD(dat, variable = influ$var[i], plotit = FALSE,
-                      main = influ$var[i],
+                      main = list(label = as.character(influ$var[i]), col = "darkorange",
+                          fontface = "bold"),
                       sub = paste("Influence", round(influ$rel.inf[i], 1), "%"), ylim, 
                   ...)
                     
 
         if (i == n) more <- FALSE else more <- TRUE
 
-        print(plt, split = c(combs[i, "Var1"], combs[i, "Var2"], n.plot, n.plot), more = more)
+        print(plt, split = c(combs[i, "Var1"], combs[i, "Var2"], layout[1], layout[2]), more = more)
 
     }
 
@@ -209,6 +227,8 @@ plotAllPD <- function(dat, ylim = NULL, ...) {
 ##' @return To add
 ##' @author David Carslaw
 plot2Way <- function(dat, variable = c("ws", "temp"), ...) {
+
+    if (class(dat) != "deweather") stop ("Need to supply a deweather object from buildMod.")
 
     ## extract from deweather object
     mod <- dat$model
