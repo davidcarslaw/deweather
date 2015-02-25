@@ -18,10 +18,14 @@ metSim <- function(dat, newdata, metVars = c("ws", "wd", "temp"), n.core = 4, B 
 
     ## extract the model
     mod <- dat$model
+
+    if (missing(newdata)) newdata <- dat$data
+    
+    newdata <- prepData(newdata)
     
     cl <- makeCluster(n.core)
     registerDoParallel(cl)
-
+    
     prediction <- foreach (i = 1:B, .inorder = FALSE, .combine = "rbind", 
                            .packages = "gbm", .export = "doPred") %dopar%
     doPred(newdata, mod, metVars)

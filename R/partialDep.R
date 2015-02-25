@@ -240,7 +240,39 @@ plot2Way <- function(dat, variable = c("ws", "temp"), ...) {
     res <- plot.gbm(mod, i.var = variable, continuous.resolution = 100,
                     return.grid = TRUE)
 
-    scatterPlot(res, x = variable[1], y = variable[2], z = "y", method = "level", ...)
+    
+    if (all(sapply(res, is.numeric))) {
+        
+        scatterPlot(res, x = variable[1], y = variable[2], z = "y", method = "level", ...)
+
+    } else {
+
+        ## need to rename variables that use openair dates
+        if ("hour" %in% variable) {
+
+            id <- which(variable == "hour")
+            variable[id] <- "Hour"
+            res <- rename(res, Hour = hour)
+            res$Hour <- factor(round(res$Hour))
+
+        }
+
+        if ("weekday" %in% variable) {
+
+            id <- which(variable == "weekday")
+            variable[id] <- "Weekday"
+            res <- rename(res, Weekday = weekday)
+
+            weekday.names <- format(ISOdate(2000, 1, 2:8), "%a")
+            levels(res$Weekday) <- sort(weekday.names)
+            res$Weekday <- ordered(res$Weekday, levels = weekday.names)
+          
+
+        }
+
+        trendLevel(res, x = variable[1], y = variable[2], pollutant = "y", ...)
+
+    }
     
     
 }
