@@ -12,6 +12,8 @@ BugReports: http://github.com/davidcarslaw/deweather/issues
 Imports:
 	gbm,
 	doParallel,
+	parallel,
+	foreach,
 	dplyr,
 	openair,
 	plyr,

@@ -34,6 +34,7 @@ partialDep <- function(dat, eq, vars, B = 100) {
 ##' @param dat Model object from running \code{buildMod}.
 ##' @param variable The variable to plot.
 ##' @param ylim user-specified \code{ylim}.
+##' @param plotit Should a plot be produced?
 ##' @param ... other arguments for plotting.
 ##' @export
 ##' @return A plot
@@ -160,6 +161,9 @@ plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE, ...) {
 ##' @title Plot all partial dependencies
 ##' @param dat Model object from running \code{buildMod}.
 ##' @param ylim y-axis label. Will default to pollutant name.
+##' @param layout The plot layout e.g. \code{c(3, 2)} makes a 3
+##' columns by 2 rows grid. If not supplied a square grid is used of
+##' sufficient size to accommodate all teh plots.
 ##' @param ... extra plotting arguments.
 ##' @export
 ##' @return A plot

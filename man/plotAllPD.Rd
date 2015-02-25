@@ -4,12 +4,16 @@
 \alias{plotAllPD}
 \title{Plot all partial dependencies}
 \usage{
-plotAllPD(dat, ylim = NULL, ...)
+plotAllPD(dat, ylim = NULL, layout = NULL, ...)
 }
 \arguments{
 \item{dat}{Model object from running \code{buildMod}.}
 
 \item{ylim}{y-axis label. Will default to pollutant name.}
+
+\item{layout}{The plot layout e.g. \code{c(3, 2)} makes a 3
+columns by 2 rows grid. If not supplied a square grid is used of
+sufficient size to accommodate all teh plots.}
 
 \item{...}{extra plotting arguments.}
 }

@@ -9,7 +9,7 @@
 ##' normalisation to.
 ##' @param partial.dep Should the partial dependencies be calculated?
 ##' @param B Number of bootstrap simulations for partial dependence plots.
-##' @import doParallel openair gbm dplyr lattice
+##' @import doParallel openair gbm dplyr lattice parallel foreach
 ##' @importFrom plyr ddply ldply dlply llply numcolwise
 ##' @export 
 ##' @return A list of stuff
@@ -17,8 +17,9 @@
 buildMod <- function(dat, vars = c("ws", "wd"), pollutant = "nox", partial.dep = TRUE,
                      B = 100) {
 
-    ## add other variables
+    ## add other variables, select only those required for modelling
     dat <- prepData(dat)
+    dat <- dat[(c(vars, pollutant))]
 
     variables <- paste(vars, collapse = "+")
     eq <- formula(paste(pollutant, "~", variables))

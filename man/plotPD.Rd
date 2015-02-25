@@ -13,6 +13,8 @@ plotPD(dat, variable, ylim = NULL, plotit = TRUE, ...)
 
 \item{ylim}{user-specified \code{ylim}.}
 
+\item{plotit}{Should a plot be produced?}
+
 \item{...}{other arguments for plotting.}
 }
 \value{
