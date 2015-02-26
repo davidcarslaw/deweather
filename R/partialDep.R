@@ -1,28 +1,50 @@
 
 
 partialDep <- function(dat, eq, vars, B = 100) {
+
+    if (B == 1) return.mod <- TRUE else return.mod <- FALSE
     
     cl <- makeCluster(4)
     registerDoParallel(cl)
 
     pred <- foreach (i = 1:B, .inorder = FALSE, 
                      .packages = c("gbm", "plyr")) %dopar%
-    runGbm(dat, eq, vars, simulate = TRUE)
+    runGbm(dat, eq, vars, return.mod, simulate = TRUE)
 
     stopCluster(cl)
-
+    
     ## partial dependence plots
     pd <- lapply(pred, "[[", 1)
     pd <- do.call(rbind, pd)
 
-
-
+    ## relative influence
+    ri <- lapply(pred, "[[", 2)
+    ri <- do.call(rbind, ri)
+    
+    
     resCI <- group_by(pd, var, x) %>%
       summarise(mean = mean(y),
                 lower = quantile(y, probs = c(0.025)),
                 upper = quantile(y, probs = c(0.975)))
 
-    return(resCI)
+    resRI <- group_by(ri, var) %>%
+      summarise(mean = mean(rel.inf),
+                lower = quantile(rel.inf, probs = c(0.025)),
+                upper = quantile(rel.inf, probs = c(0.975)))
+
+    if (return.mod) {
+        
+        mod <- pred[[1]]$model
+        
+        return(list(resCI, resRI, mod))
+
+    } else {
+
+        return(list(resCI, resRI))
+
+    }
+
+    
 
 }
 
@@ -42,12 +64,12 @@ partialDep <- function(dat, eq, vars, B = 100) {
 plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE, ...) {
 
     if (class(dat) != "deweather") stop ("Need to supply a deweather object from buildMod.")
-
+    
     ## extract from deweather object
     mod <- dat$model
     data <- dat$data
     dat <- dat$pd
-
+    
     ## variable modelled
     ylab <- mod$response.name
 
@@ -69,7 +91,7 @@ plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE, ...) {
     
     if (is.null(ylim)) ylim <- rng(dat)
 
-
+    
     if (!variable %in% c("trend", "weekday")) {
 
         plt <- xyplot(myform, data = dat, type = "l",
@@ -94,7 +116,7 @@ plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE, ...) {
                )
         
     } 
-
+    
     if (variable == "trend") {
         myform <- formula("mean ~ date")
         dat <- decimalDate(dat, date = "x")
@@ -197,7 +219,7 @@ plotAllPD <- function(dat, ylim = NULL, layout = NULL, ...) {
 
     ## plot most influencial predictor first
     influ <- dat$influence
-
+    
     ## plot everything
     for (i in 1:n) {
 
@@ -205,7 +227,7 @@ plotAllPD <- function(dat, ylim = NULL, layout = NULL, ...) {
         plt <- plotPD(dat, variable = influ$var[i], plotit = FALSE,
                       main = list(label = as.character(influ$var[i]), col = "darkorange",
                           fontface = "bold"),
-                      sub = paste("Influence", round(influ$rel.inf[i], 1), "%"), ylim, 
+                      sub = paste("Influence", round(influ$mean[i], 1), "%"), ylim, 
                   ...)
                     
 
@@ -273,6 +295,8 @@ plot2Way <- function(dat, variable = c("ws", "temp"), ...) {
         trendLevel(res, x = variable[1], y = variable[2], pollutant = "y", ...)
 
     }
+
+    invisible(res)
     
     
 }

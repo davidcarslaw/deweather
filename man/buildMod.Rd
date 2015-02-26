@@ -4,8 +4,7 @@
 \alias{buildMod}
 \title{Function to apply meteorological normalisation to.}
 \usage{
-buildMod(dat, vars = c("ws", "wd"), pollutant = "nox", partial.dep = TRUE,
-  B = 100)
+buildMod(dat, vars = c("ws", "wd"), pollutant = "nox", B = 100)
 }
 \arguments{
 \item{dat}{Data frame to analyse.}
@@ -15,9 +14,9 @@ buildMod(dat, vars = c("ws", "wd"), pollutant = "nox", partial.dep = TRUE,
 \item{pollutant}{The name of the variable to apply meteorological
 normalisation to.}
 
-\item{partial.dep}{Should the partial dependencies be calculated?}
-
 \item{B}{Number of bootstrap simulations for partial dependence plots.}
+
+\item{partial.dep}{Should the partial dependencies be calculated?}
 }
 \value{
 A list of stuff

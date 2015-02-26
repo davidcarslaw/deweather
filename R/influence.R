@@ -12,9 +12,9 @@ gbmInf <- function(dat) {
     if (class(dat) != "deweather") stop ("Need to supply a deweather object from buildMod.")
 
     ## extract influence data from object
-    influ <- modOb$influence
+    influ <- dat$influence
 
-    dotplot(var ~ rel.inf, data = influ, type = c("p", "h"),
+    dotplot(var ~ mean, data = influ, type = c("p", "h"),
             xlab = "relative variable influence (%)",
             xlim = c(0, NA), 
             panel = function(x, y){

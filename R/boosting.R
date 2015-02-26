@@ -14,8 +14,7 @@
 ##' @export 
 ##' @return A list of stuff
 ##' @author David Carslaw
-buildMod <- function(dat, vars = c("ws", "wd"), pollutant = "nox", partial.dep = TRUE,
-                     B = 100) {
+buildMod <- function(dat, vars = c("ws", "wd"), pollutant = "nox", B = 100) {
 
     ## add other variables, select only those required for modelling
     dat <- prepData(dat)
@@ -29,42 +28,29 @@ buildMod <- function(dat, vars = c("ws", "wd"), pollutant = "nox", partial.dep =
     if (length(id) > 0 )
         dat <- dat[-id, ]
 
-    ## Influence plot
-   
+    ## if more than one simulation only return model ONCE
+    if (B != 1)
+        mod <- runGbm(dat, eq, vars, return.mod = TRUE, simulate = FALSE)
+ 
     
-    mod <- runGbm(dat, eq, vars, return.mod = TRUE, simulate = FALSE)
-    mod <- mod[[2]] ## second list item
-    influ <- summary(mod, plotit = FALSE)
+    res <- partialDep(dat, eq, vars, B)
+
+    if (B != 1) Mod <- mod else Mod <- res[[3]]
     
-    influ$var <- reorder(influ$var, influ$rel.inf)
-
-  
-    ## partial dependence calculations
-    if (partial.dep) {
-
-        pd <- partialDep(dat, eq, vars, B)
-
-        result <- list(model = mod, influence = influ, data = dat, pd = pd)
-        class(result) <- "deweather"
-
-        return(result)
-        
-    } else {
-
-        result <- list(model = mod, influence = influ, data = dat)
-        class(result) <- "deweather"
-
-        return(result)
+    result <- list(model = Mod, influence = res[[2]], data = dat, pd = res[[1]])
+    class(result) <- "deweather"
+    
+    return(result)
+    
     }
-
-    
-
-}
 
 extractPD <- function(vars, mod) {
     
+    n <- 100 ## resolution of output
+    if (vars %in% c("hour", "hour.local")) n <- 24
+    
     ## extract partial dependence values
-    res <- plot(mod, vars, cont = 100, return.grid = TRUE)
+    res <- plot(mod, vars, cont = n, return.grid = TRUE)
     res <- data.frame(y = res$y, var = vars, x = res[[vars]])
     return(res)
 }
@@ -82,24 +68,25 @@ runGbm <- function(dat, eq, vars, return.mod = FALSE, simulate = FALSE) {
     mod <- gbm(eq, data = dat, distribution = "gaussian", n.trees = trees,
                shrinkage = 0.1, interaction.depth = 10, bag.fraction = 0.7,
                train.fraction = 1,  n.minobsinnode = 10,
-               keep.data = FALSE, verbose = FALSE)
+               keep.data = TRUE, verbose = FALSE)
 
     ## extract partial dependnece componets
     pd <- plyr::ldply(vars, extractPD, mod)
-
+    
     ## relative influence
     ri <- summary(mod, plotit = FALSE)
+    ri$var <- reorder(ri$var, ri$rel.inf)
 
     if (return.mod) {
 
-        result <- list(pd, mod)
+        result <- list(pd = pd, ri = ri, model = mod)
         
-        return(list(pd, mod))
+        return(result)
         
         
     } else {
         
-        return(list(pd))
+        return(list(pd, ri))
         
     }
 
