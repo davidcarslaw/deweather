@@ -3,7 +3,7 @@
 partialDep <- function(dat, eq, vars, B = 100) {
 
     if (B == 1) return.mod <- TRUE else return.mod <- FALSE
-    
+
     cl <- makeCluster(4)
     registerDoParallel(cl)
 
@@ -36,6 +36,7 @@ partialDep <- function(dat, eq, vars, B = 100) {
         
         mod <- pred[[1]]$model
         
+        
         return(list(resCI, resRI, mod))
 
     } else {
@@ -43,9 +44,7 @@ partialDep <- function(dat, eq, vars, B = 100) {
         return(list(resCI, resRI))
 
     }
-
     
-
 }
 
 
@@ -216,13 +215,13 @@ plotAllPD <- function(dat, ylim = NULL, layout = NULL, ...) {
     }
 
     
-
     ## plot most influencial predictor first
     influ <- dat$influence
+    influ <- arrange(influ, desc(mean))
     
     ## plot everything
     for (i in 1:n) {
-
+        
         ## the plot
         plt <- plotPD(dat, variable = influ$var[i], plotit = FALSE,
                       main = list(label = as.character(influ$var[i]), col = "darkorange",
@@ -241,7 +240,7 @@ plotAllPD <- function(dat, ylim = NULL, layout = NULL, ...) {
 }
 
 
-##' Two-way intercation plots
+##' Two-way interaction plots
 ##'
 ##' To add
 ##' @title Plot two-way interactions from gbm model

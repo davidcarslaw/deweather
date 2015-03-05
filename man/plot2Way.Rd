@@ -18,7 +18,7 @@ e.g. \code{variables = c("ws", "wd"}.}
 To add
 }
 \description{
-Two-way intercation plots
+Two-way interaction plots
 }
 \details{
 To add

@@ -19,6 +19,8 @@ metSim <- function(dat, newdata, metVars = c("ws", "wd", "temp"), n.core = 4, B 
     ## extract the model
     mod <- dat$model
 
+    if (!"trend" %in% mod$var.names) stop("The model must have a trend component as one of the explanatory variables.")
+
     if (missing(newdata)) newdata <- dat$data
     
     newdata <- prepData(newdata)

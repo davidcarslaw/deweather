@@ -31,11 +31,11 @@ buildMod <- function(dat, vars = c("ws", "wd"), pollutant = "nox", B = 100) {
     ## if more than one simulation only return model ONCE
     if (B != 1)
         mod <- runGbm(dat, eq, vars, return.mod = TRUE, simulate = FALSE)
- 
+    
     
     res <- partialDep(dat, eq, vars, B)
 
-    if (B != 1) Mod <- mod else Mod <- res[[3]]
+    if (B != 1) Mod <- mod$model else Mod <- res[[3]]
     
     result <- list(model = Mod, influence = res[[2]], data = dat, pd = res[[1]])
     class(result) <- "deweather"
