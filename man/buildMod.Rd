@@ -19,7 +19,8 @@ normalisation to.}
 \item{partial.dep}{Should the partial dependencies be calculated?}
 }
 \value{
-A list of stuff
+Returns a list including the model, influence data frame
+and partial dependence data frame.
 }
 \description{
 Function to do meteorological normalisation

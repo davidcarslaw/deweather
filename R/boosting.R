@@ -11,8 +11,9 @@
 ##' @param B Number of bootstrap simulations for partial dependence plots.
 ##' @import doParallel openair gbm dplyr lattice parallel foreach
 ##' @importFrom plyr ddply ldply dlply llply numcolwise
-##' @export 
-##' @return A list of stuff
+##' @export
+##' @return Returns a list including the model, influence data frame
+##' and partial dependence data frame.
 ##' @author David Carslaw
 buildMod <- function(dat, vars = c("ws", "wd"), pollutant = "nox", B = 100) {
 
@@ -31,24 +32,24 @@ buildMod <- function(dat, vars = c("ws", "wd"), pollutant = "nox", B = 100) {
     ## if more than one simulation only return model ONCE
     if (B != 1)
         mod <- runGbm(dat, eq, vars, return.mod = TRUE, simulate = FALSE)
-    
-    
+
+
     res <- partialDep(dat, eq, vars, B)
 
     if (B != 1) Mod <- mod$model else Mod <- res[[3]]
-    
+
     result <- list(model = Mod, influence = res[[2]], data = dat, pd = res[[1]])
     class(result) <- "deweather"
-    
+
     return(result)
-    
+
     }
 
 extractPD <- function(vars, mod) {
-    
+
     n <- 100 ## resolution of output
     if (vars %in% c("hour", "hour.local")) n <- 24
-    
+
     ## extract partial dependence values
     res <- plot(mod, vars, cont = n, return.grid = TRUE)
     res <- data.frame(y = res$y, var = vars, x = res[[vars]])
@@ -63,7 +64,7 @@ runGbm <- function(dat, eq, vars, return.mod = FALSE, simulate = FALSE) {
     ## sub-sample the data for bootstrapping
     if (simulate)
         dat <- dat[sample(1:nrow(dat), nrow(dat), replace = TRUE), ]
-    
+
     trees <- 1000
     mod <- gbm(eq, data = dat, distribution = "gaussian", n.trees = trees,
                shrinkage = 0.1, interaction.depth = 10, bag.fraction = 0.7,
@@ -72,7 +73,7 @@ runGbm <- function(dat, eq, vars, return.mod = FALSE, simulate = FALSE) {
 
     ## extract partial dependnece componets
     pd <- plyr::ldply(vars, extractPD, mod)
-    
+
     ## relative influence
     ri <- summary(mod, plotit = FALSE)
     ri$var <- reorder(ri$var, ri$rel.inf)
@@ -80,14 +81,14 @@ runGbm <- function(dat, eq, vars, return.mod = FALSE, simulate = FALSE) {
     if (return.mod) {
 
         result <- list(pd = pd, ri = ri, model = mod)
-        
+
         return(result)
-        
-        
+
+
     } else {
-        
+
         return(list(pd, ri))
-        
+
     }
 
 }
