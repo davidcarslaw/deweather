@@ -4,13 +4,15 @@
 \alias{plot2Way}
 \title{Plot two-way interactions from gbm model}
 \usage{
-plot2Way(dat, variable = c("ws", "temp"), ...)
+plot2Way(dat, variable = c("ws", "temp"), res = 100, ...)
 }
 \arguments{
 \item{dat}{Model object from running \code{buildMod}.}
 
 \item{variable}{The variables to plot. Must be of length two
 e.g. \code{variables = c("ws", "wd"}.}
+
+\item{res}{Resolution in x-y i.e. number of points in each dimension.}
 
 \item{...}{other arguments to send to \code{openair} \code{scatterPlot}.}
 }

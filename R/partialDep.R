@@ -7,12 +7,12 @@ partialDep <- function(dat, eq, vars, B = 100) {
     cl <- makeCluster(4)
     registerDoParallel(cl)
 
-    pred <- foreach (i = 1:B, .inorder = FALSE, 
+    pred <- foreach (i = 1:B, .inorder = FALSE,
                      .packages = c("gbm", "plyr")) %dopar%
     runGbm(dat, eq, vars, return.mod, simulate = TRUE)
 
     stopCluster(cl)
-    
+
     ## partial dependence plots
     pd <- lapply(pred, "[[", 1)
     pd <- do.call(rbind, pd)
@@ -20,8 +20,8 @@ partialDep <- function(dat, eq, vars, B = 100) {
     ## relative influence
     ri <- lapply(pred, "[[", 2)
     ri <- do.call(rbind, ri)
-    
-    
+
+
     resCI <- group_by(pd, var, x) %>%
       summarise(mean = mean(y),
                 lower = quantile(y, probs = c(0.025)),
@@ -33,10 +33,10 @@ partialDep <- function(dat, eq, vars, B = 100) {
                 upper = quantile(rel.inf, probs = c(0.975)))
 
     if (return.mod) {
-        
+
         mod <- pred[[1]]$model
-        
-        
+
+
         return(list(resCI, resRI, mod))
 
     } else {
@@ -44,13 +44,13 @@ partialDep <- function(dat, eq, vars, B = 100) {
         return(list(resCI, resRI))
 
     }
-    
+
 }
 
 
 ##' Function to plot partial dependence plots with bootstrap uncertainties
 ##'
-##' 
+##'
 ##' @title Partial dependence plots with uncertainties.
 ##' @param dat Model object from running \code{buildMod}.
 ##' @param variable The variable to plot.
@@ -63,99 +63,99 @@ partialDep <- function(dat, eq, vars, B = 100) {
 plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE, ...) {
 
     if (class(dat) != "deweather") stop ("Need to supply a deweather object from buildMod.")
-    
+
     ## extract from deweather object
     mod <- dat$model
     data <- dat$data
     dat <- dat$pd
-    
+
     ## variable modelled
     ylab <- mod$response.name
 
     ## check if variable present
     if (!variable %in% dat$var) stop ("Variable not present in data.")
-    
+
     ## select variable of interest
     dat <- dat[dat$var == variable, ]
-    
+
     gap <- openair:::prettyGap(dat$x, 40)
     dat$x <- openair:::round_any(dat$x, gap)
-    
+
     dat <- group_by(dat, var, x) %>%
       summarise_each(funs(mean(.)))
 
     myform <- formula("mean ~ x")
-    
+
     blues3 <-  RColorBrewer::brewer.pal(3, "Blues")
-    
+
     if (is.null(ylim)) ylim <- rng(dat)
 
-    
+
     if (!variable %in% c("trend", "weekday")) {
 
         plt <- xyplot(myform, data = dat, type = "l",
                xlab = quickText(variable),
                       ylab = quickText(ylab),
-                      ylim = ylim, ..., 
-               
+                      ylim = ylim, ...,
+
                panel = function(x, y, subscripts, ...) {
-                   
+
                    panel.grid(-1, -1)
-                   
+
                    lpolygon(c(dat$x, rev(dat$x)),
                             c(dat[["lower"]], rev(dat[["upper"]])),
                             col = blues3[2], border = NA)
-                   
-                   
+
+
                    panel.xyplot(x, y, col = blues3[3], lwd = 2, ...)
-                   
+
                    panel.rug(x = quantile(data[[as.character(variable)]],
                                  probs = 0:10 / 10, na.rm = TRUE), col = "firebrick", lwd = 2)
                }
                )
-        
-    } 
-    
+
+    }
+
     if (variable == "trend") {
         myform <- formula("mean ~ date")
         dat <- decimalDate(dat, date = "x")
-        
+
         plt <- xyplot(myform, data = dat, type = "l",
                xlab = quickText(variable),
-                      ylab = quickText(ylab), ylim = ylim, ..., 
-               
+                      ylab = quickText(ylab), ylim = ylim, ...,
+
                       panel = function(x, y, ...) {
-                   
+
                    panel.grid(-1, -1)
-                   
+
                    lpolygon(c(dat$date, rev(dat$date)),
                             c(dat[["lower"]], rev(dat[["upper"]])),
                             col = blues3[2], border = NA)
-                   
-                   
+
+
                    panel.xyplot(as.POSIXct(x), y, col = blues3[3], lwd = 2, ...)
                }
                )
-        
+
     }
 
     if (variable == "weekday") {
-        
+
         ## change to weekday names
         dat$x <- factor(dat$x)
         weekday.names <- format(ISOdate(2000, 1, 2:8), "%a")
         levels(dat$x) <- sort(weekday.names)
 
         dat$x <- ordered(dat$x, levels = weekday.names)
-        
+
         myform <- formula("mean ~ x")
-        
+
         plt <- xyplot(myform, data = dat, type = "l",
                       scales = list(x = list(at = 1:7, labels = weekday.names)),
                       xlab = quickText(variable),
                       ylab = quickText(ylab),
-                      ylim = ylim, ..., 
-                      
+                      ylim = ylim, ...,
+
                       panel = function(x, y, ...) {
 
                           panel.grid(-1, 0)
@@ -163,17 +163,17 @@ plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE, ...) {
 
                           lrect(as.numeric(dat$x) - 0.3, dat$lower, as.numeric(dat$x) + 0.3,
                                 dat$upper, col = blues3[2], border = NA)
-                          
+
                           panel.xyplot(1:7, dat$mean[as.numeric(factor(weekday.names))],
                                        col = blues3[3], lwd = 2, ...)
                       }
                       )
-        
+
     }
 
     if (plotit) print(plt)
     invisible(plt)
-    
+
 }
 
 ##' Function to plot all partial dependencies
@@ -190,7 +190,7 @@ plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE, ...) {
 ##' @return A plot
 ##' @author David Carslaw
 plotAllPD <- function(dat, ylim = NULL, layout = NULL, ...) {
-    
+
     if (class(dat) != "deweather") stop ("Need to supply a deweather object from buildMod.")
 
     ## names of explanatory variables
@@ -206,29 +206,29 @@ plotAllPD <- function(dat, ylim = NULL, layout = NULL, ...) {
     if (!is.null(layout)) {
 
         combs <- expand.grid(1:layout[1], 1:layout[2])
-        
+
     } else {
 
         combs <- expand.grid(1:n.plot, 1:n.plot)
         layout <- c(n.plot, n.plot)
-        
+
     }
 
-    
+
     ## plot most influencial predictor first
     influ <- dat$influence
     influ <- arrange(influ, desc(mean))
-    
+
     ## plot everything
     for (i in 1:n) {
-        
+
         ## the plot
         plt <- plotPD(dat, variable = influ$var[i], plotit = FALSE,
                       main = list(label = as.character(influ$var[i]), col = "darkorange",
                           fontface = "bold"),
-                      sub = paste("Influence", round(influ$mean[i], 1), "%"), ylim, 
+                      sub = paste("Influence", round(influ$mean[i], 1), "%"), ylim,
                   ...)
-                    
+
 
         if (i == n) more <- FALSE else more <- TRUE
 
@@ -236,7 +236,7 @@ plotAllPD <- function(dat, ylim = NULL, layout = NULL, ...) {
 
     }
 
-    
+
 }
 
 
@@ -247,23 +247,24 @@ plotAllPD <- function(dat, ylim = NULL, layout = NULL, ...) {
 ##' @param dat Model object from running \code{buildMod}.
 ##' @param variable The variables to plot. Must be of length two
 ##' e.g. \code{variables = c("ws", "wd"}.
+##' @param res Resolution in x-y i.e. number of points in each dimension.
 ##' @param ... other arguments to send to \code{openair} \code{scatterPlot}.
 ##' @export
 ##' @return To add
 ##' @author David Carslaw
-plot2Way <- function(dat, variable = c("ws", "temp"), ...) {
+plot2Way <- function(dat, variable = c("ws", "temp"), res = 100, ...) {
 
     if (class(dat) != "deweather") stop ("Need to supply a deweather object from buildMod.")
 
     ## extract from deweather object
     mod <- dat$model
 
-    res <- plot.gbm(mod, i.var = variable, continuous.resolution = 100,
+    res <- plot.gbm(mod, i.var = variable, continuous.resolution = res,
                     return.grid = TRUE)
 
-    
+
     if (all(sapply(res, is.numeric))) {
-        
+
         scatterPlot(res, x = variable[1], y = variable[2], z = "y", method = "level", ...)
 
     } else {
@@ -287,7 +288,7 @@ plot2Way <- function(dat, variable = c("ws", "temp"), ...) {
             weekday.names <- format(ISOdate(2000, 1, 2:8), "%a")
             levels(res$Weekday) <- sort(weekday.names)
             res$Weekday <- ordered(res$Weekday, levels = weekday.names)
-          
+
 
         }
 
@@ -296,6 +297,6 @@ plot2Way <- function(dat, variable = c("ws", "temp"), ...) {
     }
 
     invisible(res)
-    
-    
+
+
 }
