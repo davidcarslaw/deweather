@@ -52,11 +52,8 @@ prepData <- function(mydata, add = c("hour", "hour.local", "weekday", "trend", "
 
     ## Some cheack to make sure data are OK.
     if (!"date" %in% names(mydata)) stop("No date field supplied.")
-
-    if (class(mydata$date) != "Date" || class(mydata$date) != "POSIXct")
-        stop("Date format is not correct - should be POSIXct or Date.")
-
-    if ("hour" %in% add) mydata$hour <- as.numeric(format(mydata$date, "%H"))
+    
+        if ("hour" %in% add) mydata$hour <- as.numeric(format(mydata$date, "%H"))
 
     if ("hour.local" %in% add)
         mydata$hour.local <- as.numeric(format(as.POSIXct(format(mydata$date,

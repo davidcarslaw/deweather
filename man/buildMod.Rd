@@ -15,8 +15,6 @@ buildMod(dat, vars = c("ws", "wd"), pollutant = "nox", B = 100)
 normalisation to.}
 
 \item{B}{Number of bootstrap simulations for partial dependence plots.}
-
-\item{partial.dep}{Should the partial dependencies be calculated?}
 }
 \value{
 Returns a list including the model, influence data frame

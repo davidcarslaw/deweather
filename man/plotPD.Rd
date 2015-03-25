@@ -4,7 +4,7 @@
 \alias{plotPD}
 \title{Partial dependence plots with uncertainties.}
 \usage{
-plotPD(dat, variable, ylim = NULL, plotit = TRUE, ...)
+plotPD(dat, variable, ylim = NULL, plotit = TRUE, auto.text = TRUE, ...)
 }
 \arguments{
 \item{dat}{Model object from running \code{buildMod}.}
@@ -14,6 +14,11 @@ plotPD(dat, variable, ylim = NULL, plotit = TRUE, ...)
 \item{ylim}{user-specified \code{ylim}.}
 
 \item{plotit}{Should a plot be produced?}
+
+\item{auto.text}{Either \code{TRUE} (default) or \code{FALSE}. If
+\code{TRUE} titles and axis labels will automatically try and
+format pollutant names and units properly e.g.  by subscripting
+the `2' in NO2.}
 
 \item{...}{other arguments for plotting.}
 }

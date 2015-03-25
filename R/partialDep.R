@@ -56,11 +56,15 @@ partialDep <- function(dat, eq, vars, B = 100) {
 ##' @param variable The variable to plot.
 ##' @param ylim user-specified \code{ylim}.
 ##' @param plotit Should a plot be produced?
+##' @param auto.text Either \code{TRUE} (default) or \code{FALSE}. If
+##' \code{TRUE} titles and axis labels will automatically try and
+##' format pollutant names and units properly e.g.  by subscripting
+##' the `2' in NO2.
 ##' @param ... other arguments for plotting.
 ##' @export
 ##' @return A plot
 ##' @author David Carslaw
-plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE, ...) {
+plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE, auto.text = TRUE, ...) {
 
     if (class(dat) != "deweather") stop ("Need to supply a deweather object from buildMod.")
 
@@ -69,9 +73,12 @@ plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE, ...) {
     data <- dat$data
     dat <- dat$pd
 
-    ## variable modelled
-    ylab <- mod$response.name
-
+    ## extra.args setup
+    extra.args <- list(...)
+    
+    extra.args$ylab <- if ("ylab" %in% names(extra.args))
+                           quickText(extra.args$ylab, auto.text) else mod$response.name
+    
     ## check if variable present
     if (!variable %in% dat$var) stop ("Variable not present in data.")
 
@@ -87,32 +94,31 @@ plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE, ...) {
     myform <- formula("mean ~ x")
 
     blues3 <-  RColorBrewer::brewer.pal(3, "Blues")
-
+    
     if (is.null(ylim)) ylim <- rng(dat)
 
 
     if (!variable %in% c("trend", "weekday")) {
 
-        plt <- xyplot(myform, data = dat, type = "l",
-               xlab = quickText(variable),
-                      ylab = quickText(ylab),
-                      ylim = ylim, ...,
+        plt <- list(myform, data = dat, type = "l",
+                    xlab = quickText(variable),
+                    ylim = ylim, ...,
 
-               panel = function(x, y, subscripts, ...) {
+                    panel = function(x, y, subscripts, ...) {
 
-                   panel.grid(-1, -1)
+                        panel.grid(-1, -1)
 
-                   lpolygon(c(dat$x, rev(dat$x)),
-                            c(dat[["lower"]], rev(dat[["upper"]])),
-                            col = blues3[2], border = NA)
+                        lpolygon(c(dat$x, rev(dat$x)),
+                                 c(dat[["lower"]], rev(dat[["upper"]])),
+                                 col = blues3[2], border = NA)
 
 
-                   panel.xyplot(x, y, col = blues3[3], lwd = 2, ...)
+                        panel.xyplot(x, y, col = blues3[3], lwd = 2, ...)
 
-                   panel.rug(x = quantile(data[[as.character(variable)]],
-                                 probs = 0:10 / 10, na.rm = TRUE), col = "firebrick", lwd = 2)
-               }
-               )
+                        panel.rug(x = quantile(data[[as.character(variable)]],
+                                      probs = 0:10 / 10, na.rm = TRUE), col = "firebrick", lwd = 2)
+                    }
+                    )
 
     }
 
@@ -120,22 +126,22 @@ plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE, ...) {
         myform <- formula("mean ~ date")
         dat <- decimalDate(dat, date = "x")
 
-        plt <- xyplot(myform, data = dat, type = "l",
-               xlab = quickText(variable),
-                      ylab = quickText(ylab), ylim = ylim, ...,
+        plt <- list(myform, data = dat, type = "l",
+                    xlab = quickText(variable),
+                    ylim = ylim, ...,
 
-                      panel = function(x, y, ...) {
+                    panel = function(x, y, ...) {
 
-                   panel.grid(-1, -1)
+                        panel.grid(-1, -1)
 
-                   lpolygon(c(dat$date, rev(dat$date)),
-                            c(dat[["lower"]], rev(dat[["upper"]])),
-                            col = blues3[2], border = NA)
+                        lpolygon(c(dat$date, rev(dat$date)),
+                                 c(dat[["lower"]], rev(dat[["upper"]])),
+                                 col = blues3[2], border = NA)
 
 
-                   panel.xyplot(as.POSIXct(x), y, col = blues3[3], lwd = 2, ...)
-               }
-               )
+                        panel.xyplot(as.POSIXct(x), y, col = blues3[3], lwd = 2, ...)
+                    }
+                    )
 
     }
 
@@ -150,26 +156,31 @@ plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE, ...) {
 
         myform <- formula("mean ~ x")
 
-        plt <- xyplot(myform, data = dat, type = "l",
-                      scales = list(x = list(at = 1:7, labels = weekday.names)),
-                      xlab = quickText(variable),
-                      ylab = quickText(ylab),
-                      ylim = ylim, ...,
+        plt <- list(myform, data = dat, type = "l",
+                    scales = list(x = list(at = 1:7, labels = weekday.names)),
+                    xlab = quickText(variable),
+                    ylim = ylim, ...,
 
-                      panel = function(x, y, ...) {
+                    panel = function(x, y, ...) {
 
-                          panel.grid(-1, 0)
-                          panel.abline(v = 1:7, col = "grey85")
+                        panel.grid(-1, 0)
+                        panel.abline(v = 1:7, col = "grey85")
 
-                          lrect(as.numeric(dat$x) - 0.3, dat$lower, as.numeric(dat$x) + 0.3,
-                                dat$upper, col = blues3[2], border = NA)
+                        lrect(as.numeric(dat$x) - 0.3, dat$lower, as.numeric(dat$x) + 0.3,
+                              dat$upper, col = blues3[2], border = NA)
 
-                          panel.xyplot(1:7, dat$mean[as.numeric(factor(weekday.names))],
-                                       col = blues3[3], lwd = 2, ...)
-                      }
-                      )
+                        panel.xyplot(1:7, dat$mean[as.numeric(factor(weekday.names))],
+                                     col = blues3[3], lwd = 2, ...)
+                    }
+                    )
 
     }
+
+    ## reset for extra.args
+    Args <- openair:::listUpdate(plt, extra.args)
+    plt <- do.call(xyplot, Args)
+  
+    
 
     if (plotit) print(plt)
     invisible(plt)
@@ -248,20 +259,41 @@ plotAllPD <- function(dat, ylim = NULL, layout = NULL, ...) {
 ##' @param variable The variables to plot. Must be of length two
 ##' e.g. \code{variables = c("ws", "wd"}.
 ##' @param res Resolution in x-y i.e. number of points in each dimension.
+##' @param exlude Should surfaces exlude predictions too far from
+##' original data? The default is \code{TRUE}.
 ##' @param ... other arguments to send to \code{openair} \code{scatterPlot}.
 ##' @export
+##' @importFrom mgcv exclude.too.far
 ##' @return To add
 ##' @author David Carslaw
-plot2Way <- function(dat, variable = c("ws", "temp"), res = 100, ...) {
+plot2Way <- function(dat, variable = c("ws", "temp"), res = 100, exlude = TRUE, ...) {
 
     if (class(dat) != "deweather") stop ("Need to supply a deweather object from buildMod.")
 
     ## extract from deweather object
+    data <- dat$data
     mod <- dat$model
 
     res <- plot.gbm(mod, i.var = variable, continuous.resolution = res,
                     return.grid = TRUE)
 
+    
+    ## exclude predictions too far from data (from mgcv)
+
+    if (exlude) {
+        sub <- na.omit(data[, variable]) ## pairs of variables
+        x <- sub[[variable[1]]] ## x data
+        y <- sub[[variable[2]]] ## y data
+        
+        mx <- unique(res[, 1])
+        my <- unique(res[, 2])
+        n <- length(mx)
+        gx <- rep(mx, n)
+        gy <-rep(my, rep(n, n))
+        tf <- mgcv::exclude.too.far(gx, gy, x, y, 0.01)
+        
+        res$y[tf] <- NA
+    }
 
     if (all(sapply(res, is.numeric))) {
 

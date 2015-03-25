@@ -4,7 +4,7 @@
 \alias{plot2Way}
 \title{Plot two-way interactions from gbm model}
 \usage{
-plot2Way(dat, variable = c("ws", "temp"), res = 100, ...)
+plot2Way(dat, variable = c("ws", "temp"), res = 100, exlude = TRUE, ...)
 }
 \arguments{
 \item{dat}{Model object from running \code{buildMod}.}
@@ -13,6 +13,9 @@ plot2Way(dat, variable = c("ws", "temp"), res = 100, ...)
 e.g. \code{variables = c("ws", "wd"}.}
 
 \item{res}{Resolution in x-y i.e. number of points in each dimension.}
+
+\item{exlude}{Should surfaces exlude predictions too far from
+original data? The default is \code{TRUE}.}
 
 \item{...}{other arguments to send to \code{openair} \code{scatterPlot}.}
 }

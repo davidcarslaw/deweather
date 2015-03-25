@@ -4,7 +4,7 @@
 ##' To add
 ##' @title Plot diurnal changes, removing the effect of meteorology
 ##' @param dat A data frame to analyse.
-##' @param variables The explanatory variables used in the model.
+##' @param vars The explanatory variables used in the model.
 ##' @param pollutant Name of teh pollutant to apply meteorological
 ##' normalisation to.
 ##' @param date A vector of dates, length three. These dates are used

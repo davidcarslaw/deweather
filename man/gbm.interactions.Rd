@@ -7,7 +7,7 @@
 gbm.interactions(res)
 }
 \arguments{
-\item{res}{}
+\item{res}{Model object from running \code{buildMod}.}
 }
 \value{
 Interaction information.

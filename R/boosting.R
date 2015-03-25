@@ -7,7 +7,6 @@
 ##' @param vars Explanatory variables to use
 ##' @param pollutant The name of the variable to apply meteorological
 ##' normalisation to.
-##' @param partial.dep Should the partial dependencies be calculated?
 ##' @param B Number of bootstrap simulations for partial dependence plots.
 ##' @import doParallel openair gbm dplyr lattice parallel foreach
 ##' @importFrom plyr ddply ldply dlply llply numcolwise

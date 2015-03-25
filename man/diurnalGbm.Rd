@@ -10,6 +10,8 @@ diurnalGbm(dat, vars = c("ws", "wd", "hour", "weekday"), pollutant = "nox",
 \arguments{
 \item{dat}{A data frame to analyse.}
 
+\item{vars}{The explanatory variables used in the model.}
+
 \item{pollutant}{Name of teh pollutant to apply meteorological
 normalisation to.}
 
@@ -19,8 +21,6 @@ format is UK e.g. \code{date = c("19/2/2005", "19/2/2007",
 "19/2/2010")}.}
 
 \item{single}{Not used.}
-
-\item{variables}{The explanatory variables used in the model.}
 }
 \value{
 Some data

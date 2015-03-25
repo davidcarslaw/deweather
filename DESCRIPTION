@@ -17,6 +17,7 @@ Imports:
 	dplyr,
 	openair,
 	plyr,
+	mgcv,
 	reshape2,
 	RColorBrewer,
 	lattice

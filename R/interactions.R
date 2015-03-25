@@ -2,17 +2,13 @@
 ##'
 ##' 
 ##' @title Quantify most important 2-way interactions
-##' @param res
+##' @param res Model object from running \code{buildMod}.
 ##' @export
 ##' @return Interaction information.
 ##' @author David Carslaw
 gbm.interactions <- function (res) {
 
     ## Edited version from dismo package to rank 2-way interactions
-    
-    if (!require(gbm)) {
-        stop("you need to install the gbm package to run this function")
-    }
 
     if (class(res) != "deweather") stop ("Need to supply a deweather object from buildMod.")
 
