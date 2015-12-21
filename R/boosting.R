@@ -4,21 +4,22 @@
 ##' Info here
 ##' @title Function to apply meteorological normalisation to.
 ##' @param dat Data frame to analyse.
-##' @param vars Explanatory variables to use
+##' @param vars Explanatory variables to use. 
 ##' @param pollutant The name of the variable to apply meteorological
 ##' normalisation to.
 ##' @param B Number of bootstrap simulations for partial dependence plots.
-##' @import doParallel openair gbm dplyr lattice parallel foreach
+##' @import doParallel openair gbm dplyr ggplot2 parallel foreach gridExtra
 ##' @importFrom plyr ddply ldply dlply llply numcolwise
 ##' @export
 ##' @return Returns a list including the model, influence data frame
 ##' and partial dependence data frame.
 ##' @author David Carslaw
-buildMod <- function(dat, vars = c("ws", "wd"), pollutant = "nox", B = 100) {
+buildMod <- function(dat, vars = c("trend", "ws", "wd", "hour",
+                                   "weekday", "temp"), pollutant = "nox", B = 100) {
 
     ## add other variables, select only those required for modelling
     dat <- prepData(dat)
-    dat <- dat[(c(vars, pollutant))]
+    dat <- dat[(c("date", vars, pollutant))]
 
     variables <- paste(vars, collapse = "+")
     eq <- formula(paste(pollutant, "~", variables))
@@ -37,7 +38,7 @@ buildMod <- function(dat, vars = c("ws", "wd"), pollutant = "nox", B = 100) {
 
     if (B != 1) Mod <- mod$model else Mod <- res[[3]]
 
-    result <- list(model = Mod, influence = res[[2]], data = dat, pd = res[[1]])
+   result <- list(model = Mod, influence = res[[2]], data = dat, pd = res[[1]])
     class(result) <- "deweather"
 
     return(result)

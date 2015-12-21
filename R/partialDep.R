@@ -66,18 +66,26 @@ partialDep <- function(dat, eq, vars, B = 100) {
 ##' @author David Carslaw
 plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE, auto.text = TRUE, ...) {
 
-    if (class(dat) != "deweather") stop ("Need to supply a deweather object from buildMod.")
+    if (class(dat) != "deweather")
+        stop ("Need to supply a deweather object from buildMod.")
 
     ## extract from deweather object
+    influ <- dat$influence
     mod <- dat$model
     data <- dat$data
     dat <- dat$pd
 
-    ## extra.args setup
-    extra.args <- list(...)
+    ## select influence of interest
+    influ <- influ[influ$var == variable, ]
+
+    ## title for plot
+    title <- paste0(variable, " (influ. = ", round(influ$mean, 1), "%)")
     
-    extra.args$ylab <- if ("ylab" %in% names(extra.args))
-                           quickText(extra.args$ylab, auto.text) else mod$response.name
+    ## Args setup
+    Args <- list(...)
+    
+    Args$ylab <- if ("ylab" %in% names(Args))
+                           quickText(Args$ylab, auto.text) else mod$response.name
     
     ## check if variable present
     if (!variable %in% dat$var) stop ("Variable not present in data.")
@@ -91,57 +99,44 @@ plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE, auto.text = TRUE, 
     dat <- group_by(dat, var, x) %>%
       summarise_each(funs(mean(.)))
 
-    myform <- formula("mean ~ x")
-
-    blues3 <-  RColorBrewer::brewer.pal(3, "Blues")
-    
     if (is.null(ylim)) ylim <- rng(dat)
-
+    
 
     if (!variable %in% c("trend", "weekday")) {
 
-        plt <- list(myform, data = dat, type = "l",
-                    xlab = quickText(variable),
-                    ylim = ylim, ...,
+        quants <- data.frame(x = quantile(data[[as.character(variable)]],
+                                          probs = 0:10 / 10, na.rm = TRUE))
 
-                    panel = function(x, y, subscripts, ...) {
+        plt <- ggplot(dat, aes(x, mean, ymin = lower, ymax = upper)) +
+            geom_line(size = 1, col = "tomato") +
+            geom_ribbon(alpha = 0.3, fill = "tomato") +
+            xlab(quickText(variable)) +
+            ylab(quickText(Args$ylab)) +
+            ylim(ylim) +
+            ggtitle(title) +
+            theme(plot.title = element_text(lineheight = 0.8, face = "bold")) +
+            geom_rug(aes(x = x), data = quants, sides = "b", inherit.aes = FALSE, size = 1)
 
-                        panel.grid(-1, -1)
-
-                        lpolygon(c(dat$x, rev(dat$x)),
-                                 c(dat[["lower"]], rev(dat[["upper"]])),
-                                 col = blues3[2], border = NA)
-
-
-                        panel.xyplot(x, y, col = blues3[3], lwd = 2, ...)
-
-                        panel.rug(x = quantile(data[[as.character(variable)]],
-                                      probs = 0:10 / 10, na.rm = TRUE), col = "firebrick", lwd = 2)
-                    }
-                    )
-
-    }
+       }
 
     if (variable == "trend") {
-        myform <- formula("mean ~ date")
+        
         dat <- decimalDate(dat, date = "x")
 
-        plt <- list(myform, data = dat, type = "l",
-                    xlab = quickText(variable),
-                    ylim = ylim, ...,
-
-                    panel = function(x, y, ...) {
-
-                        panel.grid(-1, -1)
-
-                        lpolygon(c(dat$date, rev(dat$date)),
-                                 c(dat[["lower"]], rev(dat[["upper"]])),
-                                 col = blues3[2], border = NA)
-
-
-                        panel.xyplot(as.POSIXct(x), y, col = blues3[3], lwd = 2, ...)
-                    }
-                    )
+        plt <- ggplot(dat, aes(date, mean, ymin = lower, ymax = upper)) +
+            geom_line(size = 1, col = "tomato") +
+            geom_ribbon(alpha = 0.3, fill = "tomato") +
+            xlab(quickText(variable)) +
+            ylab(quickText(Args$ylab)) +
+            ggtitle(title) +
+            
+            geom_rect(alpha = 0.4, fill = "tomato") +
+            xlab(quickText(variable)) +
+            ylab(quickText(Args$ylab)) +
+            ggtitle(title) +
+            theme(plot.title = element_text(lineheight = 0.8, face = "bold")) +
+            ylim(ylim) 
+           
 
     }
 
@@ -154,35 +149,20 @@ plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE, auto.text = TRUE, 
 
         dat$x <- ordered(dat$x, levels = weekday.names)
 
-        myform <- formula("mean ~ x")
-
-        plt <- list(myform, data = dat, type = "l",
-                    scales = list(x = list(at = 1:7, labels = weekday.names)),
-                    xlab = quickText(variable),
-                    ylim = ylim, ...,
-
-                    panel = function(x, y, ...) {
-
-                        panel.grid(-1, 0)
-                        panel.abline(v = 1:7, col = "grey85")
-
-                        lrect(as.numeric(dat$x) - 0.3, dat$lower, as.numeric(dat$x) + 0.3,
-                              dat$upper, col = blues3[2], border = NA)
-
-                        panel.xyplot(1:7, dat$mean[as.numeric(factor(weekday.names))],
-                                     col = blues3[3], lwd = 2, ...)
-                    }
-                    )
+        plt <- ggplot(dat, aes(x, mean, ymin = lower, ymax = upper,
+                               xmin = as.numeric(x) - 0.4, xmax = as.numeric(x) + 0.4)) +
+            geom_point(size = 2, col = "tomato") +
+            geom_rect(alpha = 0.4, fill = "tomato") +
+            xlab(quickText(variable)) +
+            ylab(quickText(Args$ylab)) +
+            ggtitle(title) +
+            theme(plot.title = element_text(lineheight = 0.8, face = "bold")) +
+            ylim(ylim) 
 
     }
 
-    ## reset for extra.args
-    Args <- openair:::listUpdate(plt, extra.args)
-    plt <- do.call(xyplot, Args)
-  
-    
-
-    if (plotit) print(plt)
+   
+    if (plotit) return(plt)
     invisible(plt)
 
 }
@@ -200,54 +180,20 @@ plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE, auto.text = TRUE, 
 ##' @export
 ##' @return A plot
 ##' @author David Carslaw
-plotAllPD <- function(dat, ylim = NULL, layout = NULL, ...) {
+plotAllPD <- function(dat, ylim = NULL, nrow = NULL, ...) {
 
     if (class(dat) != "deweather") stop ("Need to supply a deweather object from buildMod.")
 
-    ## names of explanatory variables
-    var.names <- dat$model$var.names
-
-    ## number of variables
-    n <- length(var.names)
-
-    ## dimension of plotting layout
-    n.plot <- ceiling(n ^ 0.5)
-
-    ## Layout of plots
-    if (!is.null(layout)) {
-
-        combs <- expand.grid(1:layout[1], 1:layout[2])
-
-    } else {
-
-        combs <- expand.grid(1:n.plot, 1:n.plot)
-        layout <- c(n.plot, n.plot)
-
-    }
-
-
+    
     ## plot most influencial predictor first
     influ <- dat$influence
     influ <- arrange(influ, desc(mean))
 
     ## plot everything
-    for (i in 1:n) {
+    plots <- lapply(influ$var, plotPD, dat = dat)
 
-        ## the plot
-        plt <- plotPD(dat, variable = influ$var[i], plotit = FALSE,
-                      main = list(label = as.character(influ$var[i]), col = "darkorange",
-                          fontface = "bold"),
-                      sub = paste("Influence", round(influ$mean[i], 1), "%"), ylim,
-                  ...)
-
-
-        if (i == n) more <- FALSE else more <- TRUE
-
-        print(plt, split = c(combs[i, "Var1"], combs[i, "Var2"], layout[1], layout[2]), more = more)
-
-    }
-
-
+    do.call(grid.arrange, c(plots, nrow = nrow))
+   
 }
 
 
@@ -266,7 +212,8 @@ plotAllPD <- function(dat, ylim = NULL, layout = NULL, ...) {
 ##' @importFrom mgcv exclude.too.far
 ##' @return To add
 ##' @author David Carslaw
-plot2Way <- function(dat, variable = c("ws", "temp"), res = 100, exlude = TRUE, ...) {
+plot2Way <- function(dat, variable = c("ws", "temp"), res = 100,
+                     exlude = TRUE, cols = "default", ...) {
 
     if (class(dat) != "deweather") stop ("Need to supply a deweather object from buildMod.")
 
@@ -276,11 +223,10 @@ plot2Way <- function(dat, variable = c("ws", "temp"), res = 100, exlude = TRUE, 
 
     res <- plot.gbm(mod, i.var = variable, continuous.resolution = res,
                     return.grid = TRUE)
-
     
     ## exclude predictions too far from data (from mgcv)
 
-    if (exlude) {
+    if (exlude && !"weekday" %in% variable) {
         sub <- na.omit(data[, variable]) ## pairs of variables
         x <- sub[[variable[1]]] ## x data
         y <- sub[[variable[2]]] ## y data
@@ -290,24 +236,43 @@ plot2Way <- function(dat, variable = c("ws", "temp"), res = 100, exlude = TRUE, 
         n <- length(mx)
         gx <- rep(mx, n)
         gy <-rep(my, rep(n, n))
-        tf <- mgcv::exclude.too.far(gx, gy, x, y, 0.01)
+        tf <- mgcv::exclude.too.far(gx, gy, x, y, 0.05)
         
         res$y[tf] <- NA
     }
 
     if (all(sapply(res, is.numeric))) {
 
-        scatterPlot(res, x = variable[1], y = variable[2], z = "y", method = "level", ...)
+        var1 <- variable[1]
+        var2 <- variable[2]
+        
+        
+        plt <- ggplot(res, aes_string(var1, var2, fill = "y")) +
+            geom_tile() +
+            scale_fill_gradientn(colours = openColours(cols, 100))
 
+        if (any(is.na(res$y))) {
+            
+            plt <- plt + geom_tile(data = subset(res, is.na(y)), aes(colour = "missing"),
+                                   linetype = 0, fill = "grey92", alpha = 1)
+        }
+
+        print(plt)
+            
     } else {
+
+        var1 <- variable[1]
+        var2 <- variable[2]
 
         ## need to rename variables that use openair dates
         if ("hour" %in% variable) {
 
             id <- which(variable == "hour")
             variable[id] <- "Hour"
+            var2 <- variable[which(variable != "Hour")]
             res <- rename(res, Hour = hour)
-            res$Hour <- factor(round(res$Hour))
+          #  res$Hour <- factor(round(res$Hour))
+            var1 <- "Hour"
 
         }
 
@@ -315,18 +280,23 @@ plot2Way <- function(dat, variable = c("ws", "temp"), res = 100, exlude = TRUE, 
 
             id <- which(variable == "weekday")
             variable[id] <- "Weekday"
+            var2 <- variable[which(variable != "Weekday")]
             res <- rename(res, Weekday = weekday)
 
             weekday.names <- format(ISOdate(2000, 1, 2:8), "%a")
             levels(res$Weekday) <- sort(weekday.names)
             res$Weekday <- ordered(res$Weekday, levels = weekday.names)
-
+            var1 <- "Weekday"
 
         }
+        
+         plt <- ggplot(res, aes_string(var1, var2, fill = "y")) +
+            geom_tile() +
+            scale_fill_gradientn(colours = openColours(cols, 100)) 
 
-        trendLevel(res, x = variable[1], y = variable[2], pollutant = "y", ...)
+        print(plt)
 
-    }
+     }
 
     invisible(res)
 

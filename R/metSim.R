@@ -5,9 +5,11 @@
 ##' 
 ##' @title Run random meteorology on a gbm model
 ##' @param dat Model object from running \code{buildMod}.
-##' @param newdata Model object from running \code{buildMod}.
-##' @param metVars Teh variables that should be randomly varied.
-##' @param n.core Number of cores to use
+##' @param newdata Data set to which to apply the model. If missing
+##'     the data used to build the model in the first place will be
+##'     used.
+##' @param metVars The variables that should be randomly varied.
+##' @param n.core Number of cores to use.
 ##' @param B Number of simulations
 ##' @export
 ##' @return To add
@@ -21,9 +23,15 @@ metSim <- function(dat, newdata, metVars = c("ws", "wd", "temp"), n.core = 4, B 
 
     if (!"trend" %in% mod$var.names) stop("The model must have a trend component as one of the explanatory variables.")
 
-    if (missing(newdata)) newdata <- dat$data
-    
-    newdata <- prepData(newdata)
+    if (missing(newdata)) {
+        ## should already have variables
+        newdata <- dat$data
+        
+    } else {
+        ## add variables needed
+        newdata <- prepData(newdata)
+        
+    }
     
     cl <- makeCluster(n.core)
     registerDoParallel(cl)

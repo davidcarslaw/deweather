@@ -20,6 +20,10 @@ gbm.interactions <- function (res) {
     
     alldat <- res$data
 
+    ## don't need date
+    if ("date" %in% names(alldat))
+        alldat <- subset(alldat, select = -date)
+
     id <- which(names(alldat) == gbm.object$response.name)
     
     alldat <- alldat[, -id]
