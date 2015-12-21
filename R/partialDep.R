@@ -129,11 +129,6 @@ plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE, auto.text = TRUE, 
             xlab(quickText(variable)) +
             ylab(quickText(Args$ylab)) +
             ggtitle(title) +
-            
-            geom_rect(alpha = 0.4, fill = "tomato") +
-            xlab(quickText(variable)) +
-            ylab(quickText(Args$ylab)) +
-            ggtitle(title) +
             theme(plot.title = element_text(lineheight = 0.8, face = "bold")) +
             ylim(ylim) 
            
@@ -173,9 +168,7 @@ plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE, auto.text = TRUE, 
 ##' @title Plot all partial dependencies
 ##' @param dat Model object from running \code{buildMod}.
 ##' @param ylim y-axis label. Will default to pollutant name.
-##' @param layout The plot layout e.g. \code{c(3, 2)} makes a 3
-##' columns by 2 rows grid. If not supplied a square grid is used of
-##' sufficient size to accommodate all teh plots.
+##' @param nrow Number of rows for th eplots.
 ##' @param ... extra plotting arguments.
 ##' @export
 ##' @return A plot
@@ -207,7 +200,13 @@ plotAllPD <- function(dat, ylim = NULL, nrow = NULL, ...) {
 ##' @param res Resolution in x-y i.e. number of points in each dimension.
 ##' @param exlude Should surfaces exlude predictions too far from
 ##' original data? The default is \code{TRUE}.
-##' @param ... other arguments to send to \code{openair} \code{scatterPlot}.
+##' @param cols Colours to be used for plotting. Options include
+##' \dQuote{default}, \dQuote{increment}, \dQuote{heat}, \dQuote{jet}
+##' and user defined. For user defined the user can supply a list of
+##' colour names recognised by R (type \code{colours()} to see the
+##' full list). An example would be \code{cols = c("yellow", "green",
+##' "blue")}
+##' @param .... other arguments to send to \code{openair} \code{scatterPlot}.
 ##' @export
 ##' @importFrom mgcv exclude.too.far
 ##' @return To add

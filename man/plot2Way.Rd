@@ -18,7 +18,14 @@ e.g. \code{variables = c("ws", "wd"}.}
 \item{exlude}{Should surfaces exlude predictions too far from
 original data? The default is \code{TRUE}.}
 
-\item{...}{other arguments to send to \code{openair} \code{scatterPlot}.}
+\item{cols}{Colours to be used for plotting. Options include
+\dQuote{default}, \dQuote{increment}, \dQuote{heat}, \dQuote{jet}
+and user defined. For user defined the user can supply a list of
+colour names recognised by R (type \code{colours()} to see the
+full list). An example would be \code{cols = c("yellow", "green",
+"blue")}}
+
+\item{....}{other arguments to send to \code{openair} \code{scatterPlot}.}
 }
 \value{
 To add
