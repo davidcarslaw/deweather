@@ -173,9 +173,10 @@ plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE, auto.text = TRUE, 
 ##' @export
 ##' @return A plot
 ##' @author David Carslaw
-plotAllPD <- function(dat, ylim = NULL, nrow = NULL, ...) {
+plotAllPD <- function(dat, ylim = NULL, nrow = NULL, ylab = NULL, ...) {
 
-    if (class(dat) != "deweather") stop ("Need to supply a deweather object from buildMod.")
+    if (class(dat) != "deweather")
+        stop ("Need to supply a deweather object from buildMod.")
 
     
     ## plot most influencial predictor first
@@ -183,7 +184,7 @@ plotAllPD <- function(dat, ylim = NULL, nrow = NULL, ...) {
     influ <- arrange(influ, desc(mean))
 
     ## plot everything
-    plots <- lapply(influ$var, plotPD, dat = dat)
+    plots <- lapply(influ$var, plotPD, dat = dat, ylab = ylab, ylim = ylim)
 
     do.call(grid.arrange, c(plots, nrow = nrow))
    
@@ -247,7 +248,7 @@ plot2Way <- function(dat, variable = c("ws", "temp"), res = 100,
         
         
         plt <- ggplot(res, aes_string(var1, var2, fill = "y")) +
-            geom_tile() +
+            geom_raster() +
             scale_fill_gradientn(colours = openColours(cols, 100))
 
         if (any(is.na(res$y))) {
