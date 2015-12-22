@@ -69,15 +69,17 @@ diurnalGbm <- function(dat, vars = c("ws", "wd", "hour", "weekday"),  pollutant 
 
         results <- melt(results, id.var = c("Weekday", "Hour", "difference"))
         ylim <- range(c(results$difference, results$value)) * 1.03
-
         
-        plt <- ggplot(results, aes(x = Hour, y = value, ymin = 0, ymax = difference,
-                                   colour = variable)) +
+        
+        plt <- ggplot(results, aes(x = Hour, y = value, colour = variable)) +
             geom_line(size = 1) +
             facet_grid(~ Weekday) +
             theme(legend.position = "top") +
-            geom_ribbon(colour = "grey")
-
+            geom_ribbon(aes(ymin = 0, ymax = difference),
+                            fill = "tomato", colour = "tomato") +
+            scale_colour_brewer(palette = "Set1", name = "period") 
+            
+        
         print(plt)
         
         
