@@ -15,7 +15,7 @@ gbmInf <- function(dat) {
     ## extract influence data from object
     influ <- dat$influence
 
-    ggplot(influ, aes(var, mean)c) +
+    ggplot(influ, aes(var, mean)) +
         geom_bar(stat = "identity") +
         coord_flip() +
         ylab("relative variable influence (%)") +
