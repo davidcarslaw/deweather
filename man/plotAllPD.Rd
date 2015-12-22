@@ -4,7 +4,7 @@
 \alias{plotAllPD}
 \title{Plot all partial dependencies}
 \usage{
-plotAllPD(dat, ylim = NULL, nrow = NULL, ...)
+plotAllPD(dat, ylim = NULL, nrow = NULL, ylab = NULL, ...)
 }
 \arguments{
 \item{dat}{Model object from running \code{buildMod}.}

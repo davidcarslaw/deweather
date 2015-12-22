@@ -1,7 +1,7 @@
 ##' Function to build and test a gbm model
 ##'
 ##' Info here
-##' @title Function to apply meteorological normalisation to.
+##' @title Function to test different meteorological normalisation models.
 ##' @param dat Data frame to analyse.
 ##' @param vars Explanatory variables to use.
 ##' @param pollutant The name of the variable to apply meteorological
@@ -40,12 +40,13 @@ testMod <- function(dat, vars = c("trend", "ws", "wd", "hour",
     plt <- ggplot(pred, aes_string("pred", pollutant)) +
         geom_point()
 
+    ## calculate key model statistics
     stats <- modStats(pred, obs = pollutant, mod = "pred")
     stats <- as.data.frame(t(stats))
     names(stats) <- "value"
     stats$statistic <- rownames(stats)
     stats <- stats[-1, ]
-    stats <- subset(stats, select = c(statistic, value))
+    stats <- select(stats, statistic, value)
     stats$value <- as.numeric(as.character(stats$value))
     stats$value <- round(stats$value, 2)
 
