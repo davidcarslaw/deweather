@@ -12,7 +12,7 @@ diurnalGbm(dat, vars = c("ws", "wd", "hour", "weekday"), pollutant = "nox",
 
 \item{vars}{The explanatory variables used in the model.}
 
-\item{pollutant}{Name of teh pollutant to apply meteorological
+\item{pollutant}{Name of the pollutant to apply meteorological
 normalisation to.}
 
 \item{date}{A vector of dates, length three. These dates are used

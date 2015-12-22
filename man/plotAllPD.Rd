@@ -13,6 +13,8 @@ plotAllPD(dat, ylim = NULL, nrow = NULL, ylab = NULL, ...)
 
 \item{nrow}{Number of rows for th eplots.}
 
+\item{ylab}{The y-axis label to over-ride default.}
+
 \item{...}{extra plotting arguments.}
 }
 \value{

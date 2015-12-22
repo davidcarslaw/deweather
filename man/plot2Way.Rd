@@ -25,7 +25,7 @@ colour names recognised by R (type \code{colours()} to see the
 full list). An example would be \code{cols = c("yellow", "green",
 "blue")}}
 
-\item{....}{other arguments to send to \code{openair} \code{scatterPlot}.}
+\item{...}{Other arguments to be passed for plotting.}
 }
 \value{
 To add
