@@ -76,8 +76,9 @@ diurnalGbm <- function(dat, vars = c("ws", "wd", "hour", "weekday"),  pollutant 
             geom_line(size = 1) +
             facet_grid(~ Weekday) +
             theme(legend.position = "top") +
-            geom_ribbon(colour = "grey")
-
+            geom_ribbon(colour = "tomato", fill = "tomato") +
+            scale_colour_brewer(palette = "Set1", name = "period") 
+        
         print(plt)
         
         
