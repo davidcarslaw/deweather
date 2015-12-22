@@ -2,6 +2,9 @@
 
 partialDep <- function(dat, eq, vars, B = 100) {
 
+    ## silence R check
+    x = y = rel.inf = NULL
+
     if (B == 1) return.mod <- TRUE else return.mod <- FALSE
 
     cl <- makeCluster(4)
@@ -64,7 +67,11 @@ partialDep <- function(dat, eq, vars, B = 100) {
 ##' @export
 ##' @return A plot
 ##' @author David Carslaw
-plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE, auto.text = TRUE, ...) {
+plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE,
+                   auto.text = TRUE, ...) {
+
+    ## silence R check
+    x = . = lower = upper = NULL
 
     if (class(dat) != "deweather")
         stop ("Need to supply a deweather object from buildMod.")
@@ -169,6 +176,7 @@ plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE, auto.text = TRUE, 
 ##' @param dat Model object from running \code{buildMod}.
 ##' @param ylim y-axis label. Will default to pollutant name.
 ##' @param nrow Number of rows for th eplots.
+##' @param ylab The y-axis label to over-ride default.
 ##' @param ... extra plotting arguments.
 ##' @export
 ##' @return A plot
@@ -207,13 +215,16 @@ plotAllPD <- function(dat, ylim = NULL, nrow = NULL, ylab = NULL, ...) {
 ##' colour names recognised by R (type \code{colours()} to see the
 ##' full list). An example would be \code{cols = c("yellow", "green",
 ##' "blue")}
-##' @param .... other arguments to send to \code{openair} \code{scatterPlot}.
+##' @param ... Other arguments to be passed for plotting.
 ##' @export
 ##' @importFrom mgcv exclude.too.far
 ##' @return To add
 ##' @author David Carslaw
 plot2Way <- function(dat, variable = c("ws", "temp"), res = 100,
                      exlude = TRUE, cols = "default", ...) {
+
+    ## silence R check
+    hour = weekday = NULL
 
     if (class(dat) != "deweather") stop ("Need to supply a deweather object from buildMod.")
 

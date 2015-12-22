@@ -15,6 +15,9 @@ testMod <- function(dat, vars = c("trend", "ws", "wd", "hour",
                                   "weekday", "temp"),
                     pollutant = "nox", train.frac = 0.8) {
 
+    ## silence R check
+    statistic = value = NULL
+
     ## add other variables, select only those required for modelling
     dat <- prepData(dat)
     dat <- dat[(c("date", vars, pollutant))]

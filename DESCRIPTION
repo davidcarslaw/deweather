@@ -22,7 +22,6 @@ Imports:
     plyr,
     mgcv,
     reshape2,
-    RColorBrewer,
     ggplot2,
     gridExtra
 License: GPL (>= 2)

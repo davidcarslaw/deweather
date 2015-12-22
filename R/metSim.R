@@ -14,7 +14,10 @@
 ##' @export
 ##' @return To add
 ##' @author David Carslaw
-metSim <- function(dat, newdata, metVars = c("ws", "wd", "temp"), n.core = 4, B = 200) {
+metSim <- function(dat, newdata, metVars = c("ws", "wd", "temp"),
+                   n.core = 4, B = 200) {
+    ## silence R check
+    pred <- NULL
 
     if (class(dat) != "deweather") stop ("Need to supply a deweather object from buildMod.")
 
