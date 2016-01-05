@@ -106,8 +106,8 @@ plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE,
     ## select variable of interest
     dat <- dat[dat$var == variable, ]
 
-    gap <- openair:::prettyGap(dat$x, 40)
-    dat$x <- openair:::round_any(dat$x, gap)
+    gap <- prettyGap(dat$x, 40)
+    dat$x <- round_any(dat$x, gap)
 
     dat <- group_by(dat, var, x) %>%
       summarise_each(funs(mean(.)))

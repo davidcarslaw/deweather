@@ -20,6 +20,9 @@ diurnalGbm <- function(dat, vars = c("ws", "wd", "hour", "weekday"),  pollutant 
                        date = c("01/01/2012", "31/12/2012",
                                 "31/12/2013"), single = FALSE){
 
+    ## silence R check
+    Hour = Weekday = value = variable = difference = NULL
+
 
     mod1 <- buildMod(selectByDate(dat, start = date[1], end = date[2]),
                      vars = vars, pollutant = pollutant, B = 1)
