@@ -8,6 +8,7 @@
 ##' @param pollutant The name of the variable to apply meteorological
 ##' normalisation to.
 ##' @param B Number of bootstrap simulations for partial dependence plots.
+##' @param n.core Number of cores to use for parallel processing.
 ##' @import doParallel openair gbm dplyr ggplot2 parallel foreach gridExtra
 ##' @importFrom plyr ddply ldply dlply llply numcolwise
 ##' @export
@@ -15,7 +16,8 @@
 ##' and partial dependence data frame.
 ##' @author David Carslaw
 buildMod <- function(dat, vars = c("trend", "ws", "wd", "hour",
-                                   "weekday", "temp"), pollutant = "nox", B = 100) {
+                                   "weekday", "temp"),
+                     pollutant = "nox", B = 100, n.core = 4) {
 
     ## add other variables, select only those required for modelling
     dat <- prepData(dat)
@@ -34,7 +36,7 @@ buildMod <- function(dat, vars = c("trend", "ws", "wd", "hour",
         mod <- runGbm(dat, eq, vars, return.mod = TRUE, simulate = FALSE)
 
 
-    res <- partialDep(dat, eq, vars, B)
+    res <- partialDep(dat, eq, vars, B, n.core)
 
     if (B != 1) Mod <- mod$model else Mod <- res[[3]]
 

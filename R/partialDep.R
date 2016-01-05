@@ -1,13 +1,13 @@
 
 
-partialDep <- function(dat, eq, vars, B = 100) {
+partialDep <- function(dat, eq, vars, B = 100, n.core = 4) {
 
     ## silence R check
     x = y = rel.inf = NULL
 
     if (B == 1) return.mod <- TRUE else return.mod <- FALSE
 
-    cl <- makeCluster(4)
+    cl <- makeCluster(n.core)
     registerDoParallel(cl)
 
     pred <- foreach (i = 1:B, .inorder = FALSE,
@@ -82,6 +82,12 @@ plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE,
     data <- dat$data
     dat <- dat$pd
 
+    ## make sure variable is character
+    variable <- as.character(variable)
+
+    ## variables to be treated specifically
+    special <- c("trend", "weekday")
+
     ## select influence of interest
     influ <- influ[influ$var == variable, ]
 
@@ -109,7 +115,7 @@ plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE,
     if (is.null(ylim)) ylim <- rng(dat)
     
 
-    if (!variable %in% c("trend", "weekday")) {
+    if (!variable %in% special && is.numeric(data[[variable]])) {
 
         quants <- data.frame(x = quantile(data[[as.character(variable)]],
                                           probs = 0:10 / 10, na.rm = TRUE))
@@ -122,7 +128,8 @@ plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE,
             ylim(ylim) +
             ggtitle(title) +
             theme(plot.title = element_text(lineheight = 0.8, face = "bold")) +
-            geom_rug(aes(x = x), data = quants, sides = "b", inherit.aes = FALSE, size = 1)
+            geom_rug(aes(x = x), data = quants, sides = "b",
+                     inherit.aes = FALSE, size = 1)
 
        }
 
@@ -138,10 +145,29 @@ plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE,
             ggtitle(title) +
             theme(plot.title = element_text(lineheight = 0.8, face = "bold")) +
             ylim(ylim) 
-           
+        
+    }
+
+    ## for factors/character variables
+    
+    if (!variable %in% special && !is.numeric(data[[variable]])) {
+        
+        dat$x <- factor(dat$x)
+    
+        plt <- ggplot(dat, aes(x, mean, ymin = lower, ymax = upper,
+                               xmin = as.numeric(x) - 0.4,
+                               xmax = as.numeric(x) + 0.4)) +
+            geom_point(size = 2, col = "tomato") +
+            geom_rect(alpha = 0.4, fill = "tomato") +
+            xlab(quickText(variable)) +
+            ylab(quickText(Args$ylab)) +
+            ggtitle(title) +
+            theme(plot.title = element_text(lineheight = 0.8, face = "bold")) +
+            ylim(ylim) 
 
     }
 
+    
     if (variable == "weekday") {
 
         ## change to weekday names
@@ -152,7 +178,8 @@ plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE,
         dat$x <- ordered(dat$x, levels = weekday.names)
 
         plt <- ggplot(dat, aes(x, mean, ymin = lower, ymax = upper,
-                               xmin = as.numeric(x) - 0.4, xmax = as.numeric(x) + 0.4)) +
+                               xmin = as.numeric(x) - 0.4, xmax = as.numeric(
+                                                               x) + 0.4)) +
             geom_point(size = 2, col = "tomato") +
             geom_rect(alpha = 0.4, fill = "tomato") +
             xlab(quickText(variable)) +
@@ -192,7 +219,8 @@ plotAllPD <- function(dat, ylim = NULL, nrow = NULL, ylab = NULL, ...) {
     influ <- arrange(influ, desc(mean))
 
     ## plot everything
-    plots <- lapply(influ$var, plotPD, dat = dat, ylab = ylab, ylim = ylim)
+    plots <- lapply(influ$var, plotPD, dat = dat, ylab = ylab,
+                    ylim = ylim)
 
     do.call(grid.arrange, c(plots, nrow = nrow))
    
@@ -226,7 +254,8 @@ plot2Way <- function(dat, variable = c("ws", "temp"), res = 100,
     ## silence R check
     hour = weekday = NULL
 
-    if (class(dat) != "deweather") stop ("Need to supply a deweather object from buildMod.")
+    if (class(dat) != "deweather")
+        stop ("Need to supply a deweather object from buildMod.")
 
     ## extract from deweather object
     data <- dat$data
@@ -264,8 +293,10 @@ plot2Way <- function(dat, variable = c("ws", "temp"), res = 100,
 
         if (any(is.na(res$y))) {
             
-            plt <- plt + geom_tile(data = subset(res, is.na(y)), aes(colour = "missing"),
-                                   linetype = 0, fill = "grey92", alpha = 1)
+            plt <- plt + geom_tile(data = subset(res, is.na(y)),
+                                   aes(colour = "missing"),
+                                   linetype = 0, fill = "grey92",
+                                   alpha = 1)
         }
 
         print(plt)

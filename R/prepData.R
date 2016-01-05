@@ -68,7 +68,7 @@ prepData <- function(mydata, add = c("hour", "hour.local", "weekday", "trend", "
 
     if ("jday" %in% add) mydata$jday <- as.numeric(format(mydata$date, "%j"))
 
-    if ("month" %in% add) mydata$month <- as.factor(format(mydata$date, "%B"))
+    if ("month" %in% add) mydata$month <- as.factor(format(mydata$date, "%b"))
 
     
     ## add lagged variables
