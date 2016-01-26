@@ -84,7 +84,8 @@ diurnalGbm <- function(dat, vars = c("ws", "wd", "hour", "weekday"),  pollutant 
             theme(legend.position = "top") +
             geom_ribbon(aes(ymin = 0, ymax = difference),
                             fill = "tomato", colour = "tomato") +
-            scale_colour_brewer(palette = "Set1", name = "period") 
+            scale_colour_brewer(palette = "Set1", name = "period") +
+            scale_x_continuous(breaks = c(0, 6, 12, 18))
         
         print(plt)
         
@@ -106,7 +107,8 @@ diurnalGbm <- function(dat, vars = c("ws", "wd", "hour", "weekday"),  pollutant 
         plt <- ggplot(results, aes(x = Hour, y = value, colour = variable)) +
             geom_line(size = 1) +
             facet_grid(~ Weekday) +
-            theme(legend.position = "top")
+            theme(legend.position = "top") +
+            scale_x_continuous(breaks = c(0, 6, 12, 18))
 
         print(plt)
 
