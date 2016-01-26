@@ -23,10 +23,19 @@ decimalDate <- function(x, date = "date") {
     ## fraction of the year
     x.frac <- x - x.year
     ## number of seconds in each year
-    x.sec.yr <- unclass(ISOdate(x.year + 1, 1, 1, 0, 0, 0)) - unclass(ISOdate(x.year, 1, 1, 0, 0, 0))
+    x.sec.yr <- unclass(ISOdate(x.year + 1, 1, 1, 0, 0, 0)) -
+        unclass(ISOdate(x.year, 1, 1, 0, 0, 0))
     ## now get the actual time
     x.actual <- ISOdate(x.year, 1, 1, 0, 0, 0) + x.frac * x.sec.yr
     x.actual <- as.POSIXct(trunc(x.actual, "hours"), "GMT")
     thedata$date <- x.actual
     thedata
+}
+
+prettyGap <- function (x, n = 100) {
+    return(diff(pretty(x, n))[1])
+}
+
+round_any <- function (x, accuracy, f = round) {
+    f(x/accuracy) * accuracy
 }

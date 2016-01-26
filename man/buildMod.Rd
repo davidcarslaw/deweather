@@ -5,7 +5,7 @@
 \title{Function to apply meteorological normalisation to.}
 \usage{
 buildMod(dat, vars = c("trend", "ws", "wd", "hour", "weekday", "temp"),
-  pollutant = "nox", B = 100)
+  pollutant = "nox", B = 100, n.core = 4)
 }
 \arguments{
 \item{dat}{Data frame to analyse.}
@@ -16,6 +16,8 @@ buildMod(dat, vars = c("trend", "ws", "wd", "hour", "weekday", "temp"),
 normalisation to.}
 
 \item{B}{Number of bootstrap simulations for partial dependence plots.}
+
+\item{n.core}{Number of cores to use for parallel processing.}
 }
 \value{
 Returns a list including the model, influence data frame
