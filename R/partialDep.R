@@ -131,6 +131,10 @@ plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE,
             geom_rug(aes(x = x), data = quants, sides = "b",
                      inherit.aes = FALSE, size = 1)
 
+        ## better hour x-scaling
+        if (variable %in% c("hour", "hour.local"))
+            plt <- plt + scale_x_continuous(breaks = c(0, 6, 12, 18))
+
        }
 
     if (variable == "trend") {
