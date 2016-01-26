@@ -20,13 +20,15 @@ diurnalGbm <- function(dat, vars = c("ws", "wd", "hour", "weekday"),  pollutant 
                        date = c("01/01/2012", "31/12/2012",
                                 "31/12/2013"), single = FALSE){
 
+    ## format dates
+    date <- as.POSIXct(strptime(date, format = "%d/%m/%Y", "GMT"), "GMT")
 
     mod1 <- buildMod(selectByDate(dat, start = date[1], end = date[2]),
                      vars = vars, pollutant = pollutant, B = 1)
     
     res1 <- plot2Way(mod1, variable = c("weekday", "hour"))
-
-    name1 <- paste(date[1], "-", date[2], sep = "")
+    
+    name1 <- paste(format(date[1], "%d %b %Y"), "to", format(date[2], "%d %b %Y"))
     names(res1)[which(names(res1) == "y")] <- name1
     
     results <- res1
@@ -37,7 +39,7 @@ diurnalGbm <- function(dat, vars = c("ws", "wd", "hour", "weekday"),  pollutant 
             start1 <- date[3]
             end1 <- date[4]
         } else {
-            start1 <- date[2]
+            start1 <- date[2] + 24 * 3600 ## start of next day
             end1 <- date[3]
         }
         
@@ -46,7 +48,7 @@ diurnalGbm <- function(dat, vars = c("ws", "wd", "hour", "weekday"),  pollutant 
 
         res2 <- plot2Way(mod2, variable = c("weekday", "hour"))
 
-        name2 <- paste(start1, "-", end1, sep = "")
+        name2 <- paste(format(start1, "%d %b %Y"), "to", format(end1, "%d %b %Y"))
         names(res2)[which(names(res2) == "y")] <- name2
         
         results <- merge(res1, res2, by = c("Hour", "Weekday"))
