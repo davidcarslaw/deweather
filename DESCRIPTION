@@ -4,7 +4,7 @@ Title: Remove the influence of weather on air quality data
 Version: 0.2
 Date: 2015-12-21
 Authors@R: c(person("David", "Carslaw", role = c("aut", "cre"), email =
-    "david.carslaw@kcl.ac.uk"))
+    "david.carslaw@york.ac.uk"))
 Maintainer: David Carslaw <david.carslaw@kcl.ac.uk>
 Description: Tools to model and account for (or remove) the effect of
     meteorology on atmospheric composition data. The technique uses boosted
