@@ -42,24 +42,24 @@ gbm.interactions <- function (res) {
     
     for (i in 1:(n.preds - 1)) {
         if (is.vector(data[, i])) {
-            x.var <- seq(min(data[, i], na.rm = T), max(data[, 
-                                            i], na.rm = T), length = 20)
+            x.var <- seq(min(data[, i], na.rm = T),
+                         max(data[, i], na.rm = T), length = 20)
         }
         else {
-            x.var <- factor(names(table(data[, i])), levels = levels(data[, 
-                                                         i]))
+            x.var <- factor(names(table(data[, i])),
+                            levels = levels(data[, i]))
         }
         
         x.length <- length(x.var)
         cat(i, " ")
         for (j in (i + 1):n.preds) {
             if (is.vector(data[, j])) {
-                y.var <- seq(min(data[, j], na.rm = T), max(data[, 
-                                                j], na.rm = T), length = 20)
+                y.var <- seq(min(data[, j], na.rm = T),
+                             max(data[, j], na.rm = T), length = 20)
             }
             else {
-                y.var <- factor(names(table(data[, j])), levels = levels(data[, 
-                                                             j]))
+                y.var <- factor(names(table(data[, j])),
+                                levels = levels(data[, j]))
             }
             y.length <- length(y.var)
             pred.frame <- expand.grid(list(x.var, y.var))
@@ -85,14 +85,15 @@ gbm.interactions <- function (res) {
             prediction <- gbm::predict.gbm(gbm.object, pred.frame, 
                                            n.trees = n.trees, type = "link")
             
-            interaction.test.model <- lm(prediction ~ as.factor(pred.frame[, 
-                                                                           1]) + as.factor(pred.frame[, 2]))
+            interaction.test.model <-
+                lm(prediction ~ as.factor(pred.frame[, 1]) + as.factor(pred.frame[, 2]))
             
             interaction.flag <- round(mean(resid(interaction.test.model)^2) * 
-                                        1000, 2)
+                                      1000, 2)
             cross.tab[i, j] <- interaction.flag
         }
     }
+    
     search.index <- ((n.preds^2) + 1) - rank(cross.tab, ties.method = "first")
     n.important <- max(2, round(0.1 * ((n.preds^2)/2), 0))
     var1.names <- rep(" ", n.important)
@@ -100,6 +101,7 @@ gbm.interactions <- function (res) {
     var2.names <- rep(" ", n.important)
     var2.index <- rep(0, n.important)
     int.size <- rep(0, n.important)
+    
     for (i in 1:n.important) {
         index.match <- match(i, search.index)
         j <- trunc(index.match/n.preds) + 1
