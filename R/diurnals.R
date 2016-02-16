@@ -1,16 +1,19 @@
 ## diurnal changes
 ##' 
 ##'
-##' To add
+##' This function calculates the diurnal profile of a pollutant with
+##' the effect of meteorology removed. Its primary use is to compare
+##' two periods to determine whether there has been a shift in diurnal
+##' profile e.g. due to some intervention.
 ##' @title Plot diurnal changes, removing the effect of meteorology
 ##' @param dat A data frame to analyse.
 ##' @param vars The explanatory variables used in the model.
 ##' @param pollutant Name of the pollutant to apply meteorological
-##' normalisation to.
+##'     normalisation to.
 ##' @param date A vector of dates, length three. These dates are used
-##' to parition the data into two categories (before/after). The date
-##' format is UK e.g. \code{date = c("19/2/2005", "19/2/2007",
-##' "19/2/2010")}.
+##'     to parition the data into two categories (before/after). The
+##'     date format is UK e.g. \code{date = c("19/2/2005",
+##'     "19/2/2007", "19/2/2010")}.
 ##' @param single Not used.
 ##' @import reshape2
 ##' @export

@@ -1,19 +1,25 @@
 
 ##' Function to do meteorological normalisation
 ##'
-##' Info here
+##' This is the main function to apply a gbm model to a data set.
 ##' @title Function to apply meteorological normalisation to.
-##' @param dat Data frame to analyse.
-##' @param vars Explanatory variables to use. 
+##' @param dat Data frame to analyse. Must contain a POSIXct field
+##'     called \code{date}.
+##' @param vars Explanatory variables to use. These variables will be
+##'     used to build the gbm model. Note that the model must include
+##'     a trend component. Several variables can be automatically
+##'     calculated (see \code{\link{prepData}} for details).
 ##' @param pollutant The name of the variable to apply meteorological
-##' normalisation to.
-##' @param B Number of bootstrap simulations for partial dependence plots.
+##'     normalisation to.
+##' @param B Number of bootstrap simulations for partial dependence
+##'     plots.
 ##' @param n.core Number of cores to use for parallel processing.
-##' @import doParallel openair gbm dplyr ggplot2 parallel foreach gridExtra
+##' @import doParallel openair gbm dplyr ggplot2 parallel foreach
+##'     gridExtra
 ##' @importFrom plyr ddply ldply dlply llply numcolwise
 ##' @export
 ##' @return Returns a list including the model, influence data frame
-##' and partial dependence data frame.
+##'     and partial dependence data frame.
 ##' @author David Carslaw
 buildMod <- function(dat, vars = c("trend", "ws", "wd", "hour",
                                    "weekday", "temp"),
