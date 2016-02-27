@@ -16,9 +16,9 @@ diurnalGbm(dat, vars = c("ws", "wd", "hour", "weekday"), pollutant = "nox",
 normalisation to.}
 
 \item{date}{A vector of dates, length three. These dates are used
-to parition the data into two categories (before/after). The date
-format is UK e.g. \code{date = c("19/2/2005", "19/2/2007",
-"19/2/2010")}.}
+to parition the data into two categories (before/after). The
+date format is UK e.g. \code{date = c("19/2/2005",
+"19/2/2007", "19/2/2010")}.}
 
 \item{single}{Not used.}
 }
@@ -26,7 +26,10 @@ format is UK e.g. \code{date = c("19/2/2005", "19/2/2007",
 Some data
 }
 \description{
-To add
+This function calculates the diurnal profile of a pollutant with
+the effect of meteorology removed. Its primary use is to compare
+two periods to determine whether there has been a shift in diurnal
+profile e.g. due to some intervention.
 }
 \author{
 David Carslaw
