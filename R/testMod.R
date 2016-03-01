@@ -41,7 +41,10 @@ testMod <- function(dat, vars = c("trend", "ws", "wd", "hour",
     pred <- data.frame(pred.dat, pred = pred)
 
     plt <- ggplot(pred, aes_string("pred", pollutant)) +
-        geom_point()
+      geom_point(fill = "grey30", color = "white", pch = 21, size = 3) +
+      xlab("predicted") + 
+      ylab("measured")
+      
 
     ## calculate key model statistics
     stats <- modStats(pred, obs = pollutant, mod = "pred")
@@ -53,9 +56,9 @@ testMod <- function(dat, vars = c("trend", "ws", "wd", "hour",
     stats$value <- as.numeric(as.character(stats$value))
     stats$value <- round(stats$value, 2)
 
-    tbl <- tableGrob(stats, rows = NULL)
+    tbl <- gridExtra::tableGrob(stats, rows = NULL)
 
-    grid.arrange(plt, tbl, nrow = 1, as.table=TRUE)
+    gridExtra::grid.arrange(plt, tbl, nrow = 1, as.table=TRUE)
 
     
     invisible(pred)
