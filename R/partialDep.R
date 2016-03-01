@@ -226,7 +226,7 @@ plotAllPD <- function(dat, ylim = NULL, nrow = NULL, ylab = NULL, ...) {
     plots <- lapply(influ$var, plotPD, dat = dat, ylab = ylab,
                     ylim = ylim)
 
-    do.call(grid.arrange, c(plots, nrow = nrow))
+    do.call(gridExtra::grid.arrange, c(plots, nrow = nrow))
    
 }
 

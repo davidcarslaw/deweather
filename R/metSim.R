@@ -19,12 +19,14 @@ metSim <- function(dat, newdata, metVars = c("ws", "wd", "temp"),
     ## silence R check
     pred <- NULL
 
-    if (class(dat) != "deweather") stop ("Need to supply a deweather object from buildMod.")
+    if (class(dat) != "deweather") 
+      stop ("Need to supply a deweather object from buildMod.")
 
     ## extract the model
     mod <- dat$model
 
-    if (!"trend" %in% mod$var.names) stop("The model must have a trend component as one of the explanatory variables.")
+    if (!"trend" %in% mod$var.names) 
+      stop("The model must have a trend component as one of the explanatory variables.")
 
     if (missing(newdata)) {
         ## should already have variables

@@ -5,28 +5,36 @@
 \title{Function to apply meteorological normalisation to.}
 \usage{
 buildMod(dat, vars = c("trend", "ws", "wd", "hour", "weekday", "temp"),
-  pollutant = "nox", B = 100, n.core = 4)
+  pollutant = "nox", sam.size = 5000, B = 100, n.core = 4)
 }
 \arguments{
-\item{dat}{Data frame to analyse. Must contain a POSIXct field
+\item{dat}{Data frame to analyse. Must contain a POSIXct field 
 called \code{date}.}
 
-\item{vars}{Explanatory variables to use. These variables will be
-used to build the gbm model. Note that the model must include
-a trend component. Several variables can be automatically
+\item{vars}{Explanatory variables to use. These variables will be 
+used to build the gbm model. Note that the model must include a
+trend component. Several variables can be automatically 
 calculated (see \code{\link{prepData}} for details).}
 
-\item{pollutant}{The name of the variable to apply meteorological
+\item{pollutant}{The name of the variable to apply meteorological 
 normalisation to.}
 
-\item{B}{Number of bootstrap simulations for partial dependence
+\item{sam.size}{The number of random samples to extract from the
+data for model building. While it is possible to use the full
+data set, for data sets spanning years the model building can
+take a very long time to run. Additionally, there will be
+diminishing returns in terms of model accuracy. If
+\code{sam.size} is greater than the number of number of rows of
+data, the number of rows of data is used instead.}
+
+\item{B}{Number of bootstrap simulations for partial dependence 
 plots.}
 
 \item{n.core}{Number of cores to use for parallel processing.}
 }
 \value{
-Returns a list including the model, influence data frame
-    and partial dependence data frame.
+Returns a list including the model, influence data frame 
+  and partial dependence data frame.
 }
 \description{
 Function to do meteorological normalisation
