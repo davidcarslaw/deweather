@@ -3,102 +3,121 @@
 ##'
 ##' This is the main function to apply a gbm model to a data set.
 ##' @title Function to apply meteorological normalisation to.
-##' @param dat Data frame to analyse. Must contain a POSIXct field
-##'     called \code{date}.
-##' @param vars Explanatory variables to use. These variables will be
-##'     used to build the gbm model. Note that the model must include
-##'     a trend component. Several variables can be automatically
-##'     calculated (see \code{\link{prepData}} for details).
-##' @param pollutant The name of the variable to apply meteorological
-##'     normalisation to.
-##' @param B Number of bootstrap simulations for partial dependence
-##'     plots.
+##'   
+##' @param dat Data frame to analyse. Must contain a POSIXct field 
+##'   called \code{date}.
+##' @param vars Explanatory variables to use. These variables will be 
+##'   used to build the gbm model. Note that the model must include a
+##'   trend component. Several variables can be automatically 
+##'   calculated (see \code{\link{prepData}} for details).
+##' @param pollutant The name of the variable to apply meteorological 
+##'   normalisation to.
+##' @param sam.size The number of random samples to extract from the
+##'   data for model building. While it is possible to use the full
+##'   data set, for data sets spanning years the model building can
+##'   take a very long time to run. Additionally, there will be
+##'   diminishing returns in terms of model accuracy. If
+##'   \code{sam.size} is greater than the number of number of rows of
+##'   data, the number of rows of data is used instead.
+##' @param B Number of bootstrap simulations for partial dependence 
+##'   plots.
 ##' @param n.core Number of cores to use for parallel processing.
-##' @import doParallel openair gbm dplyr ggplot2 parallel foreach
-##'     gridExtra
+##'   
+##' @import doParallel openair gbm dplyr ggplot2 parallel foreach 
 ##' @importFrom plyr ddply ldply dlply llply numcolwise
+##' @importFrom gridExtra grid.arrange tableGrob
 ##' @export
-##' @return Returns a list including the model, influence data frame
-##'     and partial dependence data frame.
+##' @return Returns a list including the model, influence data frame 
+##'   and partial dependence data frame.
 ##' @author David Carslaw
 buildMod <- function(dat, vars = c("trend", "ws", "wd", "hour",
                                    "weekday", "temp"),
-                     pollutant = "nox", B = 100, n.core = 4) {
-
-    ## add other variables, select only those required for modelling
-    dat <- prepData(dat)
-    dat <- dat[(c("date", vars, pollutant))]
-
-    variables <- paste(vars, collapse = "+")
-    eq <- formula(paste(pollutant, "~", variables))
-
-    ## make sure no NA in response
-    id <- which(is.na(dat[[pollutant]]))
-    if (length(id) > 0 )
-        dat <- dat[-id, ]
-
-    ## if more than one simulation only return model ONCE
-    if (B != 1)
-        mod <- runGbm(dat, eq, vars, return.mod = TRUE, simulate = FALSE)
-
-
-    res <- partialDep(dat, eq, vars, B, n.core)
-
-    if (B != 1) Mod <- mod$model else Mod <- res[[3]]
-
-   result <- list(model = Mod, influence = res[[2]], data = dat, pd = res[[1]])
-    class(result) <- "deweather"
-
-    return(result)
-
-    }
+                     pollutant = "nox", sam.size = 5000,
+                     B = 100, n.core = 4) {
+  
+  ## add other variables, select only those required for modelling
+  dat <- prepData(dat)
+  dat <- dat[(c("date", vars, pollutant))]
+  
+  variables <- paste(vars, collapse = "+")
+  eq <- formula(paste(pollutant, "~", variables))
+  
+  ## make sure no NA in response
+  id <- which(is.na(dat[[pollutant]]))
+  if (length(id) > 0 )
+    dat <- dat[-id, ]
+  
+  # randomly sample data according to sam.size
+  if (sam.size > nrow(dat)) 
+    sam.size <- nrow(dat)
+  
+  id <- sample(1:nrow(dat), size = sam.size)
+  dat <- dat[id, ]
+  
+  ## if more than one simulation only return model ONCE
+  if (B != 1)
+    mod <- runGbm(dat, eq, vars, return.mod = TRUE, simulate = FALSE)
+  
+  
+  res <- partialDep(dat, eq, vars, B, n.core)
+  
+  if (B != 1) Mod <- mod$model else Mod <- res[[3]]
+  
+  # return a list of model, data, partial deps
+  result <- list(model = Mod, influence = res[[2]], data = dat, pd = res[[1]])
+  class(result) <- "deweather"
+  
+  return(result)
+  
+}
 
 extractPD <- function(vars, mod) {
-
-    n <- 100 ## resolution of output
-    if (vars %in% c("hour", "hour.local")) n <- 24
-
-    ## extract partial dependence values
-    res <- plot(mod, vars, cont = n, return.grid = TRUE)
-    res <- data.frame(y = res$y, var = vars, x = res[[vars]])
-    return(res)
+  
+  n <- 100 ## resolution of output
+  if (vars %in% c("hour", "hour.local")) n <- 24
+  
+  ## extract partial dependence values
+  res <- plot(mod, vars, cont = n, return.grid = TRUE)
+  res <- data.frame(y = res$y, var = vars, x = res[[vars]])
+  return(res)
 }
 
 
 
 
 runGbm <- function(dat, eq, vars, return.mod = FALSE, simulate = FALSE) {
-
-    ## sub-sample the data for bootstrapping
-    if (simulate)
-        dat <- dat[sample(1:nrow(dat), nrow(dat), replace = TRUE), ]
-
-    trees <- 1000
-    mod <- gbm(eq, data = dat, distribution = "gaussian", n.trees = trees,
-               shrinkage = 0.1, interaction.depth = 10, bag.fraction = 0.7,
-               train.fraction = 1,  n.minobsinnode = 10,
-               keep.data = TRUE, verbose = FALSE)
-
-    ## extract partial dependnece componets
-    pd <- plyr::ldply(vars, extractPD, mod)
-
-    ## relative influence
-    ri <- summary(mod, plotit = FALSE)
-    ri$var <- reorder(ri$var, ri$rel.inf)
-
-    if (return.mod) {
-
-        result <- list(pd = pd, ri = ri, model = mod)
-
-        return(result)
-
-
-    } else {
-
-        return(list(pd, ri))
-
-    }
-
+  
+  ## sub-sample the data for bootstrapping
+  if (simulate)
+    dat <- dat[sample(1:nrow(dat), nrow(dat), replace = TRUE), ]
+  
+  # these models for AQ data are not very senstive to tree sizes > 1000
+  trees <- 1000
+  mod <- gbm(eq, data = dat, distribution = "gaussian", n.trees = trees,
+             shrinkage = 0.1, interaction.depth = 10, bag.fraction = 0.7,
+             train.fraction = 1,  n.minobsinnode = 10,
+             keep.data = TRUE, verbose = FALSE)
+  
+  ## extract partial dependnece componets
+  pd <- plyr::ldply(vars, extractPD, mod)
+  
+  ## relative influence
+  ri <- summary(mod, plotit = FALSE)
+  ri$var <- reorder(ri$var, ri$rel.inf)
+  
+  if (return.mod) {
+    
+    result <- list(pd = pd, ri = ri, model = mod)
+    
+    return(result)
+    
+    
+  } else {
+    
+    return(list(pd, ri))
+    
+  }
+  
 }
 
 
