@@ -5,7 +5,7 @@
 \title{Plot two-way interactions from gbm model}
 \usage{
 plot2Way(dat, variable = c("ws", "temp"), res = 100, exlude = TRUE,
-  cols = "default", ...)
+  cols = "default", dist = 0.05, ...)
 }
 \arguments{
 \item{dat}{Model object from running \code{buildMod}.}
@@ -24,6 +24,12 @@ and user defined. For user defined the user can supply a list of
 colour names recognised by R (type \code{colours()} to see the
 full list). An example would be \code{cols = c("yellow", "green",
 "blue")}}
+
+\item{dist}{When plotting surfaces, \code{dist} controls how far from the
+original data the predictions should be made. See
+\code{exclude.too.far} from the \code{mgcv} package. Data are
+first transformed to a unit square. Values should be between 0 and
+1.}
 
 \item{...}{Other arguments to be passed for plotting.}
 }

@@ -247,13 +247,18 @@ plotAllPD <- function(dat, ylim = NULL, nrow = NULL, ylab = NULL, ...) {
 ##' colour names recognised by R (type \code{colours()} to see the
 ##' full list). An example would be \code{cols = c("yellow", "green",
 ##' "blue")}
+##' @param dist When plotting surfaces, \code{dist} controls how far from the
+##' original data the predictions should be made. See
+##' \code{exclude.too.far} from the \code{mgcv} package. Data are
+##' first transformed to a unit square. Values should be between 0 and
+##' 1.
 ##' @param ... Other arguments to be passed for plotting.
 ##' @export
 ##' @importFrom mgcv exclude.too.far
 ##' @return To add
 ##' @author David Carslaw
 plot2Way <- function(dat, variable = c("ws", "temp"), res = 100,
-                     exlude = TRUE, cols = "default", ...) {
+                     exlude = TRUE, cols = "default", dist = 0.05, ...) {
 
     ## silence R check
     hour = weekday = NULL
@@ -280,7 +285,7 @@ plot2Way <- function(dat, variable = c("ws", "temp"), res = 100,
         n <- length(mx)
         gx <- rep(mx, n)
         gy <-rep(my, rep(n, n))
-        tf <- mgcv::exclude.too.far(gx, gy, x, y, 0.05)
+        tf <- mgcv::exclude.too.far(gx, gy, x, y, dist)
         
         res$y[tf] <- NA
     }
@@ -300,7 +305,7 @@ plot2Way <- function(dat, variable = c("ws", "temp"), res = 100,
             plt <- plt + geom_tile(data = subset(res, is.na(y)),
                                    aes(colour = "missing"),
                                    linetype = 0, fill = "grey92",
-                                   alpha = 1)
+                                   alpha = 1, show.legend = FALSE)
         }
 
         print(plt)
