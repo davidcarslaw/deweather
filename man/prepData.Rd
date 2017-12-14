@@ -62,4 +62,3 @@ long-term seasonal variations.
 \author{
 David Carslaw
 }
-

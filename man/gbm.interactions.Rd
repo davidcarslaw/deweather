@@ -18,4 +18,3 @@ Two-way interactions
 \author{
 David Carslaw
 }
-

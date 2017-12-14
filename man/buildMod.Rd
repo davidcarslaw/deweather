@@ -45,4 +45,3 @@ This is the main function to apply a gbm model to a data set.
 \author{
 David Carslaw
 }
-
