@@ -1,7 +1,30 @@
+---
+output: 
+  github_document: 
+    toc: FALSE
+---
 
 <!-- Edit the README.Rmd only!!! The README.md is generated automatically from README.Rmd. -->
+
 deweather: an R package to remove meteorological variation from air quality data
-================================================================================
+========================================================
+
+
+```{r echo=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  eval = FALSE,
+  cache = TRUE
+)
+knitr::opts_chunk$set(
+  fig.path = "tools/"
+)
+
+```
+
+
 
 <img src="inst/plume.png" alt="openair logo" width="35%" />
 
@@ -11,29 +34,28 @@ The **deweather** package uses a *boosted regression tree* approach for modellin
 
 The modelling can be computatuonally intensive and therefore **deweather** makes use of the parallel processing, which should work on Windows, linux and Mac OSX.
 
-Installation
-------------
+## Installation
 
-Installation of **deweather** from GitHub should be easy using the devtools package.
+Installation of **deweather** from GitHub should be easy using the devtools package. 
 
-``` r
+```{r}
 require(devtools)
 install_github('davidcarslaw/deweather')
 ```
 
-Description
------------
+
+## Description
 
 Meteorology play a central role in affecting teh concentrations of pollutants in teh atmosphere. When considering trends in air pollutants it can be very difficult to know whether a change in concentration is due to emissions or meteorology.
 
 The **deweather** package uses a powerful statistical technique based on *boosted regression trees* using the **gbm** package (Ridgeway, 2017). Statistical models are developed to explain concentrations using meteorological and other variables. These models can be tested on randomly withheld data with the aim of developing the most appropriate model.
 
-Example data set
-----------------
+
+## Example data set
 
 The **deweather** package comes with a comprehensive data set of air quality and meteorological data. The air quality data is from Marylebone Road in central London (obtained from teh **openair** package) and the meteorological data from Heathrow Airport (obtained from the **worldmet** package).
 
-``` r
+```{r, eval=TRUE}
 # library(openair)
 # kc1 <- importAURN(site = "kc1", year = 2011:2012)
 # head(kc1)
@@ -41,7 +63,7 @@ The **deweather** package comes with a comprehensive data set of air quality and
 
 For those interested in obtaining the data directly, the following code can be used.
 
-``` r
+```{r}
 library(openair)
 library(worldmet)
 library(dplyr)
@@ -60,27 +82,27 @@ road_data <- select(road_data, date, nox, no2, ethane, isoprene,
                     benzene, ws, wd, air_temp, RH, cl)
 ```
 
-``` r
+
+
+```{r,eval=TRUE,fig.width=4,fig.height=4.5}
 #windRose(mydata)
 ```
 
-Construct and test model(s)
----------------------------
 
-Build a model
--------------
+## Construct and test model(s)
 
-Examine the partial dependencies
---------------------------------
+## Build a model
 
-Apply meteorological averaging
-------------------------------
+## Examine the partial dependencies
 
-References
-----------
+## Apply meteorological averaging
 
-Carslaw, D.C. and P.J. Taylor (2009). Analysis of air pollution data at a mixed source location using boosted regression trees. Atmospheric Environment. Vol. 43, pp. 3563–3570.
+
+
+## References
+
+Carslaw, D.C. and P.J. Taylor (2009). Analysis of air pollution data at a mixed source location using boosted regression trees. Atmospheric Environment.  Vol. 43, pp. 3563–3570.
 
 Carslaw, D.C., Williams, M.L. and B. Barratt A short-term intervention study — impact of airport closure on near-field air quality due to the eruption of Eyjafjallajökull. (2012) Atmospheric Environment, Vol. 54, 328–336.
 
-Greg Ridgeway with contributions from others (2017). gbm: Generalized Boosted Regression Models. Rpackage version 2.1.3. (<https://CRAN.R-project.org/package=gbm>)
+Greg Ridgeway with contributions from others (2017). gbm: Generalized Boosted Regression Models. Rpackage version 2.1.3. (https://CRAN.R-project.org/package=gbm)
