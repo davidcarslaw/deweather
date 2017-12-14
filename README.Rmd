@@ -117,10 +117,20 @@ This function returns a `deweather` object that can be interogated as shown belo
 
 ## Examine the partial dependencies
 
+### Plot all partial dependencies
+
 One of the benefits of the boosted regression tree approach is that the *partial dependencies* can be explored. In simple terms, the partial dependencies show the relationship between the pollutant of interest and the covariates used in the model while holding the value of other covariates at their mean level.
 
 ```{r plotAll, eval=TRUE, fig.width=7, fig.height=9}
-plotAllPD(mod_no2)
+plotAllPD(dw_model = mod_no2)
+```
+
+### Plot two-way interactions
+
+It can be very useful to plot important two-way interactions. In this example the interaction between `ws` and `air_temp` is considered.
+
+```{r plot2way, eval = TRUE, fig.width=5, fig.height=4.5}
+plot2Way(dw_model = mod_no2, variable = c("ws", "air_temp"))
 ```
 
 

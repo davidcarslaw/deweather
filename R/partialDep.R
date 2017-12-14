@@ -204,7 +204,7 @@ plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE,
 ##'
 ##' .
 ##' @title Plot all partial dependencies
-##' @param dat Model object from running \code{buildMod}.
+##' @param dw_model Model object from running \code{buildMod}.
 ##' @param ylim y-axis label. Will default to pollutant name.
 ##' @param nrow Number of rows for th eplots.
 ##' @param ylab The y-axis label to over-ride default.
@@ -212,18 +212,18 @@ plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE,
 ##' @export
 ##' @return A plot
 ##' @author David Carslaw
-plotAllPD <- function(dat, ylim = NULL, nrow = NULL, ylab = NULL, ...) {
+plotAllPD <- function(dw_model, ylim = NULL, nrow = NULL, ylab = NULL, ...) {
 
-    if (class(dat) != "deweather")
+    if (class(dw_model) != "deweather")
         stop ("Need to supply a deweather object from buildMod.")
 
     
     ## plot most influencial predictor first
-    influ <- dat$influence
+    influ <- dw_model$influence
     influ <- arrange(influ, desc(mean))
 
     ## plot everything
-    plots <- lapply(influ$var, plotPD, dat = dat, ylab = ylab,
+    plots <- lapply(influ$var, plotPD, dat = dw_model, ylab = ylab,
                     ylim = ylim)
 
     do.call(gridExtra::grid.arrange, c(plots, nrow = nrow))
@@ -235,7 +235,7 @@ plotAllPD <- function(dat, ylim = NULL, nrow = NULL, ylab = NULL, ...) {
 ##'
 ##' To add
 ##' @title Plot two-way interactions from gbm model
-##' @param dat Model object from running \code{buildMod}.
+##' @param dw_model Model object from running \code{buildMod}.
 ##' @param variable The variables to plot. Must be of length two
 ##' e.g. \code{variables = c("ws", "wd"}.
 ##' @param res Resolution in x-y i.e. number of points in each dimension.
@@ -257,18 +257,18 @@ plotAllPD <- function(dat, ylim = NULL, nrow = NULL, ylab = NULL, ...) {
 ##' @importFrom mgcv exclude.too.far
 ##' @return To add
 ##' @author David Carslaw
-plot2Way <- function(dat, variable = c("ws", "temp"), res = 100,
+plot2Way <- function(dw_model, variable = c("ws", "temp"), res = 100,
                      exlude = TRUE, cols = "default", dist = 0.05, ...) {
 
     ## silence R check
     hour = weekday = NULL
 
-    if (class(dat) != "deweather")
+    if (class(dw_model) != "deweather")
         stop ("Need to supply a deweather object from buildMod.")
 
     ## extract from deweather object
-    data <- dat$data
-    mod <- dat$model
+    data <- dw_model$data
+    mod <- dw_model$model
 
     res <- plot.gbm(mod, i.var = variable, continuous.resolution = res,
                     return.grid = TRUE)

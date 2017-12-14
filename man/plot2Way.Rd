@@ -4,11 +4,11 @@
 \alias{plot2Way}
 \title{Plot two-way interactions from gbm model}
 \usage{
-plot2Way(dat, variable = c("ws", "temp"), res = 100, exlude = TRUE,
+plot2Way(dw_model, variable = c("ws", "temp"), res = 100, exlude = TRUE,
   cols = "default", dist = 0.05, ...)
 }
 \arguments{
-\item{dat}{Model object from running \code{buildMod}.}
+\item{dw_model}{Model object from running \code{buildMod}.}
 
 \item{variable}{The variables to plot. Must be of length two
 e.g. \code{variables = c("ws", "wd"}.}

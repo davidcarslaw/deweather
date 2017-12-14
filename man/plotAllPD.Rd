@@ -4,10 +4,10 @@
 \alias{plotAllPD}
 \title{Plot all partial dependencies}
 \usage{
-plotAllPD(dat, ylim = NULL, nrow = NULL, ylab = NULL, ...)
+plotAllPD(dw_model, ylim = NULL, nrow = NULL, ylab = NULL, ...)
 }
 \arguments{
-\item{dat}{Model object from running \code{buildMod}.}
+\item{dw_model}{Model object from running \code{buildMod}.}
 
 \item{ylim}{y-axis label. Will default to pollutant name.}
 
