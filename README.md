@@ -88,7 +88,7 @@ dat_part <- selectByDate(road_data, year = 2001:2004)
 
 # test a model with commonly used covariates
 testMod(dat = dat_part, 
-        vars = c("trend", "ws", "wd", "hour", "weekday", "air_temp"),
+        vars = c("trend", "ws", "wd", "hour", "weekday", "air_temp", "week"),
         pollutant = "no2")
 ```
 
@@ -103,7 +103,7 @@ Assuming that a good model can be developed, it can now be explored in more deta
 
 ``` r
 mod_no2 <- buildMod(dat = dat_part, 
-        vars = c("trend", "ws", "wd", "hour", "weekday", "air_temp"),
+        vars = c("trend", "ws", "wd", "hour", "weekday", "air_temp", "week"),
         pollutant = "no2",
         n.core = 6)
 ```

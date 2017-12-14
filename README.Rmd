@@ -96,7 +96,7 @@ dat_part <- selectByDate(road_data, year = 2001:2004)
 
 # test a model with commonly used covariates
 testMod(dat = dat_part, 
-        vars = c("trend", "ws", "wd", "hour", "weekday", "air_temp"),
+        vars = c("trend", "ws", "wd", "hour", "weekday", "air_temp", "week"),
         pollutant = "no2")
 ```
 
@@ -108,7 +108,7 @@ Assuming that a good model can be developed, it can now be explored in more deta
 
 ```{r buildMod, eval = TRUE}
 mod_no2 <- buildMod(dat = dat_part, 
-        vars = c("trend", "ws", "wd", "hour", "weekday", "air_temp"),
+        vars = c("trend", "ws", "wd", "hour", "weekday", "air_temp", "week"),
         pollutant = "no2",
         n.core = 6)
 ```
@@ -121,7 +121,7 @@ This function returns a `deweather` object that can be interogated as shown belo
 
 One of the benefits of the boosted regression tree approach is that the *partial dependencies* can be explored. In simple terms, the partial dependencies show the relationship between the pollutant of interest and the covariates used in the model while holding the value of other covariates at their mean level.
 
-```{r plotAll, eval=TRUE, fig.width=7, fig.height=9}
+```{r plotAll, eval = TRUE, fig.width=7, fig.height=9}
 plotAllPD(dw_model = mod_no2)
 ```
 
