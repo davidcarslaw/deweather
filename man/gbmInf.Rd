@@ -18,4 +18,3 @@ Plot a gbm influence plot
 \author{
 David Carslaw
 }
-

@@ -4,7 +4,7 @@
 ##'
 ##' 
 ##' @title Run random meteorology on a gbm model
-##' @param dat Model object from running \code{buildMod}.
+##' @param dw_model Model object from running \code{buildMod}.
 ##' @param newdata Data set to which to apply the model. If missing
 ##'     the data used to build the model in the first place will be
 ##'     used.
@@ -14,16 +14,16 @@
 ##' @export
 ##' @return To add
 ##' @author David Carslaw
-metSim <- function(dat, newdata, metVars = c("ws", "wd", "temp"),
+metSim <- function(dw_model, newdata, metVars = c("ws", "wd", "temp"),
                    n.core = 4, B = 200) {
     ## silence R check
     pred <- NULL
 
-    if (class(dat) != "deweather") 
+    if (class(dw_model) != "deweather") 
       stop ("Need to supply a deweather object from buildMod.")
 
     ## extract the model
-    mod <- dat$model
+    mod <- dw_model$model
 
     if (!"trend" %in% mod$var.names) 
       stop("The model must have a trend component as one of the explanatory variables.")
