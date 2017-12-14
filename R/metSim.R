@@ -30,7 +30,7 @@ metSim <- function(dw_model, newdata, metVars = c("ws", "wd", "temp"),
 
     if (missing(newdata)) {
         ## should already have variables
-        newdata <- dat$data
+        newdata <- dw_model$data
         
     } else {
         ## add variables needed

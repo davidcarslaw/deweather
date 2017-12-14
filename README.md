@@ -24,7 +24,7 @@ install_github('davidcarslaw/deweather')
 Description
 -----------
 
-Meteorology play a central role in affecting the concentrations of pollutants in the atmosphere. When considering trends in air pollutants it can be very difficult to know whether a change in concentration is due to emissions or meteorology.
+Meteorology plays a central role in affecting the concentrations of pollutants in the atmosphere. When considering trends in air pollutants it can be very difficult to know whether a change in concentration is due to emissions or meteorology.
 
 The **deweather** package uses a powerful statistical technique based on *boosted regression trees* using the **gbm** package (Ridgeway, 2017). Statistical models are developed to explain concentrations using meteorological and other variables. These models can be tested on randomly withheld data with the aim of developing the most appropriate model.
 
@@ -33,7 +33,7 @@ Example data set
 
 The **deweather** package comes with a comprehensive data set of air quality and meteorological data. The air quality data is from Marylebone Road in central London (obtained from the **openair** package) and the meteorological data from Heathrow Airport (obtained from the **worldmet** package).
 
-The `road_data` data frame contains various pollutants such a NOx, NO2, ethane and isoprene as well as meteorological data including wind speed, wind direction, relative humidity, ambient temperature and cloud cover.
+The `road_data` data frame contains various pollutants such a NO<sub>x</sub>, NO<sub>2</sub>, ethane and isoprene as well as meteorological data including wind speed, wind direction, relative humidity, ambient temperature and cloud cover.
 
 ``` r
 library(deweather)
@@ -79,7 +79,7 @@ Construct and test model(s)
 
 The `testMod` function is used to build and test various models to help derive the most appropriate.
 
-In this example, we will restrict the data to model to 4 years. Note that variables such as `hour` and `weekday` are used as variables that can be used to explain some of teh variation. `hour` for example very usefully acts as a proxy for the diurnal variation in emissions.
+In this example, we will restrict the data to model to 4 years. Note that variables such as `hour` and `weekday` are used as variables that can be used to explain some of the variation. `hour` for example very usefully acts as a proxy for the diurnal variation in emissions.
 
 ``` r
 library(openair)
@@ -125,7 +125,7 @@ plotAllPD(dw_model = mod_no2)
 
 ### Plot two-way interactions
 
-It can be very useful to plot important two-way interactions. In this example the interaction between `ws` and `air_temp` is considered.
+It can be very useful to plot important two-way interactions. In this example the interaction between `ws` and `air_temp` is considered. The plot shows that NO<sub>2</sub> tends to be high when the wind speed is low and the temperature is low i.e. stable atmospheric conditions. Also NO<sub>2</sub> tends to be high when the temperature is high, which is most likely due to more O<sub>3</sub> available to convert NO to NO<sub>2</sub>. In fact, background O<sub>3</sub> would probably be a useful covariate to add to the model.
 
 ``` r
 plot2Way(dw_model = mod_no2, variable = c("ws", "air_temp"))
@@ -135,6 +135,34 @@ plot2Way(dw_model = mod_no2, variable = c("ws", "air_temp"))
 
 Apply meteorological averaging
 ------------------------------
+
+An indication of the meteorologically-averaged trend is given by the `plotAllPD` function above. A better indication is given by using the model to predict many times with random sampling of meteorological conditions. This sampling is carried out by the `metSim` function. Note that in this case there is no need to supply the "trend" component because it is calculated using `metSim`
+
+``` r
+demet <- metSim(mod_no2, newdata = dat_part, 
+                metVars = c("ws", "wd", "hour", "weekday", "air_temp", "week"))
+```
+
+Now it is possible to plot the resulting trend.
+
+``` r
+library(ggplot2)
+ggplot(demet, aes(date, pred)) +
+  geom_line()
+```
+
+![](tools/plotTrend-1.png)
+
+The plot is rather noisy due to relatively few samples of meteorology being considered (200 by default, set with `B = 200`). The noise could be reduced by increasing the simulations, but this would add to run time. Alternatively, it can be useful to simply average the results. For example:
+
+``` r
+library(ggplot2)
+ggplot(timeAverage(demet, "day"), aes(date, pred)) +
+  geom_line(col = "dodgerblue", size = 1) +
+  ylab(quickText("no2 (ug/m3)"))
+```
+
+![](tools/plotTrendAve-1.png)
 
 References
 ----------
