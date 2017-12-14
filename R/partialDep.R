@@ -110,7 +110,7 @@ plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE,
     dat$x <- round_any(dat$x, gap)
 
     dat <- group_by(dat, var, x) %>%
-      summarise_each(funs(mean(.)))
+      summarise_all(funs(mean(.)))
 
     if (is.null(ylim)) ylim <- rng(dat)
     
