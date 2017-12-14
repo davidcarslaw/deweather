@@ -77,9 +77,16 @@ road_data <- select(road_data, date, nox, no2, ethane, isoprene,
 Construct and test model(s)
 ---------------------------
 
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+
 The `testMod` function is used to build and test various models to help derive the most appropriate.
+====================================================================================================
+
+> > > > > > > 01c1c2d8b5491fac7e160f4fa4e83f372d3cb0f7
 
 In this example, we will restrict the data to model to 4 years. Note that variables such as `hour` and `weekday` are used as variables that can be used to explain some of teh variation. `hour` for example very usefully acts as a proxy for the diurnal variation in emissions.
+
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
 
 ``` r
 library(openair)
@@ -95,6 +102,9 @@ testMod(dat = dat_part,
 ![](tools/testMod-1.png)
 
 The output shows by default the performance of the model when applied to a withheld random 20% (by default) of the data i.e. the model is evaluated against data nt used to build the model. Common model evaluation metrics are also given.
+============================================================================================================================================================================================================================================
+
+> > > > > > > 01c1c2d8b5491fac7e160f4fa4e83f372d3cb0f7
 
 Build a model
 -------------
