@@ -4,22 +4,22 @@ partialDep <- function(dat, eq, vars, B = 100, n.core = 4) {
 
     ## silence R check
     x = y = rel.inf = NULL
-
+    
     if (B == 1) return.mod <- TRUE else return.mod <- FALSE
-
+    
     cl <- makeCluster(n.core)
     registerDoParallel(cl)
-
+    
     pred <- foreach (i = 1:B, .inorder = FALSE,
                      .packages = c("gbm", "plyr")) %dopar%
-    runGbm(dat, eq, vars, return.mod, simulate = TRUE)
-
+      runGbm(dat, eq, vars, return.mod, simulate = TRUE)
+    
     stopCluster(cl)
-
+    
     ## partial dependence plots
     pd <- lapply(pred, "[[", 1)
     pd <- do.call(rbind, pd)
-
+    
     ## relative influence
     ri <- lapply(pred, "[[", 2)
     ri <- do.call(rbind, ri)

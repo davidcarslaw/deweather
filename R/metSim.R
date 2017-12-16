@@ -65,7 +65,7 @@ doPred <- function(mydata, mod, metVars) {
     ## new data with random samples
     mydata[metVars] <- lapply(mydata[metVars], function (x) x[id])
     
-    prediction <- predict.gbm(mod, mydata, 1000)
+    prediction <- predict.gbm(mod, mydata, 100)
     prediction <- data.frame(date = mydata$date, pred = prediction)
     
     return(prediction)

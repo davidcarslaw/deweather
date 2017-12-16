@@ -25,6 +25,7 @@
 ##'   
 ##' @import doParallel openair gbm dplyr ggplot2 parallel foreach 
 ##' @importFrom plyr ddply ldply dlply llply numcolwise
+##' @importFrom lubridate decimal_date
 ##' @importFrom gridExtra grid.arrange tableGrob
 ##' @export
 ##' @return Returns a list including the model, influence data frame 
@@ -92,10 +93,10 @@ runGbm <- function(dat, eq, vars, return.mod = FALSE, simulate = FALSE) {
     dat <- dat[sample(1:nrow(dat), nrow(dat), replace = TRUE), ]
   
   # these models for AQ data are not very senstive to tree sizes > 1000
-  trees <- 1000
+  trees <- 250
   mod <- gbm(eq, data = dat, distribution = "gaussian", n.trees = trees,
-             shrinkage = 0.1, interaction.depth = 10, bag.fraction = 0.7,
-             train.fraction = 1,  n.minobsinnode = 10,
+             shrinkage = 0.1, interaction.depth = 6, bag.fraction = 0.5,
+             train.fraction = 1,  n.minobsinnode = 5, #cv.folds=5,
              keep.data = TRUE, verbose = FALSE)
   
   ## extract partial dependnece componets

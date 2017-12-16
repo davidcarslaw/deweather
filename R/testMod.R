@@ -35,8 +35,26 @@ testMod <- function(dat, vars = c("trend", "ws", "wd", "hour",
     pred.dat <- dat[-id, ]
     
     mod <- runGbm(train.dat, eq, vars, return.mod = TRUE, simulate = FALSE)
+    
+    # predictions based on training data
+    pred_train <- predict.gbm(mod$model, newdata = train.dat, n.trees = 250)
+    
+    pred_train <- data.frame(train.dat, pred = pred_train)
+    
+        ## calculate key model statistics
+    stats_train <- modStats(pred_train, obs = pollutant, mod = "pred")
+    stats_train <- as.data.frame(t(stats_train))
+    names(stats_train) <- "value"
+    stats_train$statistic <- rownames(stats_train)
+    stats_train <- stats_train[-1, ]
+    stats_train <- select(stats_train, statistic, value)
+    stats_train$value <- as.numeric(as.character(stats_train$value))
+    stats_train$value <- round(stats_train$value, 2)
+    
+    
+    # predictions based on test data
 
-    pred <- predict.gbm(mod$model, newdata = pred.dat, n.trees = 1000)
+    pred <- predict.gbm(mod$model, newdata = pred.dat, n.trees = 250)
 
     pred <- data.frame(pred.dat, pred = pred)
 
@@ -56,9 +74,19 @@ testMod <- function(dat, vars = c("trend", "ws", "wd", "hour",
     stats$value <- as.numeric(as.character(stats$value))
     stats$value <- round(stats$value, 2)
 
-    tbl <- gridExtra::tableGrob(stats, rows = NULL)
+    head_train <- data.frame(statistic = "Training", value = NA, 
+                             stringsAsFactors = FALSE)
+    
+    head_test <- data.frame(statistic = "Test data", value = NA,
+                            stringsAsFactors = FALSE)
+    
+    stats <- bind_rows(head_test, stats)
+    stats_train <- bind_rows(head_train, stats_train)
 
-    gridExtra::grid.arrange(plt, tbl, nrow = 1, as.table=TRUE)
+    tbl <- gridExtra::tableGrob(stats, rows = NULL)
+    tbl_train <- gridExtra::tableGrob(stats_train, rows = NULL)
+
+    gridExtra::grid.arrange(plt, tbl, tbl_train, nrow = 1, as.table = TRUE)
 
     
     invisible(pred)

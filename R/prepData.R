@@ -61,9 +61,8 @@ prepData <- function(mydata, add = c("hour", "hour.local", "weekday", "trend", "
 
     if ("weekday" %in% add) mydata$weekday <- as.factor(format(mydata$date, "%A"))
 
-    if ("trend" %in% add) mydata$trend <- as.numeric(format(mydata$date, "%Y")) +
-      as.numeric(format(mydata$date, "%j")) / 366
-
+    if ("trend" %in% add) mydata$trend <- decimal_date(mydata$date)
+      
     if ("week" %in% add) mydata$week <- as.numeric(format(mydata$date, "%W"))
 
     if ("jday" %in% add) mydata$jday <- as.numeric(format(mydata$date, "%j"))
