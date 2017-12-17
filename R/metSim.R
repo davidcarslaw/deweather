@@ -43,14 +43,14 @@ metSim <- function(dw_model, newdata, metVars = c("ws", "wd", "temp"),
     
     prediction <- foreach (i = 1:B, .inorder = FALSE, .combine = "rbind", 
                            .packages = "gbm", .export = "doPred") %dopar%
-    doPred(newdata, mod, metVars)
+      doPred(newdata, mod, metVars)
     
     stopCluster(cl)
-
+    
     ## Aggregate results
     prediction <- group_by(prediction, date) %>%
       summarise(pred = mean(pred))
-
+    
     return(prediction)
 }
 
@@ -65,7 +65,7 @@ doPred <- function(mydata, mod, metVars) {
     ## new data with random samples
     mydata[metVars] <- lapply(mydata[metVars], function (x) x[id])
     
-    prediction <- predict.gbm(mod, mydata, 100)
+    prediction <- predict.gbm(mod, mydata, mod$n.trees)
     prediction <- data.frame(date = mydata$date, pred = prediction)
     
     return(prediction)

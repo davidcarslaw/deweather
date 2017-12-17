@@ -8,12 +8,14 @@
 ##'     normalisation to.
 ##' @param train.frac Fraction of data to train a model on. The model
 ##'     is tested against the withheld 0.2 proportion.
+##' @param n.trees Number of trees to use.
 ##' @export
 ##' @return Returns to be added.
 ##' @author David Carslaw
 testMod <- function(dat, vars = c("trend", "ws", "wd", "hour",
                                   "weekday", "temp"),
-                    pollutant = "nox", train.frac = 0.8) {
+                    pollutant = "nox", train.frac = 0.8,
+                    n.trees = 200) {
 
     ## silence R check
     statistic = value = NULL
@@ -34,10 +36,10 @@ testMod <- function(dat, vars = c("trend", "ws", "wd", "hour",
     train.dat <- dat[id, ]
     pred.dat <- dat[-id, ]
     
-    mod <- runGbm(train.dat, eq, vars, return.mod = TRUE, simulate = FALSE)
+    mod <- runGbm(train.dat, eq, vars, return.mod = TRUE, simulate = FALSE, n.trees = n.trees)
     
     # predictions based on training data
-    pred_train <- predict.gbm(mod$model, newdata = train.dat, n.trees = 250)
+    pred_train <- predict.gbm(mod$model, newdata = train.dat, n.trees = n.trees)
     
     pred_train <- data.frame(train.dat, pred = pred_train)
     
@@ -54,7 +56,7 @@ testMod <- function(dat, vars = c("trend", "ws", "wd", "hour",
     
     # predictions based on test data
 
-    pred <- predict.gbm(mod$model, newdata = pred.dat, n.trees = 250)
+    pred <- predict.gbm(mod$model, newdata = pred.dat, n.trees = n.trees)
 
     pred <- data.frame(pred.dat, pred = pred)
 

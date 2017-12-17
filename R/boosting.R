@@ -19,6 +19,7 @@
 ##'   diminishing returns in terms of model accuracy. If
 ##'   \code{sam.size} is greater than the number of number of rows of
 ##'   data, the number of rows of data is used instead.
+##' @param n.trees Number of trees to fit.
 ##' @param B Number of bootstrap simulations for partial dependence 
 ##'   plots.
 ##' @param n.core Number of cores to use for parallel processing.
@@ -34,6 +35,7 @@
 buildMod <- function(dat, vars = c("trend", "ws", "wd", "hour",
                                    "weekday", "temp"),
                      pollutant = "nox", sam.size = 5000,
+                     n.trees = 200,
                      B = 100, n.core = 4) {
   
   ## add other variables, select only those required for modelling
@@ -57,10 +59,10 @@ buildMod <- function(dat, vars = c("trend", "ws", "wd", "hour",
   
   ## if more than one simulation only return model ONCE
   if (B != 1)
-    mod <- runGbm(dat, eq, vars, return.mod = TRUE, simulate = FALSE)
+    mod <- runGbm(dat, eq, vars, return.mod = TRUE, simulate = FALSE, n.trees = n.trees)
   
   
-  res <- partialDep(dat, eq, vars, B, n.core)
+  res <- partialDep(dat, eq, vars, B, n.core, n.trees)
   
   if (B != 1) Mod <- mod$model else Mod <- res[[3]]
   
@@ -86,15 +88,15 @@ extractPD <- function(vars, mod) {
 
 
 
-runGbm <- function(dat, eq, vars, return.mod = FALSE, simulate = FALSE) {
+runGbm <- function(dat, eq, vars, return.mod = FALSE, simulate = FALSE, n.trees = n.trees) {
   
   ## sub-sample the data for bootstrapping
   if (simulate)
     dat <- dat[sample(1:nrow(dat), nrow(dat), replace = TRUE), ]
   
   # these models for AQ data are not very senstive to tree sizes > 1000
-  trees <- 250
-  mod <- gbm(eq, data = dat, distribution = "gaussian", n.trees = trees,
+
+  mod <- gbm(eq, data = dat, distribution = "gaussian", n.trees = n.trees,
              shrinkage = 0.1, interaction.depth = 6, bag.fraction = 0.5,
              train.fraction = 1,  n.minobsinnode = 5, #cv.folds=5,
              keep.data = TRUE, verbose = FALSE)

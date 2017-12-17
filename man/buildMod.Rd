@@ -5,7 +5,8 @@
 \title{Function to apply meteorological normalisation to.}
 \usage{
 buildMod(dat, vars = c("trend", "ws", "wd", "hour", "weekday", "temp"),
-  pollutant = "nox", sam.size = 5000, B = 100, n.core = 4)
+  pollutant = "nox", sam.size = 5000, n.trees = 200, B = 100,
+  n.core = 4)
 }
 \arguments{
 \item{dat}{Data frame to analyse. Must contain a POSIXct field 
@@ -26,6 +27,8 @@ take a very long time to run. Additionally, there will be
 diminishing returns in terms of model accuracy. If
 \code{sam.size} is greater than the number of number of rows of
 data, the number of rows of data is used instead.}
+
+\item{n.trees}{Number of trees to fit.}
 
 \item{B}{Number of bootstrap simulations for partial dependence 
 plots.}

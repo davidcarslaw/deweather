@@ -1,6 +1,6 @@
 
 
-partialDep <- function(dat, eq, vars, B = 100, n.core = 4) {
+partialDep <- function(dat, eq, vars, B = 100, n.core = 4, n.trees) {
 
     ## silence R check
     x = y = rel.inf = NULL
@@ -12,7 +12,7 @@ partialDep <- function(dat, eq, vars, B = 100, n.core = 4) {
     
     pred <- foreach (i = 1:B, .inorder = FALSE,
                      .packages = c("gbm", "plyr")) %dopar%
-      runGbm(dat, eq, vars, return.mod, simulate = TRUE)
+      runGbm(dat, eq, vars, return.mod, simulate = TRUE, n.trees = n.trees)
     
     stopCluster(cl)
     

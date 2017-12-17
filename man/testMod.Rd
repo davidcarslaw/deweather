@@ -5,7 +5,7 @@
 \title{Function to test different meteorological normalisation models.}
 \usage{
 testMod(dat, vars = c("trend", "ws", "wd", "hour", "weekday", "temp"),
-  pollutant = "nox", train.frac = 0.8)
+  pollutant = "nox", train.frac = 0.8, n.trees = 200)
 }
 \arguments{
 \item{dat}{Data frame to analyse.}
@@ -17,6 +17,8 @@ normalisation to.}
 
 \item{train.frac}{Fraction of data to train a model on. The model
 is tested against the withheld 0.2 proportion.}
+
+\item{n.trees}{Number of trees to use.}
 }
 \value{
 Returns to be added.
