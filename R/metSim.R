@@ -66,6 +66,7 @@ doPred <- function(mydata, mod, metVars) {
     mydata[metVars] <- lapply(mydata[metVars], function (x) x[id])
     
     prediction <- predict.gbm(mod, mydata, mod$n.trees)
+
     prediction <- data.frame(date = mydata$date, pred = prediction)
     
     return(prediction)
