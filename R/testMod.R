@@ -84,6 +84,11 @@ testMod <- function(dat, vars = c("trend", "ws", "wd", "hour",
     
     stats <- bind_rows(head_test, stats)
     stats_train <- bind_rows(head_train, stats_train)
+    
+    # print % difference in RMSE
+    diff_rmse <- round(100 * (stats$value[8] - stats_train$value[8]) / stats$value[8], 1)
+    print(paste0("Percent increase in RMSE using test data is ", diff_rmse, "%"))
+    
 
     tbl <- gridExtra::tableGrob(stats, rows = NULL)
     tbl_train <- gridExtra::tableGrob(stats_train, rows = NULL)

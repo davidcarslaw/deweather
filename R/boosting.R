@@ -34,7 +34,7 @@
 ##' @author David Carslaw
 buildMod <- function(dat, vars = c("trend", "ws", "wd", "hour",
                                    "weekday", "temp"),
-                     pollutant = "nox", sam.size = 5000,
+                     pollutant = "nox", sam.size = round(2 * nrow(dat) / 3),
                      n.trees = 200,
                      B = 100, n.core = 4) {
   
@@ -77,6 +77,9 @@ buildMod <- function(dat, vars = c("trend", "ws", "wd", "hour",
 extractPD <- function(vars, mod) {
   
   n <- 100 ## resolution of output
+  
+  if ("trend" %in% vars) n <- 500
+  
   if (vars %in% c("hour", "hour.local")) n <- 24
   
   ## extract partial dependence values
@@ -98,7 +101,7 @@ runGbm <- function(dat, eq, vars, return.mod = FALSE, simulate = FALSE, n.trees 
 
   mod <- gbm(eq, data = dat, distribution = "gaussian", n.trees = n.trees,
              shrinkage = 0.1, interaction.depth = 6, bag.fraction = 0.5,
-             train.fraction = 1,  n.minobsinnode = 5, #cv.folds=5,
+             train.fraction = 1, n.minobsinnode = 10, #cv.folds=5,
              keep.data = TRUE, verbose = FALSE)
   
   ## extract partial dependnece componets
