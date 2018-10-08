@@ -83,7 +83,7 @@ extractPD <- function(vars, mod) {
   if (vars %in% c("hour", "hour.local")) n <- 24
   
   ## extract partial dependence values
-  res <- plot(mod, vars, cont = n, return.grid = TRUE)
+  res <- plot.gbm(mod, vars, continuous.resolution = n, return.grid = TRUE)
   res <- data.frame(y = res$y, var = vars, x = res[[vars]])
   return(res)
 }
