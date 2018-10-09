@@ -30,9 +30,10 @@ diurnalGbm <- function(dat, vars = c("ws", "wd", "hour", "weekday"),  pollutant 
     ## silence R check
     Hour = Weekday = value = variable = difference = NULL
 
-
-    mod1 <- buildMod(selectByDate(dat, start = date[1], end = date[2]),
-                     vars = vars, pollutant = pollutant, B = 1)
+    theData <- selectByDate(dat, start = date[1], end = date[2])
+    
+    mod1 <- buildMod(theData,
+                     vars = vars, pollutant = pollutant, B = 1, sam.size = nrow(theData))
     
     res1 <- plot2Way(mod1, variable = c("weekday", "hour"))
     
@@ -51,8 +52,10 @@ diurnalGbm <- function(dat, vars = c("ws", "wd", "hour", "weekday"),  pollutant 
             end1 <- date[3]
         }
         
-        mod2 <- buildMod(selectByDate(dat, start = start1, end = end1), vars = vars,
-                         pollutant = pollutant, B = 1)
+        theData <- selectByDate(dat, start = start1, end = end1)
+        
+        mod2 <- buildMod(theData, vars = vars,
+                         pollutant = pollutant, B = 1, sam.size = nrow(theData))
 
         res2 <- plot2Way(mod2, variable = c("weekday", "hour"))
 
