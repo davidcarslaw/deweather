@@ -104,8 +104,8 @@ diurnalGbm <- function(dat, vars = c("ws", "wd", "hour", "weekday"),  pollutant 
         ids <- which(results$Weekday %in% c("Sat", "Sun"))
         results$Weekday <- as.character(results$Weekday)
         results$Weekday[-ids] <- "Weekday"
-        results <- plyr::ddply(results, plyr::.(Weekday = Weekday, Hour = Hour),
-                               plyr::numcolwise(mean))
+        results <- results <- group_by(results, Weekday, Hour) %>% 
+            summarise_if(is.numeric, mean, na.rm = TRUE)
         results$Weekday <- ordered(results$Weekday, levels =c("Weekday", "Sat", "Sun"),
                                    labels = c("Weekday", "Saturday", "Sunday"))
 

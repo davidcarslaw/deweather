@@ -4,8 +4,8 @@
 \alias{prepData}
 \title{Prepare data for boosting algorithm}
 \usage{
-prepData(mydata, add = c("hour", "hour.local", "weekday", "trend", "week",
-  "jday", "month"), local.tz = "Europe/London", lag = NULL)
+prepData(mydata, add = c("hour", "hour.local", "weekday", "trend",
+  "week", "jday", "month"), local.tz = "Europe/London", lag = NULL)
 }
 \arguments{
 \item{mydata}{A data frame to process.}

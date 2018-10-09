@@ -4,8 +4,8 @@
 \alias{plot2Way}
 \title{Plot two-way interactions from gbm model}
 \usage{
-plot2Way(dw_model, variable = c("ws", "temp"), res = 100, exlude = TRUE,
-  cols = "default", dist = 0.05, ...)
+plot2Way(dw_model, variable = c("ws", "temp"), res = 100,
+  exlude = TRUE, cols = "default", dist = 0.05, ...)
 }
 \arguments{
 \item{dw_model}{Model object from running \code{buildMod}.}

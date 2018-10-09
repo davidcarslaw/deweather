@@ -22,7 +22,6 @@ Imports:
     dplyr,
     lubridate,
     openair,
-    plyr,
     mgcv,
     reshape2,
     ggplot2,
@@ -30,4 +29,4 @@ Imports:
 License: GPL (>= 2)
 LazyLoad: yes
 LazyData: yes
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0

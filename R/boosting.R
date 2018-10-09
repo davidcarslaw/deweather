@@ -25,7 +25,6 @@
 ##' @param n.core Number of cores to use for parallel processing.
 ##'   
 ##' @import doParallel openair gbm dplyr ggplot2 parallel foreach 
-##' @importFrom plyr ddply ldply dlply llply numcolwise
 ##' @importFrom lubridate decimal_date
 ##' @importFrom gridExtra grid.arrange tableGrob
 ##' @export
@@ -105,7 +104,9 @@ runGbm <- function(dat, eq, vars, return.mod = FALSE, simulate = FALSE, n.trees 
              keep.data = TRUE, verbose = FALSE)
   
   ## extract partial dependnece componets
-  pd <- plyr::ldply(vars, extractPD, mod)
+
+  pd <- lapply(vars, extractPD, mod)
+  pd <- do.call(rbind, pd)
   
   ## relative influence
   ri <- summary(mod, plotit = FALSE)

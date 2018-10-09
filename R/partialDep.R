@@ -11,7 +11,7 @@ partialDep <- function(dat, eq, vars, B = 100, n.core = 4, n.trees) {
     registerDoParallel(cl)
     
     pred <- foreach (i = 1:B, .inorder = FALSE,
-                     .packages = c("gbm", "plyr")) %dopar%
+                     .packages = "gbm") %dopar%
       runGbm(dat, eq, vars, return.mod, simulate = TRUE, n.trees = n.trees)
     
     stopCluster(cl)
