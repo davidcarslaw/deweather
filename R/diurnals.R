@@ -70,15 +70,14 @@ diurnalGbm <- function(dat, vars = c("ws", "wd", "hour", "weekday"),  pollutant 
         results$Weekday <- as.character(results$Weekday)
         results$Weekday[-ids] <- "Weekday"
         
-        results <- plyr::ddply(results,
-                               plyr::.(Weekday = Weekday, Hour = Hour),
-                               plyr::numcolwise(mean))
-        
+        results <- group_by(results, Weekday, Hour) %>% 
+            summarise_if(is.numeric, mean, na.rm = TRUE)
+     
         results$Weekday <- ordered(results$Weekday, levels = c("Weekday", "Sat", "Sun"),
                                    labels = c("Weekday", "Saturday", "Sunday"))
 
         ## difference
-        results$difference <- results[, 4] - results[, 3]
+        results$difference <- results[[4]] - results[[3]]
 
         results <- melt(results, id.var = c("Weekday", "Hour", "difference"))
         ylim <- range(c(results$difference, results$value)) * 1.03
