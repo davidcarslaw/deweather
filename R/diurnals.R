@@ -15,13 +15,15 @@
 ##'     date format is UK e.g. \code{date = c("19/2/2005",
 ##'     "19/2/2007", "19/2/2010")}.
 ##' @param single Not used.
+##' @param ylab Label for y-axis.
 ##' @import reshape2
 ##' @export
 ##' @return Some data
 ##' @author David Carslaw
 diurnalGbm <- function(dat, vars = c("ws", "wd", "hour", "weekday"),  pollutant = "nox", 
                        date = c("01/01/2012", "31/12/2012",
-                                "31/12/2013"), single = FALSE){
+                                "31/12/2013"), single = FALSE,
+                       ylab = "value"){
 
 
     ## format dates
@@ -51,7 +53,7 @@ diurnalGbm <- function(dat, vars = c("ws", "wd", "hour", "weekday"),  pollutant 
             start1 <- date[2] + 24 * 3600 ## start of next day
             end1 <- date[3]
         }
-        
+       
         theData <- selectByDate(dat, start = start1, end = end1)
         
         mod2 <- buildMod(theData, vars = vars,
@@ -100,7 +102,8 @@ diurnalGbm <- function(dat, vars = c("ws", "wd", "hour", "weekday"),  pollutant 
             geom_ribbon(data = data_pos, aes(ymin = 0, ymax = difference),
                         fill = "firebrick1", colour = "firebrick1") +
             scale_colour_manual(values = c("turquoise4", "deeppink"), name = "period") +
-            scale_x_continuous(breaks = c(0, 6, 12, 18))
+            scale_x_continuous(breaks = c(0, 6, 12, 18)) +
+            ylab(quickText(ylab))
         
         print(plt)
         

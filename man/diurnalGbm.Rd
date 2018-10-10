@@ -6,7 +6,7 @@
 \usage{
 diurnalGbm(dat, vars = c("ws", "wd", "hour", "weekday"),
   pollutant = "nox", date = c("01/01/2012", "31/12/2012",
-  "31/12/2013"), single = FALSE)
+  "31/12/2013"), single = FALSE, ylab = "value")
 }
 \arguments{
 \item{dat}{A data frame to analyse.}
@@ -22,6 +22,8 @@ date format is UK e.g. \code{date = c("19/2/2005",
 "19/2/2007", "19/2/2010")}.}
 
 \item{single}{Not used.}
+
+\item{ylab}{Label for y-axis.}
 }
 \value{
 Some data
