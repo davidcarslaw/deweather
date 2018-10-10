@@ -83,7 +83,8 @@ extractPD <- function(vars, mod) {
   
   ## extract partial dependence values
   res <- plot.gbm(mod, vars, continuous.resolution = n, return.grid = TRUE)
-  res <- data.frame(y = res$y, var = vars, x = res[[vars]])
+  res <- data.frame(y = res$y, var = vars, x = res[[vars]],
+                    var_type = ifelse(is.numeric(res[[vars]]), "numeric", "character"))
   return(res)
 }
 

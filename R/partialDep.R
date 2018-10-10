@@ -25,7 +25,7 @@ partialDep <- function(dat, eq, vars, B = 100, n.core = 4, n.trees) {
     ri <- do.call(rbind, ri)
 
 
-    resCI <- group_by(pd, var, x) %>%
+    resCI <- group_by(pd, var, var_type, x) %>%
       summarise(mean = mean(y),
                 lower = quantile(y, probs = c(0.025)),
                 upper = quantile(y, probs = c(0.975)))
@@ -106,10 +106,14 @@ plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE,
     ## select variable of interest
     dat <- dat[dat$var == variable, ]
 
-    gap <- prettyGap(dat$x, 40)
-    dat$x <- round_any(dat$x, gap)
+    # if type is numeric
+    if (dat$var_type[1] == "numeric") {
+      dat$x <- as.numeric(dat$x)
+      gap <- prettyGap(dat$x, 40)
+      dat$x <- round_any(dat$x, gap)
+    }
 
-    dat <- group_by(dat, var, x) %>%
+    dat <- group_by(dat, var, var_type, x) %>%
       summarise_all(funs(mean(.)))
 
     if (is.null(ylim)) ylim <- rng(dat)
