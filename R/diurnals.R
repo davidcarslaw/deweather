@@ -82,13 +82,23 @@ diurnalGbm <- function(dat, vars = c("ws", "wd", "hour", "weekday"),  pollutant 
         results <- melt(results, id.var = c("Weekday", "Hour", "difference"))
         ylim <- range(c(results$difference, results$value)) * 1.03
         
+        # data sets that provide postive and negative differences
+        id <- which(results$difference > 0)
+        data_neg <- results
+        data_neg$difference[id] <- 0
+        
+        id <- which(results$difference < 0)
+        data_pos <- results
+        data_pos$difference[id] <- 0
         
         plt <- ggplot(results, aes(x = Hour, y = value, colour = variable)) +
             geom_line(size = 1) +
             facet_grid(~ Weekday) +
             theme(legend.position = "top") +
-            geom_ribbon(aes(ymin = 0, ymax = difference),
-                            fill = "grey30", colour = "grey30") +
+            geom_ribbon(data = data_neg, aes(ymin = 0, ymax = difference),
+                        fill = "dodgerblue", colour = "dodgerblue") +
+            geom_ribbon(data = data_pos, aes(ymin = 0, ymax = difference),
+                        fill = "firebrick1", colour = "firebrick1") +
             scale_colour_manual(values = c("turquoise4", "deeppink"), name = "period") +
             scale_x_continuous(breaks = c(0, 6, 12, 18))
         
