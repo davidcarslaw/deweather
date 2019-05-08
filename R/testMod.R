@@ -61,7 +61,10 @@ testMod <- function(dat, vars = c("trend", "ws", "wd", "hour",
     pred <- data.frame(pred.dat, pred = pred)
 
     plt <- ggplot(pred, aes_string("pred", pollutant)) +
-      geom_point(fill = "grey30", color = "white", pch = 21, size = 3) +
+      geom_point(fill = "grey30", color = "white", pch = 21, size = 2.5) +
+      geom_abline(slope = 1, intercept = 0, col = "deeppink", lwd = 1.5) +
+      geom_abline(slope = 0.5, intercept = 0, col = "turquoise4", lty = 5) +
+      geom_abline(slope = 2, intercept = 0, col = "turquoise4", lty = 5) +
       xlab("predicted") + 
       ylab("measured")
       
@@ -96,6 +99,6 @@ testMod <- function(dat, vars = c("trend", "ws", "wd", "hour",
     gridExtra::grid.arrange(plt, tbl, tbl_train, nrow = 1, as.table = TRUE)
 
     
-    invisible(pred)
+    invisible(list(pred = pred, plot = plt))
 
     }
