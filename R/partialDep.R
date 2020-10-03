@@ -129,7 +129,7 @@ plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE,
             geom_ribbon(alpha = 0.3, fill = "tomato") +
             xlab(quickText(variable)) +
             ylab(quickText(Args$ylab)) +
-            ylim(ylim) +
+            coord_cartesian(ylim = ylim) +
             ggtitle(title) +
             theme(plot.title = element_text(lineheight = 0.8, face = "bold")) +
             geom_rug(aes(x = x), data = quants, sides = "b",
@@ -152,7 +152,7 @@ plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE,
             ylab(quickText(Args$ylab)) +
             ggtitle(title) +
             theme(plot.title = element_text(lineheight = 0.8, face = "bold")) +
-            ylim(ylim) 
+            coord_cartesian(ylim = ylim) 
         
     }
 
