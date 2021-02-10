@@ -4,9 +4,14 @@
 \alias{diurnalGbm}
 \title{Plot diurnal changes, removing the effect of meteorology}
 \usage{
-diurnalGbm(dat, vars = c("ws", "wd", "hour", "weekday"),
-  pollutant = "nox", date = c("01/01/2012", "31/12/2012",
-  "31/12/2013"), single = FALSE, ylab = "value")
+diurnalGbm(
+  dat,
+  vars = c("ws", "wd", "hour", "weekday"),
+  pollutant = "nox",
+  date = c("01/01/2012", "31/12/2012", "31/12/2013"),
+  single = FALSE,
+  ylab = "value"
+)
 }
 \arguments{
 \item{dat}{A data frame to analyse.}

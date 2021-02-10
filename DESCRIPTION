@@ -1,8 +1,8 @@
 Package: deweather
 Type: Package
 Title: Remove the influence of weather on air quality data
-Version: 0.5
-Date: 2018-10-09
+Version: 0.6
+Date: 2021-02-10
 Authors@R: c(person("David", "Carslaw", role = c("aut", "cre"), email =
     "david.carslaw@york.ac.uk"))
 Maintainer: David Carslaw <david.carslaw@york.ac.uk>
@@ -29,4 +29,4 @@ Imports:
 License: GPL (>= 2)
 LazyLoad: yes
 LazyData: yes
-RoxygenNote: 6.1.0
+RoxygenNote: 7.1.1

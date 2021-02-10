@@ -4,9 +4,15 @@
 \alias{buildMod}
 \title{Function to apply meteorological normalisation to.}
 \usage{
-buildMod(dat, vars = c("trend", "ws", "wd", "hour", "weekday", "temp"),
-  pollutant = "nox", sam.size = round(2 * nrow(dat)/3),
-  n.trees = 200, B = 100, n.core = 4)
+buildMod(
+  dat,
+  vars = c("trend", "ws", "wd", "hour", "weekday", "temp"),
+  pollutant = "nox",
+  sam.size = round(2 * nrow(dat)/3),
+  n.trees = 200,
+  B = 100,
+  n.core = 4
+)
 }
 \arguments{
 \item{dat}{Data frame to analyse. Must contain a POSIXct field 

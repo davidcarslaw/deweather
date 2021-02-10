@@ -57,10 +57,11 @@ buildMod <- function(dat, vars = c("trend", "ws", "wd", "hour",
   dat <- dat[id, ]
   
   ## if more than one simulation only return model ONCE
-  if (B != 1)
+  if (B != 1L) {
     mod <- runGbm(dat, eq, vars, return.mod = TRUE, simulate = FALSE, n.trees = n.trees)
+  }
   
-  
+  # if model needs to be run multiple times
   res <- partialDep(dat, eq, vars, B, n.core, n.trees)
   
   if (B != 1) Mod <- mod$model else Mod <- res[[3]]
@@ -97,8 +98,9 @@ runGbm <- function(dat, eq, vars, return.mod = FALSE, simulate = FALSE, n.trees 
   if (simulate)
     dat <- dat[sample(1:nrow(dat), nrow(dat), replace = TRUE), ]
   
-  # these models for AQ data are not very senstive to tree sizes > 1000
-
+  # these models for AQ data are not very sensitive to tree sizes > 1000
+  # make reproducible
+  set.seed(123)
   mod <- gbm(eq, data = dat, distribution = "gaussian", n.trees = n.trees,
              shrinkage = 0.1, interaction.depth = 6, bag.fraction = 0.5,
              train.fraction = 1, n.minobsinnode = 10, #cv.folds=5,

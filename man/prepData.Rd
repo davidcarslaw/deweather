@@ -4,8 +4,12 @@
 \alias{prepData}
 \title{Prepare data for boosting algorithm}
 \usage{
-prepData(mydata, add = c("hour", "hour.local", "weekday", "trend",
-  "week", "jday", "month"), local.tz = "Europe/London", lag = NULL)
+prepData(
+  mydata,
+  add = c("hour", "hour.local", "weekday", "trend", "week", "jday", "month"),
+  local.tz = "Europe/London",
+  lag = NULL
+)
 }
 \arguments{
 \item{mydata}{A data frame to process.}
@@ -47,7 +51,7 @@ UTC.
 
 \item weekday The day of the week.
 
-\item trend The trend is calculated as a decimal year.
+\item trend The trend is calculated as a decimal year. 
 
 \item week The week of the year. Useful for taking account of
 long-term seasonal variations.

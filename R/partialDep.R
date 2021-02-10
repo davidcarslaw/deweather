@@ -7,22 +7,43 @@ partialDep <- function(dat, eq, vars, B = 100, n.core = 4, n.trees) {
     
     if (B == 1) return.mod <- TRUE else return.mod <- FALSE
     
-    cl <- makeCluster(n.core)
-    registerDoParallel(cl)
+    if (B == 1) {
+      
+      pred <- runGbm(dat, eq, vars, return.mod = TRUE, simulate = FALSE, n.trees = n.trees)
+      
+    } else {
+      
+      cl <- makeCluster(n.core)
+      registerDoParallel(cl)
+      
+      pred <- foreach (i = 1:B, .inorder = FALSE,
+                       .packages = "gbm") %dopar%
+        runGbm(dat, eq, vars, return.mod = FALSE, simulate = TRUE, n.trees = n.trees)
+      
+      stopCluster(cl)
+      
+    }
     
-    pred <- foreach (i = 1:B, .inorder = FALSE,
-                     .packages = "gbm") %dopar%
-      runGbm(dat, eq, vars, return.mod, simulate = TRUE, n.trees = n.trees)
-    
-    stopCluster(cl)
-    
-    ## partial dependence plots
-    pd <- lapply(pred, "[[", 1)
-    pd <- do.call(rbind, pd)
-    
-    ## relative influence
-    ri <- lapply(pred, "[[", 2)
-    ri <- do.call(rbind, ri)
+    # partial dependence plots
+
+    if (B == 1) {
+      
+      pd <- pred$pd
+      ri <- pred$ri
+      mod <- pred$model
+      
+    } else {
+      
+      pd <- lapply(pred, "[[", 1)
+      pd <- do.call(rbind, pd)
+      
+      ## relative influence
+      ri <- lapply(pred, "[[", 2)
+      ri <- do.call(rbind, ri)
+      
+      mod <- pred[[1]]$model
+      
+    }
 
 
     resCI <- group_by(pd, var, var_type, x) %>%
@@ -36,9 +57,6 @@ partialDep <- function(dat, eq, vars, B = 100, n.core = 4, n.trees) {
                 upper = quantile(rel.inf, probs = c(0.975)))
 
     if (return.mod) {
-
-        mod <- pred[[1]]$model
-
 
         return(list(resCI, resRI, mod))
 
