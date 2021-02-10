@@ -41,7 +41,7 @@ buildMod <- function(dat, vars = c("trend", "ws", "wd", "hour",
   
   ## add other variables, select only those required for modelling
   dat <- prepData(dat)
-  dat <- dat[(c("date", vars, pollutant))]
+  dat <- select(dat, c("date", vars, pollutant))
   
   variables <- paste(vars, collapse = "+")
   eq <- formula(paste(pollutant, "~", variables))
@@ -55,7 +55,7 @@ buildMod <- function(dat, vars = c("trend", "ws", "wd", "hour",
   if (sam.size > nrow(dat)) 
     sam.size <- nrow(dat)
   
-  id <- sample(1:nrow(dat), size = sam.size)
+  id <- sample(nrow(dat), size = sam.size)
   dat <- dat[id, ]
   
   ## if more than one simulation only return model ONCE
@@ -88,21 +88,23 @@ extractPD <- function(vars, mod) {
   res <- plot.gbm(mod, vars, continuous.resolution = n, return.grid = TRUE)
   res <- data.frame(y = res$y, var = vars, x = res[[vars]],
                     var_type = ifelse(is.numeric(res[[vars]]), "numeric", "character"))
+
   return(res)
 }
 
 
 
 
-runGbm <- function(dat, eq, vars, return.mod = FALSE, simulate = FALSE, n.trees = n.trees) {
+runGbm <- function(dat, eq, vars, return.mod, simulate, n.trees = n.trees) {
   
   ## sub-sample the data for bootstrapping
-  if (simulate)
-    dat <- dat[sample(1:nrow(dat), nrow(dat), replace = TRUE), ]
+  if (simulate) 
+    dat <- dat[sample(nrow(dat), nrow(dat), replace = TRUE), ]
+  
   
   # these models for AQ data are not very sensitive to tree sizes > 1000
   # make reproducible
-  set.seed(123)
+  if (!simulate) set.seed(123)
   mod <- gbm(eq, data = dat, distribution = "gaussian", n.trees = n.trees,
              shrinkage = 0.1, interaction.depth = 6, bag.fraction = 0.5,
              train.fraction = 1, n.minobsinnode = 10, #cv.folds=5,

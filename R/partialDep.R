@@ -127,12 +127,12 @@ plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE,
     # if type is numeric
     if (dat$var_type[1] == "numeric") {
       dat$x <- as.numeric(dat$x)
-      gap <- prettyGap(dat$x, 40)
+      gap <- prettyGap(dat$x, 50)
       dat$x <- round_any(dat$x, gap)
     }
 
     dat <- group_by(dat, var, var_type, x) %>%
-      summarise(across(everything(), mean))
+      summarise(mean = mean(mean), lower = min(lower), upper = max(upper))
 
     if (is.null(ylim)) ylim <- rng(dat)
     
