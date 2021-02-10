@@ -27,6 +27,8 @@
 ##' @import doParallel openair gbm dplyr ggplot2 parallel foreach 
 ##' @importFrom lubridate decimal_date
 ##' @importFrom gridExtra grid.arrange tableGrob
+##' @importFrom stats formula lm na.omit quantile reorder resid var
+##' @importFrom tidyr pivot_longer
 ##' @export
 ##' @return Returns a list including the model, influence data frame 
 ##'   and partial dependence data frame.

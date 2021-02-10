@@ -20,12 +20,14 @@ Imports:
     parallel,
     foreach,
     dplyr,
+    tidyr,
     lubridate,
     openair,
     mgcv,
     ggplot2,
     gridExtra
 License: GPL (>= 2)
+Encoding: UTF-8
 LazyLoad: yes
 LazyData: yes
 RoxygenNote: 7.1.1
