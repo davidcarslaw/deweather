@@ -294,6 +294,7 @@ plot2Way <- function(dw_model, variable = c("ws", "temp"), res = 100,
 
     res <- plot.gbm(mod, i.var = variable, continuous.resolution = res,
                     return.grid = TRUE)
+  
     
     ## exclude predictions too far from data (from mgcv)
 
@@ -311,6 +312,13 @@ plot2Way <- function(dw_model, variable = c("ws", "temp"), res = 100,
         
         res$y[tf] <- NA
     }
+    
+    if ("trend" %in% names(res)) {
+      res <- decimalDate(res, "trend")
+      res$trend <- res$date
+    }
+    
+    
 
     if (all(sapply(res, is.numeric))) {
 
