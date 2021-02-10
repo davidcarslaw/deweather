@@ -23,7 +23,6 @@ Imports:
     lubridate,
     openair,
     mgcv,
-    reshape2,
     ggplot2,
     gridExtra
 License: GPL (>= 2)

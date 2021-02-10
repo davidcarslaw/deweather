@@ -16,7 +16,6 @@
 ##'     "19/2/2007", "19/2/2010")}.
 ##' @param single Not used.
 ##' @param ylab Label for y-axis.
-##' @import reshape2
 ##' @export
 ##' @return Some data
 ##' @author David Carslaw
@@ -80,8 +79,11 @@ diurnalGbm <- function(dat, vars = c("ws", "wd", "hour", "weekday"),  pollutant 
 
         ## difference
         results$difference <- results[[4]] - results[[3]]
-
-        results <- melt(results, id.var = c("Weekday", "Hour", "difference"))
+        
+        results <- pivot_longer(results, 
+                                cols = -c(Weekday, Hour, difference), 
+                                names_to = "variable")
+        
         ylim <- range(c(results$difference, results$value)) * 1.03
         
         # data sets that provide postive and negative differences
