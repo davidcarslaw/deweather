@@ -132,7 +132,7 @@ plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE,
     }
 
     dat <- group_by(dat, var, var_type, x) %>%
-      summarise_all(funs(mean(.)))
+      summarise(across(everything(), mean))
 
     if (is.null(ylim)) ylim <- rng(dat)
     

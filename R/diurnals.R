@@ -73,7 +73,7 @@ diurnalGbm <- function(dat, vars = c("ws", "wd", "hour", "weekday"),  pollutant 
         results$Weekday[-ids] <- "Weekday"
         
         results <- group_by(results, Weekday, Hour) %>% 
-            summarise_if(is.numeric, mean, na.rm = TRUE)
+            summarise(across(where(is.numeric), ~ mean(.x, na.rm = TRUE)))
      
         results$Weekday <- ordered(results$Weekday, levels = c("Weekday", "Sat", "Sun"),
                                    labels = c("Weekday", "Saturday", "Sunday"))
@@ -118,7 +118,8 @@ diurnalGbm <- function(dat, vars = c("ws", "wd", "hour", "weekday"),  pollutant 
         results$Weekday <- as.character(results$Weekday)
         results$Weekday[-ids] <- "Weekday"
         results <- results <- group_by(results, Weekday, Hour) %>% 
-            summarise_if(is.numeric, mean, na.rm = TRUE)
+            summarise(across(where(is.numeric), ~ mean(.x, na.rm = TRUE)))
+        
         results$Weekday <- ordered(results$Weekday, levels =c("Weekday", "Sat", "Sun"),
                                    labels = c("Weekday", "Saturday", "Sunday"))
 
