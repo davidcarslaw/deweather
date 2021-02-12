@@ -16,14 +16,15 @@ plotPD(dat, variable, ylim = NULL, plotit = TRUE, auto.text = TRUE, ...)
 \item{plotit}{Should a plot be produced?}
 
 \item{auto.text}{Either \code{TRUE} (default) or \code{FALSE}. If
-\code{TRUE} titles and axis labels will automatically try and
-format pollutant names and units properly e.g.  by subscripting
-the `2' in NO2.}
+\code{TRUE} titles and axis labels will automatically try and format
+pollutant names and units properly e.g.  by subscripting the `2' in NO2.}
 
 \item{...}{other arguments for plotting.}
 }
 \value{
-A plot
+Invisibly returns a list containing the plot and the data used to
+  make the plot for \code{plotPD} and \code{plot2Way} to allow post
+  processing e.g. modifying the \code{ggplot}.
 }
 \description{
 Function to plot partial dependence plots with bootstrap uncertainties
