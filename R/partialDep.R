@@ -217,6 +217,8 @@ plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE,
     
   }
   
+  if (plotit) print(plt)
+  
   invisible(list(plot = plt, data = dat))
   
 }
