@@ -249,7 +249,13 @@ plotAllPD <- function(dw_model, ylim = NULL, nrow = NULL, ylab = NULL, ...) {
   plots <- lapply(influ$var, plotPD, dat = dw_model, ylab = ylab,
                   ylim = ylim)
   
+  # extract first element of list, which is the plot
+  thedata <- sapply(plots, "[", 2)
+  plots <- sapply(plots, "[", 1)
+  
   do.call(gridExtra::grid.arrange, c(plots, nrow = nrow))
+  
+  invisible(list(plot = plots, data = thedata))
   
 }
 
