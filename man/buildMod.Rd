@@ -11,7 +11,8 @@ buildMod(
   sam.size = round(2 * nrow(dat)/3),
   n.trees = 200,
   B = 100,
-  n.core = 4
+  n.core = 4,
+  seed = 123
 )
 }
 \arguments{
@@ -40,6 +41,8 @@ data, the number of rows of data is used instead.}
 plots.}
 
 \item{n.core}{Number of cores to use for parallel processing.}
+
+\item{seed}{Random number seed for reproducibility in returned model.}
 }
 \value{
 Returns a list including the model, influence data frame 

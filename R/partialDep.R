@@ -1,15 +1,16 @@
 
 
-partialDep <- function(dat, eq, vars, B = 100, n.core = 4, n.trees) {
+partialDep <- function(dat, eq, vars, B = 100, n.core = 4, n.trees, seed) {
   
   ## silence R check
   x = y = rel.inf = NULL
-  
+
   if (B == 1) return.mod <- TRUE else return.mod <- FALSE
   
   if (B == 1) {
     
-    pred <- runGbm(dat, eq, vars, return.mod = TRUE, simulate = FALSE, n.trees = n.trees)
+    pred <- runGbm(dat, eq, vars, return.mod = TRUE, simulate = FALSE, 
+                   n.trees = n.trees, seed)
     
   } else {
     
@@ -18,7 +19,8 @@ partialDep <- function(dat, eq, vars, B = 100, n.core = 4, n.trees) {
     
     pred <- foreach (i = 1:B, .inorder = FALSE,
                      .packages = "gbm") %dopar%
-      runGbm(dat, eq, vars, return.mod = FALSE, simulate = TRUE, n.trees = n.trees)
+      runGbm(dat, eq, vars, return.mod = FALSE, simulate = TRUE, 
+             n.trees = n.trees)
     
     stopCluster(cl)
     
@@ -247,7 +249,7 @@ plotAllPD <- function(dw_model, ylim = NULL, nrow = NULL, ylab = NULL, ...) {
   
   ## plot everything
   plots <- lapply(influ$var, plotPD, dat = dw_model, ylab = ylab,
-                  ylim = ylim)
+                  ylim = ylim, plotit = FALSE)
   
   # extract first element of list, which is the plot
   thedata <- sapply(plots, "[", 2)

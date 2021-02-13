@@ -23,7 +23,7 @@
 ##' @param B Number of bootstrap simulations for partial dependence 
 ##'   plots.
 ##' @param n.core Number of cores to use for parallel processing.
-##'   
+##' @param seed Random number seed for reproducibility in returned model.
 ##' @import doParallel openair gbm dplyr ggplot2 parallel foreach 
 ##' @importFrom lubridate decimal_date
 ##' @importFrom gridExtra grid.arrange tableGrob
@@ -37,7 +37,7 @@ buildMod <- function(dat, vars = c("trend", "ws", "wd", "hour",
                                    "weekday", "temp"),
                      pollutant = "nox", sam.size = round(2 * nrow(dat) / 3),
                      n.trees = 200,
-                     B = 100, n.core = 4) {
+                     B = 100, n.core = 4, seed = 123) {
   
   ## add other variables, select only those required for modelling
   dat <- prepData(dat)
@@ -60,11 +60,12 @@ buildMod <- function(dat, vars = c("trend", "ws", "wd", "hour",
   
   ## if more than one simulation only return model ONCE
   if (B != 1L) {
-    mod <- runGbm(dat, eq, vars, return.mod = TRUE, simulate = FALSE, n.trees = n.trees)
+    mod <- runGbm(dat, eq, vars, return.mod = TRUE, simulate = FALSE, 
+                  n.trees = n.trees, seed)
   }
   
   # if model needs to be run multiple times
-  res <- partialDep(dat, eq, vars, B, n.core, n.trees)
+  res <- partialDep(dat, eq, vars, B, n.core, n.trees, seed)
   
   if (B != 1) Mod <- mod$model else Mod <- res[[3]]
   
@@ -95,7 +96,8 @@ extractPD <- function(vars, mod) {
 
 
 
-runGbm <- function(dat, eq, vars, return.mod, simulate, n.trees = n.trees) {
+runGbm <- function(dat, eq, vars, return.mod, simulate, n.trees = n.trees, 
+                   seed = seed) {
   
   ## sub-sample the data for bootstrapping
   if (simulate) 
@@ -104,7 +106,7 @@ runGbm <- function(dat, eq, vars, return.mod, simulate, n.trees = n.trees) {
   
   # these models for AQ data are not very sensitive to tree sizes > 1000
   # make reproducible
-  if (!simulate) set.seed(123)
+  if (!simulate) set.seed(seed)
   mod <- gbm(eq, data = dat, distribution = "gaussian", n.trees = n.trees,
              shrinkage = 0.1, interaction.depth = 6, bag.fraction = 0.5,
              train.fraction = 1, n.minobsinnode = 10, #cv.folds=5,

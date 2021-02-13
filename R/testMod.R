@@ -36,7 +36,8 @@ testMod <- function(dat, vars = c("trend", "ws", "wd", "hour",
     train.dat <- dat[id, ]
     pred.dat <- dat[-id, ]
     
-    mod <- runGbm(train.dat, eq, vars, return.mod = TRUE, simulate = FALSE, n.trees = n.trees)
+    mod <- runGbm(train.dat, eq, vars, return.mod = TRUE, simulate = FALSE, 
+                  n.trees = n.trees, seed)
     
     # predictions based on training data
     pred_train <- predict.gbm(mod$model, newdata = train.dat, n.trees = n.trees)
