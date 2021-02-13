@@ -35,7 +35,7 @@
 ##' @author David Carslaw
 buildMod <- function(dat, vars = c("trend", "ws", "wd", "hour",
                                    "weekday", "temp"),
-                     pollutant = "nox", sam.size = round(2 * nrow(dat) / 3),
+                     pollutant = "nox", sam.size = nrow(dat),
                      n.trees = 200,
                      B = 100, n.core = 4, seed = 123) {
   
@@ -55,8 +55,11 @@ buildMod <- function(dat, vars = c("trend", "ws", "wd", "hour",
   if (sam.size > nrow(dat)) 
     sam.size <- nrow(dat)
   
-  id <- sample(nrow(dat), size = sam.size)
-  dat <- dat[id, ]
+  if (sam.size != nrow(dat)) {
+    id <- sample(nrow(dat), size = sam.size)
+    dat <- dat[id, ]
+    
+  }
   
   ## if more than one simulation only return model ONCE
   if (B != 1L) {
@@ -106,7 +109,8 @@ runGbm <- function(dat, eq, vars, return.mod, simulate, n.trees = n.trees,
   
   # these models for AQ data are not very sensitive to tree sizes > 1000
   # make reproducible
-  if (!simulate) set.seed(seed)
+  if (!simulate) set.seed(seed) else set.seed(runif(1))
+  
   mod <- gbm(eq, data = dat, distribution = "gaussian", n.trees = n.trees,
              shrinkage = 0.1, interaction.depth = 6, bag.fraction = 0.5,
              train.fraction = 1, n.minobsinnode = 10, #cv.folds=5,
