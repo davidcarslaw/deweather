@@ -32,7 +32,9 @@ testMod <- function(dat, vars = c("trend", "ws", "wd", "hour",
     id <- which(is.na(dat[[pollutant]]))
     if (length(id) > 0 )
         dat <- dat[-id, ]
-
+    
+    # make reproducible
+    set.seed(seed) 
     id <- sample(1:nrow(dat), size = train.frac * nrow(dat))
     train.dat <- dat[id, ]
     pred.dat <- dat[-id, ]
