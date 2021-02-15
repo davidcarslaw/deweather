@@ -9,13 +9,14 @@
 ##' @param train.frac Fraction of data to train a model on. The model
 ##'     is tested against the withheld 0.2 proportion.
 ##' @param n.trees Number of trees to use.
+##' @param seed Random number seed for reproducibility in returned model.
 ##' @export
 ##' @return Returns to be added.
 ##' @author David Carslaw
 testMod <- function(dat, vars = c("trend", "ws", "wd", "hour",
                                   "weekday", "temp"),
                     pollutant = "nox", train.frac = 0.8,
-                    n.trees = 200) {
+                    n.trees = 200, seed = 123) {
 
     ## silence R check
     statistic = value = NULL

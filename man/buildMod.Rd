@@ -8,7 +8,7 @@ buildMod(
   dat,
   vars = c("trend", "ws", "wd", "hour", "weekday", "temp"),
   pollutant = "nox",
-  sam.size = round(2 * nrow(dat)/3),
+  sam.size = nrow(dat),
   n.trees = 200,
   B = 100,
   n.core = 4,

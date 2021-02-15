@@ -9,7 +9,8 @@ testMod(
   vars = c("trend", "ws", "wd", "hour", "weekday", "temp"),
   pollutant = "nox",
   train.frac = 0.8,
-  n.trees = 200
+  n.trees = 200,
+  seed = 123
 )
 }
 \arguments{
@@ -24,6 +25,8 @@ normalisation to.}
 is tested against the withheld 0.2 proportion.}
 
 \item{n.trees}{Number of trees to use.}
+
+\item{seed}{Random number seed for reproducibility in returned model.}
 }
 \value{
 Returns to be added.
