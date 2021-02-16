@@ -76,7 +76,7 @@ road_data <- importAURN(site = "my1", year = 1998:2016, hc = TRUE)
 met <- importNOAA(year = 1998:2016)
 
 # join together but ignore met data in road_data because it is modelled
-road_data <- left_join(select(road_data, -ws, -wd), met, by = "date")
+road_data <- left_join(select(road_data, -ws, -wd, -air_temp), met, by = "date")
 
 road_data <- select(road_data, date, nox, no2, ethane, isoprene, 
                     benzene, ws, wd, air_temp, RH, cl)
@@ -161,6 +161,8 @@ ggplot(timeAverage(demet, "day"), aes(date, pred)) +
 ```
 
 ## References
+
+Grange, S. K. and Carslaw, D. C. (2019) Using meteorological normalisation to detect interventions in air quality time series, Science of The Total Environment. 653, pp. 578–588. doi: 10.1016/j.scitotenv.2018.10.344.
 
 Carslaw, D.C. and P.J. Taylor (2009). Analysis of air pollution data at a mixed source location using boosted regression trees. Atmospheric Environment.  Vol. 43, pp. 3563–3570.
 

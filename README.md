@@ -1,60 +1,84 @@
 
 <!-- Edit the README.Rmd only!!! The README.md is generated automatically from README.Rmd. -->
-deweather: an R package to remove meteorological variation from air quality data
-================================================================================
+
+# deweather: an R package to remove meteorological variation from air quality data
 
 <img src="inst/plume.png" alt="openair logo" width="35%" />
 
-**deweather** is an R package developed for the purpose of 'removing' the influence of meteorology from air quality time series data. It is part of the [openair](http://davidcarslaw.github.io/openair/) suite of packages designed to support the analysis of air quality data and related data.
+**deweather** is an R package developed for the purpose of ‘removing’
+the influence of meteorology from air quality time series data. It is
+part of the [openair](http://davidcarslaw.github.io/openair/) suite of
+packages designed to support the analysis of air quality data and
+related data.
 
-The **deweather** package uses a *boosted regression tree* approach for modelling air quality data. These and similar techniques provide powerful tools for building statistical models of air quality data. They are able to take account of the many complex interactions between variables as well as non-linear relationships between the variables.
+The **deweather** package uses a *boosted regression tree* approach for
+modelling air quality data. These and similar techniques provide
+powerful tools for building statistical models of air quality data. They
+are able to take account of the many complex interactions between
+variables as well as non-linear relationships between the variables.
 
-The modelling can be computationally intensive and therefore **deweather** makes use of the parallel processing, which should work on Windows, Linux and Mac OSX.
+The modelling can be computationally intensive and therefore
+**deweather** makes use of the parallel processing, which should work on
+Windows, Linux and Mac OSX.
 
-Installation
-------------
+## Installation
 
-Installation of **deweather** from GitHub should be easy using the devtools package.
+Installation of **deweather** from GitHub should be easy using the
+devtools package.
 
 ``` r
 require(devtools)
 install_github('davidcarslaw/deweather')
 ```
 
-Description
------------
+## Description
 
-Meteorology plays a central role in affecting the concentrations of pollutants in the atmosphere. When considering trends in air pollutants it can be very difficult to know whether a change in concentration is due to emissions or meteorology.
+Meteorology plays a central role in affecting the concentrations of
+pollutants in the atmosphere. When considering trends in air pollutants
+it can be very difficult to know whether a change in concentration is
+due to emissions or meteorology.
 
-The **deweather** package uses a powerful statistical technique based on *boosted regression trees* using the **gbm** package (Ridgeway, 2017). Statistical models are developed to explain concentrations using meteorological and other variables. These models can be tested on randomly withheld data with the aim of developing the most appropriate model.
+The **deweather** package uses a powerful statistical technique based on
+*boosted regression trees* using the **gbm** package (Ridgeway, 2017).
+Statistical models are developed to explain concentrations using
+meteorological and other variables. These models can be tested on
+randomly withheld data with the aim of developing the most appropriate
+model.
 
-Example data set
-----------------
+## Example data set
 
-The **deweather** package comes with a comprehensive data set of air quality and meteorological data. The air quality data is from Marylebone Road in central London (obtained from the **openair** package) and the meteorological data from Heathrow Airport (obtained from the **worldmet** package).
+The **deweather** package comes with a comprehensive data set of air
+quality and meteorological data. The air quality data is from Marylebone
+Road in central London (obtained from the **openair** package) and the
+meteorological data from Heathrow Airport (obtained from the
+**worldmet** package).
 
-The `road_data` data frame contains various pollutants such a NO<sub>x</sub>, NO<sub>2</sub>, ethane and isoprene as well as meteorological data including wind speed, wind direction, relative humidity, ambient temperature and cloud cover.
+The `road_data` data frame contains various pollutants such a
+NO<sub>x</sub>, NO<sub>2</sub>, ethane and isoprene as well as
+meteorological data including wind speed, wind direction, relative
+humidity, ambient temperature and cloud cover.
 
 ``` r
 library(deweather)
 head(road_data)
-##                  date nox no2 ethane isoprene benzene  ws  wd air_temp
-## 1 1998-01-01 00:00:00 546  74     NA       NA      NA 1.0 280     3.60
-## 2 1998-01-01 01:00:00  NA  NA     NA       NA      NA 1.0 230     3.50
-## 3 1998-01-01 02:00:00  NA  NA     NA       NA      NA 1.5 180     4.25
-## 4 1998-01-01 03:00:00 944  99     NA       NA      NA  NA  NA       NA
-## 5 1998-01-01 04:00:00 894 149     NA       NA      NA 1.5 180     3.80
-## 6 1998-01-01 05:00:00 506  80     NA       NA      NA 1.0 190     3.50
-##         RH cl
-## 1 89.41776  2
-## 2 90.67753  2
-## 3 87.60679  2
-## 4       NA NA
-## 5 89.43347  1
-## 6 89.40989 NA
+##                  date nox no2 ethane isoprene benzene  ws  wd air_temp       RH
+## 1 1998-01-01 00:00:00 546  74     NA       NA      NA 1.0 280     3.60 89.41776
+## 2 1998-01-01 01:00:00  NA  NA     NA       NA      NA 1.0 230     3.50 90.67753
+## 3 1998-01-01 02:00:00  NA  NA     NA       NA      NA 1.5 180     4.25 87.60679
+## 4 1998-01-01 03:00:00 944  99     NA       NA      NA  NA  NA       NA       NA
+## 5 1998-01-01 04:00:00 894 149     NA       NA      NA 1.5 180     3.80 89.43347
+## 6 1998-01-01 05:00:00 506  80     NA       NA      NA 1.0 190     3.50 89.40989
+##   cl
+## 1  2
+## 2  2
+## 3  2
+## 4 NA
+## 5  1
+## 6 NA
 ```
 
-For those interested in obtaining the data directly, the following code can be used.
+For those interested in obtaining the data directly, the following code
+can be used.
 
 ``` r
 library(openair)
@@ -68,18 +92,21 @@ road_data <- importAURN(site = "my1", year = 1998:2016, hc = TRUE)
 met <- importNOAA(year = 1998:2016)
 
 # join together but ignore met data in road_data because it is modelled
-road_data <- left_join(select(road_data, -ws, -wd), met, by = "date")
+road_data <- left_join(select(road_data, -ws, -wd, -air_temp), met, by = "date")
 
 road_data <- select(road_data, date, nox, no2, ethane, isoprene, 
                     benzene, ws, wd, air_temp, RH, cl)
 ```
 
-Construct and test model(s)
----------------------------
+## Construct and test model(s)
 
-The `testMod` function is used to build and test various models to help derive the most appropriate.
+The `testMod` function is used to build and test various models to help
+derive the most appropriate.
 
-In this example, we will restrict the data to model to 4 years. Note that variables such as `hour` and `weekday` are used as variables that can be used to explain some of the variation. `hour` for example very usefully acts as a proxy for the diurnal variation in emissions.
+In this example, we will restrict the data to model to 4 years. Note
+that variables such as `hour` and `weekday` are used as variables that
+can be used to explain some of the variation. `hour` for example very
+usefully acts as a proxy for the diurnal variation in emissions.
 
 ``` r
 library(openair)
@@ -90,16 +117,20 @@ dat_part <- selectByDate(road_data, year = 2001:2004)
 testMod(dat = dat_part, 
         vars = c("trend", "ws", "wd", "hour", "weekday", "air_temp", "week"),
         pollutant = "no2")
+## [1] "Percent increase in RMSE using test data is 1%"
 ```
 
-![](tools/testMod-1.png)
+![](tools/testMod-1.png)<!-- -->
 
-The output shows by default the performance of the model when applied to a withheld random 20% (by default) of the data i.e. the model is evaluated against data nt used to build the model. Common model evaluation metrics are also given.
+The output shows by default the performance of the model when applied to
+a withheld random 20% (by default) of the data i.e. the model is
+evaluated against data nt used to build the model. Common model
+evaluation metrics are also given.
 
-Build a model
--------------
+## Build a model
 
-Assuming that a good model can be developed, it can now be explored in more detail.
+Assuming that a good model can be developed, it can now be explored in
+more detail.
 
 ``` r
 mod_no2 <- buildMod(dat = dat_part, 
@@ -108,35 +139,50 @@ mod_no2 <- buildMod(dat = dat_part,
         n.core = 6)
 ```
 
-This function returns a `deweather` object that can be interogated as shown below.
+This function returns a `deweather` object that can be interogated as
+shown below.
 
-Examine the partial dependencies
---------------------------------
+## Examine the partial dependencies
 
 ### Plot all partial dependencies
 
-One of the benefits of the boosted regression tree approach is that the *partial dependencies* can be explored. In simple terms, the partial dependencies show the relationship between the pollutant of interest and the covariates used in the model while holding the value of other covariates at their mean level.
+One of the benefits of the boosted regression tree approach is that the
+*partial dependencies* can be explored. In simple terms, the partial
+dependencies show the relationship between the pollutant of interest and
+the covariates used in the model while holding the value of other
+covariates at their mean level.
 
 ``` r
 plotAllPD(dw_model = mod_no2)
 ```
 
-![](tools/plotAll-1.png)
+![](tools/plotAll-1.png)<!-- -->
 
 ### Plot two-way interactions
 
-It can be very useful to plot important two-way interactions. In this example the interaction between `ws` and `air_temp` is considered. The plot shows that NO<sub>2</sub> tends to be high when the wind speed is low and the temperature is low i.e. stable atmospheric conditions. Also NO<sub>2</sub> tends to be high when the temperature is high, which is most likely due to more O<sub>3</sub> available to convert NO to NO<sub>2</sub>. In fact, background O<sub>3</sub> would probably be a useful covariate to add to the model.
+It can be very useful to plot important two-way interactions. In this
+example the interaction between `ws` and `air_temp` is considered. The
+plot shows that NO<sub>2</sub> tends to be high when the wind speed is
+low and the temperature is low i.e. stable atmospheric conditions. Also
+NO<sub>2</sub> tends to be high when the temperature is high, which is
+most likely due to more O<sub>3</sub> available to convert NO to
+NO<sub>2</sub>. In fact, background O<sub>3</sub> would probably be a
+useful covariate to add to the model.
 
 ``` r
 plot2Way(dw_model = mod_no2, variable = c("ws", "air_temp"))
 ```
 
-![](tools/plot2way-1.png)
+![](tools/plot2way-1.png)<!-- -->
 
-Apply meteorological averaging
-------------------------------
+## Apply meteorological averaging
 
-An indication of the meteorologically-averaged trend is given by the `plotAllPD` function above. A better indication is given by using the model to predict many times with random sampling of meteorological conditions. This sampling is carried out by the `metSim` function. Note that in this case there is no need to supply the "trend" component because it is calculated using `metSim`
+An indication of the meteorologically-averaged trend is given by the
+`plotAllPD` function above. A better indication is given by using the
+model to predict many times with random sampling of meteorological
+conditions. This sampling is carried out by the `metSim` function. Note
+that in this case there is no need to supply the “trend” component
+because it is calculated using `metSim`
 
 ``` r
 demet <- metSim(mod_no2, newdata = dat_part, 
@@ -151,9 +197,13 @@ ggplot(demet, aes(date, pred)) +
   geom_line()
 ```
 
-![](tools/plotTrend-1.png)
+![](tools/plotTrend-1.png)<!-- -->
 
-The plot is rather noisy due to relatively few samples of meteorology being considered (200 by default, set with `B = 200`). The noise could be reduced by increasing the simulations, but this would add to run time. Alternatively, it can be useful to simply average the results. For example:
+The plot is rather noisy due to relatively few samples of meteorology
+being considered (200 by default, set with `B = 200`). The noise could
+be reduced by increasing the simulations, but this would add to run
+time. Alternatively, it can be useful to simply average the results. For
+example:
 
 ``` r
 library(ggplot2)
@@ -162,13 +212,24 @@ ggplot(timeAverage(demet, "day"), aes(date, pred)) +
   ylab(quickText("no2 (ug/m3)"))
 ```
 
-![](tools/plotTrendAve-1.png)
+![](tools/plotTrendAve-1.png)<!-- -->
 
-References
-----------
+## References
 
-Carslaw, D.C. and P.J. Taylor (2009). Analysis of air pollution data at a mixed source location using boosted regression trees. Atmospheric Environment. Vol. 43, pp. 3563–3570.
+Grange, S. K. and Carslaw, D. C. (2019) Using meteorological
+normalisation to detect interventions in air quality time series,
+Science of The Total Environment. 653, pp. 578–588. doi:
+10.1016/j.scitotenv.2018.10.344.
 
-Carslaw, D.C., Williams, M.L. and B. Barratt A short-term intervention study — impact of airport closure on near-field air quality due to the eruption of Eyjafjallajökull. (2012) Atmospheric Environment, Vol. 54, 328–336.
+Carslaw, D.C. and P.J. Taylor (2009). Analysis of air pollution data at
+a mixed source location using boosted regression trees. Atmospheric
+Environment. Vol. 43, pp. 3563–3570.
 
-Greg Ridgeway with contributions from others (2017). gbm: Generalized Boosted Regression Models. Rpackage version 2.1.3. (<https://CRAN.R-project.org/package=gbm>)
+Carslaw, D.C., Williams, M.L. and B. Barratt A short-term intervention
+study — impact of airport closure on near-field air quality due to the
+eruption of Eyjafjallajökull. (2012) Atmospheric Environment, Vol. 54,
+328–336.
+
+Greg Ridgeway with contributions from others (2017). gbm: Generalized
+Boosted Regression Models. Rpackage version 2.1.3.
+(<https://CRAN.R-project.org/package=gbm>)
