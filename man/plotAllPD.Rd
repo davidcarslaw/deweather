@@ -4,7 +4,7 @@
 \alias{plotAllPD}
 \title{Plot all partial dependencies}
 \usage{
-plotAllPD(dw_model, ylim = NULL, nrow = NULL, ylab = NULL, ...)
+plotAllPD(dw_model, ylim = NULL, nrow = NULL, ...)
 }
 \arguments{
 \item{dw_model}{Model object from running \code{buildMod}.}
@@ -13,9 +13,9 @@ plotAllPD(dw_model, ylim = NULL, nrow = NULL, ylab = NULL, ...)
 
 \item{nrow}{Number of rows for th eplots.}
 
-\item{ylab}{The y-axis label to over-ride default.}
-
 \item{...}{extra plotting arguments.}
+
+\item{ylab}{The y-axis label to over-ride default.}
 }
 \value{
 A plot
