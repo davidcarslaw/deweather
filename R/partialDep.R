@@ -237,7 +237,7 @@ plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE,
 ##' @export
 ##' @return A plot
 ##' @author David Carslaw
-plotAllPD <- function(dw_model, ylim = NULL, nrow = NULL, ylab = NULL, ...) {
+plotAllPD <- function(dw_model, ylim = NULL, nrow = NULL, ...) {
   
   if (class(dw_model) != "deweather")
     stop ("Need to supply a deweather object from buildMod.")
@@ -248,8 +248,8 @@ plotAllPD <- function(dw_model, ylim = NULL, nrow = NULL, ylab = NULL, ...) {
   influ <- arrange(influ, desc(mean))
   
   ## plot everything
-  plots <- lapply(influ$var, plotPD, dat = dw_model, ylab = ylab,
-                  ylim = ylim, plotit = FALSE)
+  plots <- lapply(influ$var, plotPD, dat = dw_model, 
+                  ylim = ylim, plotit = FALSE, ...)
   
   # extract first element of list, which is the plot
   thedata <- sapply(plots, "[", 2)
