@@ -307,7 +307,7 @@ plot2Way <- function(dw_model, variable = c("ws", "temp"), res = 100,
   
   ## exclude predictions too far from data (from mgcv)
   
-  if (exlude && !"weekday" %in% variable) {
+  if (exlude && all(sapply(res[variable], is.numeric))) {
     sub <- na.omit(data[, variable]) ## pairs of variables
     x <- sub[[variable[1]]] ## x data
     y <- sub[[variable[2]]] ## y data
