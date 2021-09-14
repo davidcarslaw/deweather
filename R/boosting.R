@@ -3,40 +3,43 @@
 ##'
 ##' This is the main function to apply a gbm model to a data set.
 ##' @title Function to apply meteorological normalisation to.
-##'   
-##' @param dat Data frame to analyse. Must contain a POSIXct field 
-##'   called \code{date}.
-##' @param vars Explanatory variables to use. These variables will be 
-##'   used to build the gbm model. Note that the model must include a
-##'   trend component. Several variables can be automatically 
-##'   calculated (see \code{\link{prepData}} for details).
-##' @param pollutant The name of the variable to apply meteorological 
+##'
+##' @param dat Data frame to analyse. Must contain a POSIXct field called
+##'   \code{date}.
+##' @param vars Explanatory variables to use. These variables will be used to
+##'   build the gbm model. Note that the model must include a trend component.
+##'   Several variables can be automatically calculated (see
+##'   \code{\link{prepData}} for details).
+##' @param pollutant The name of the variable to apply meteorological
 ##'   normalisation to.
-##' @param sam.size The number of random samples to extract from the
-##'   data for model building. While it is possible to use the full
-##'   data set, for data sets spanning years the model building can
-##'   take a very long time to run. Additionally, there will be
-##'   diminishing returns in terms of model accuracy. If
-##'   \code{sam.size} is greater than the number of number of rows of
-##'   data, the number of rows of data is used instead.
+##' @param sam.size The number of random samples to extract from the data for
+##'   model building. While it is possible to use the full data set, for data
+##'   sets spanning years the model building can take a very long time to run.
+##'   Additionally, there will be diminishing returns in terms of model
+##'   accuracy. If \code{sam.size} is greater than the number of number of rows
+##'   of data, the number of rows of data is used instead.
 ##' @param n.trees Number of trees to fit.
-##' @param B Number of bootstrap simulations for partial dependence 
-##'   plots.
+##' @param simulate Should the original time series be randomly sampled with
+##'   replacement? The default is \code{FALSE}. Setting \code{simulate = TRUE}
+##'   can be useful for estimating model uncertainties. In which case models
+##'   should be run multiple times with \code{B = 1} and a different value of
+##'   \code{seed} e.g. \code{seed = runif(1)}.
+##' @param B Number of bootstrap simulations for partial dependence plots.
 ##' @param n.core Number of cores to use for parallel processing.
 ##' @param seed Random number seed for reproducibility in returned model.
-##' @import doParallel openair gbm dplyr ggplot2 parallel foreach 
+##' @import doParallel openair gbm dplyr ggplot2 parallel foreach
 ##' @importFrom lubridate decimal_date
 ##' @importFrom gridExtra grid.arrange tableGrob
 ##' @importFrom stats formula lm na.omit quantile reorder resid var
 ##' @importFrom tidyr pivot_longer
 ##' @export
-##' @return Returns a list including the model, influence data frame 
-##'   and partial dependence data frame.
+##' @return Returns a list including the model, influence data frame and partial
+##'   dependence data frame.
 ##' @author David Carslaw
 buildMod <- function(dat, vars = c("trend", "ws", "wd", "hour",
                                    "weekday", "temp"),
                      pollutant = "nox", sam.size = nrow(dat),
-                     n.trees = 200,
+                     n.trees = 200, simulate = FALSE,
                      B = 100, n.core = 4, seed = 123) {
   
   ## add other variables, select only those required for modelling
@@ -55,15 +58,23 @@ buildMod <- function(dat, vars = c("trend", "ws", "wd", "hour",
   if (sam.size > nrow(dat)) 
     sam.size <- nrow(dat)
   
-  if (sam.size != nrow(dat)) {
-    id <- sample(nrow(dat), size = sam.size)
-    dat <- dat[id, ]
-    
-  }
+   if (simulate) {
+     
+     id <- sample(nrow(dat), size = sam.size, replace = TRUE)
+     dat <- dat[id, ]
+     
+   } else {
+     
+     id <- sample(nrow(dat), size = sam.size)
+     dat <- dat[id, ]
+     
+   }
   
+    
+
   ## if more than one simulation only return model ONCE
   if (B != 1L) {
-    mod <- runGbm(dat, eq, vars, return.mod = TRUE, simulate = FALSE, 
+    mod <- runGbm(dat, eq, vars, return.mod = TRUE, simulate = simulate, 
                   n.trees = n.trees, seed)
   }
   
