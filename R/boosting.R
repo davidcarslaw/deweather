@@ -45,6 +45,7 @@ buildMod <- function(dat, vars = c("trend", "ws", "wd", "hour",
   ## add other variables, select only those required for modelling
   dat <- prepData(dat)
   dat <- select(dat, c("date", vars, pollutant))
+  dat <- na.omit(dat) # only build model where all data are available - can always predict in gaps
   
   variables <- paste(vars, collapse = "+")
   eq <- formula(paste(pollutant, "~", variables))
