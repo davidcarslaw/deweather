@@ -4,7 +4,15 @@
 \alias{plotPD}
 \title{Partial dependence plots with uncertainties.}
 \usage{
-plotPD(dat, variable, ylim = NULL, plotit = TRUE, auto.text = TRUE, ...)
+plotPD(
+  dat,
+  variable,
+  ylim = NULL,
+  plotit = TRUE,
+  intervals = 40,
+  auto.text = TRUE,
+  ...
+)
 }
 \arguments{
 \item{dat}{Model object from running \code{buildMod}.}
@@ -14,6 +22,8 @@ plotPD(dat, variable, ylim = NULL, plotit = TRUE, auto.text = TRUE, ...)
 \item{ylim}{user-specified \code{ylim}.}
 
 \item{plotit}{Should a plot be produced?}
+
+\item{intervals}{Number of intervals to to calculate partial dependence over.}
 
 \item{auto.text}{Either \code{TRUE} (default) or \code{FALSE}. If
 \code{TRUE} titles and axis labels will automatically try and format

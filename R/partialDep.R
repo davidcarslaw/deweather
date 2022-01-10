@@ -79,6 +79,7 @@ partialDep <- function(dat, eq, vars, B = 100, n.core = 4, n.trees, seed) {
 ##' @param variable The variable to plot.
 ##' @param ylim user-specified \code{ylim}.
 ##' @param plotit Should a plot be produced?
+##' @param intervals Number of intervals to to calculate partial dependence over.
 ##' @param auto.text Either \code{TRUE} (default) or \code{FALSE}. If
 ##'   \code{TRUE} titles and axis labels will automatically try and format
 ##'   pollutant names and units properly e.g.  by subscripting the `2' in NO2.
@@ -89,6 +90,7 @@ partialDep <- function(dat, eq, vars, B = 100, n.core = 4, n.trees, seed) {
 ##'   processing e.g. modifying the \code{ggplot}.
 ##' @author David Carslaw
 plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE,
+                   intervals = 40,
                    auto.text = TRUE, ...) {
   
   ## silence R check
@@ -130,7 +132,7 @@ plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE,
   # if type is numeric
   if (dat$var_type[1] == "numeric") {
     dat$x <- as.numeric(dat$x)
-    gap <- prettyGap(dat$x, 50)
+    gap <- prettyGap(dat$x, intervals)
     dat$x <- round_any(dat$x, gap)
   }
   
