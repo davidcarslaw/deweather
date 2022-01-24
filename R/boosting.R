@@ -50,11 +50,6 @@ buildMod <- function(dat, vars = c("trend", "ws", "wd", "hour",
   variables <- paste(vars, collapse = "+")
   eq <- formula(paste(pollutant, "~", variables))
   
-  ## make sure no NA in response
-  id <- which(is.na(dat[[pollutant]]))
-  if (length(id) > 0 )
-    dat <- dat[-id, ]
-  
   # randomly sample data according to sam.size
   if (sam.size > nrow(dat)) 
     sam.size <- nrow(dat)
