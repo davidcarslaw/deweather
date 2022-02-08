@@ -339,15 +339,11 @@ plot2Way <- function(dw_model, variable = c("ws", "temp"), res = 100,
     
     plt <- ggplot(res, aes_string(var1, var2, fill = "y")) +
       geom_raster() +
-      scale_fill_gradientn(colours = openColours(cols, 100))
+      scale_fill_gradientn(colours = openColours(cols, 100), na.value = "transparent")
     
     if (any(is.na(res$y))) {
       
       plt <- plt + 
-        geom_tile(data = subset(res, is.na(y)),
-                  aes(colour = "missing"),
-                  linetype = 0, fill = "grey92",
-                  alpha = 1, show.legend = FALSE) +
         labs(fill = quickText(mod$response.name))
     }
     
@@ -386,7 +382,8 @@ plot2Way <- function(dw_model, variable = c("ws", "temp"), res = 100,
     
     plt <- ggplot(res, aes_string(var1, var2, fill = "y")) +
       geom_tile() +
-      scale_fill_gradientn(colours = openColours(cols, 100)) +
+      scale_fill_gradientn(colours = openColours(cols, 100), 
+                           na.value = "transparent") +
       labs(fill = quickText(mod$response.name))
     
     print(plt)
