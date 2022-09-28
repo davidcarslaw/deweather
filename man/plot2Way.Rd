@@ -44,10 +44,7 @@ first transformed to a unit square. Values should be between 0 and
 To add
 }
 \description{
-Two-way interaction plots
-}
-\details{
-To add
+Plot two-way interactions from gbm model
 }
 \author{
 David Carslaw
