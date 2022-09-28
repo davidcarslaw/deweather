@@ -2,7 +2,7 @@
 % Please edit documentation in R/boosting.R
 \name{buildMod}
 \alias{buildMod}
-\title{Function to apply meteorological normalisation to.}
+\title{Function to apply meteorological normalisation}
 \usage{
 buildMod(
   dat,
@@ -22,8 +22,8 @@ buildMod(
 
 \item{vars}{Explanatory variables to use. These variables will be used to
 build the gbm model. Note that the model must include a trend component.
-Several variables can be automatically calculated (see
-\code{\link{prepData}} for details).}
+Several variables can be automatically calculated (see \code{\link[=prepData]{prepData()}} for
+details).}
 
 \item{pollutant}{The name of the variable to apply meteorological
 normalisation to.}
@@ -31,9 +31,9 @@ normalisation to.}
 \item{sam.size}{The number of random samples to extract from the data for
 model building. While it is possible to use the full data set, for data
 sets spanning years the model building can take a very long time to run.
-Additionally, there will be diminishing returns in terms of model
-accuracy. If \code{sam.size} is greater than the number of number of rows
-of data, the number of rows of data is used instead.}
+Additionally, there will be diminishing returns in terms of model accuracy.
+If \code{sam.size} is greater than the number of number of rows of data,
+the number of rows of data is used instead.}
 
 \item{n.trees}{Number of trees to fit.}
 
@@ -51,12 +51,9 @@ should be run multiple times with \code{B = 1} and a different value of
 }
 \value{
 Returns a list including the model, influence data frame and partial
-  dependence data frame.
+dependence data frame.
 }
 \description{
-Function to do meteorological normalisation
-}
-\details{
 This is the main function to apply a gbm model to a data set.
 }
 \author{

@@ -32,10 +32,7 @@ is tested against the withheld 0.2 proportion.}
 Returns to be added.
 }
 \description{
-Function to build and test a gbm model
-}
-\details{
-Info here
+Function to test different meteorological normalisation models.
 }
 \author{
 David Carslaw

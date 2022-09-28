@@ -2,18 +2,18 @@
 % Please edit documentation in R/influence.R
 \name{gbmInf}
 \alias{gbmInf}
-\title{Influence plot}
+\title{Plot a GBM influence plot}
 \usage{
 gbmInf(dat)
 }
 \arguments{
-\item{dat}{Model object from running \code{buildMod}}
+\item{dat}{Model object from running \code{\link[=buildMod]{buildMod()}}.}
 }
 \value{
 Plot
 }
 \description{
-Plot a gbm influence plot
+Plot a GBM influence plot
 }
 \author{
 David Carslaw
