@@ -1,6 +1,6 @@
 #' Function to test different meteorological normalisation models.
 #'
-#' @param dat Data frame to analyse.
+#' @param input_data Data frame to analyse.
 #' @param vars Explanatory variables to use.
 #' @param pollutant The name of the variable to apply meteorological
 #'     normalisation to.
@@ -11,7 +11,7 @@
 #' @export
 #' @return Returns to be added.
 #' @author David Carslaw
-testMod <- function(dat, vars = c(
+testMod <- function(input_data, vars = c(
                       "trend", "ws", "wd", "hour",
                       "weekday", "temp"
                     ),
@@ -22,23 +22,23 @@ testMod <- function(dat, vars = c(
   statistic <- value <- NULL
 
   ## add other variables, select only those required for modelling
-  dat <- prepData(dat)
-  dat <- dat[(c("date", vars, pollutant))]
+  input_data <- prepData(input_data)
+  input_data <- input_data[(c("date", vars, pollutant))]
 
   variables <- paste(vars, collapse = "+")
   eq <- stats::formula(paste(pollutant, "~", variables))
 
   ## make sure no NA in response
-  id <- which(is.na(dat[[pollutant]]))
+  id <- which(is.na(input_data[[pollutant]]))
   if (length(id) > 0) {
-    dat <- dat[-id, ]
+    input_data <- input_data[-id, ]
   }
 
   # make reproducible
   set.seed(seed)
-  id <- sample(1:nrow(dat), size = train.frac * nrow(dat))
-  train.dat <- dat[id, ]
-  pred.dat <- dat[-id, ]
+  id <- sample(1:nrow(input_data), size = train.frac * nrow(input_data))
+  train.dat <- input_data[id, ]
+  pred.dat <- input_data[-id, ]
 
   mod <- runGbm(train.dat, eq, vars,
     return.mod = TRUE, simulate = FALSE,

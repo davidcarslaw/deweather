@@ -5,7 +5,7 @@
 \title{Function to test different meteorological normalisation models.}
 \usage{
 testMod(
-  dat,
+  input_data,
   vars = c("trend", "ws", "wd", "hour", "weekday", "temp"),
   pollutant = "nox",
   train.frac = 0.8,
@@ -14,7 +14,7 @@ testMod(
 )
 }
 \arguments{
-\item{dat}{Data frame to analyse.}
+\item{input_data}{Data frame to analyse.}
 
 \item{vars}{Explanatory variables to use.}
 
