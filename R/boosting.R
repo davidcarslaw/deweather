@@ -2,7 +2,7 @@
 #'
 #' This is the main function to apply a gbm model to a data set.
 #'
-#' @param dat Data frame to analyse. Must contain a POSIXct field called
+#' @param input_data Data frame to analyse. Must contain a POSIXct field called
 #'   \code{date}.
 #' @param vars Explanatory variables to use. These variables will be used to
 #'   build the gbm model. Note that the model must include a trend component.
@@ -30,50 +30,50 @@
 #'   dependence data frame.
 #' @author David Carslaw
 
-buildMod <- function(dat, vars = c(
+buildMod <- function(input_data, vars = c(
                        "trend", "ws", "wd", "hour",
                        "weekday", "temp"
                      ),
-                     pollutant = "nox", sam.size = nrow(dat),
+                     pollutant = "nox", sam.size = nrow(input_data),
                      n.trees = 200, simulate = FALSE,
                      B = 100, n.core = 4, seed = 123) {
 
   ## add other variables, select only those required for modelling
-  dat <- prepData(dat)
-  dat <- dplyr::select(dat, c("date", vars, pollutant))
-  dat <- stats::na.omit(dat) # only build model where all data are available - can always predict in gaps
+  input_data <- prepData(input_data)
+  input_data <- dplyr::select(input_data, c("date", vars, pollutant))
+  input_data <- stats::na.omit(input_data) # only build model where all data are available - can always predict in gaps
 
   variables <- paste(vars, collapse = "+")
   eq <- stats::formula(paste(pollutant, "~", variables))
 
   # randomly sample data according to sam.size
-  if (sam.size > nrow(dat)) {
-    sam.size <- nrow(dat)
+  if (sam.size > nrow(input_data)) {
+    sam.size <- nrow(input_data)
   }
 
   if (simulate) {
-    id <- sample(nrow(dat), size = sam.size, replace = TRUE)
-    dat <- dat[id, ]
+    id <- sample(nrow(input_data), size = sam.size, replace = TRUE)
+    input_data <- input_data[id, ]
   } else {
-    id <- sample(nrow(dat), size = sam.size)
-    dat <- dat[id, ]
+    id <- sample(nrow(input_data), size = sam.size)
+    input_data <- input_data[id, ]
   }
 
   ## if more than one simulation only return model ONCE
   if (B != 1L) {
-    mod <- runGbm(dat, eq, vars,
+    mod <- runGbm(input_data, eq, vars,
       return.mod = TRUE, simulate = simulate,
       n.trees = n.trees, seed
     )
   }
 
   # if model needs to be run multiple times
-  res <- partialDep(dat, eq, vars, B, n.core, n.trees, seed)
+  res <- partialDep(input_data, eq, vars, B, n.core, n.trees, seed)
 
   if (B != 1) Mod <- mod$model else Mod <- res[[3]]
 
   # return a list of model, data, partial deps
-  result <- list(model = Mod, influence = res[[2]], data = dat, pd = res[[1]])
+  result <- list(model = Mod, influence = res[[2]], data = input_data, pd = res[[1]])
   class(result) <- "deweather"
 
   return(result)

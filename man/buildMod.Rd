@@ -5,10 +5,10 @@
 \title{Function to apply meteorological normalisation}
 \usage{
 buildMod(
-  dat,
+  input_data,
   vars = c("trend", "ws", "wd", "hour", "weekday", "temp"),
   pollutant = "nox",
-  sam.size = nrow(dat),
+  sam.size = nrow(input_data),
   n.trees = 200,
   simulate = FALSE,
   B = 100,
@@ -17,7 +17,7 @@ buildMod(
 )
 }
 \arguments{
-\item{dat}{Data frame to analyse. Must contain a POSIXct field called
+\item{input_data}{Data frame to analyse. Must contain a POSIXct field called
 \code{date}.}
 
 \item{vars}{Explanatory variables to use. These variables will be used to
