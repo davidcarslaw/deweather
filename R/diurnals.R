@@ -19,18 +19,18 @@
 #' @author David Carslaw
 
 diurnalGbm <-
-  function(dat,
+  function(input_data,
            vars = c("ws", "wd", "hour", "weekday"),
            pollutant = "nox",
-           date = c(
+           dates = c(
              "01/01/2012", "31/12/2012",
              "31/12/2013"
            ),
            ylab = "value") {
     
-    date <- lubridate::dmy(date, tz = "GMT")
+    dates <- lubridate::dmy(dates, tz = attr(input_data$date, "tzone"))
 
-    theData <- openair::selectByDate(dat, start = date[1], end = date[2])
+    theData <- openair::selectByDate(input_data, start = dates[1], end = dates[2])
 
     mod1 <- buildMod(
       theData,
@@ -43,21 +43,21 @@ diurnalGbm <-
     res1 <- plot2Way(mod1, variable = c("weekday", "hour"))
 
     name1 <-
-      paste(format(date[1], "%d %b %Y"), "to", format(date[2], "%d %b %Y"))
+      paste(format(dates[1], "%d %b %Y"), "to", format(dates[2], "%d %b %Y"))
     names(res1$data)[which(names(res1$data) == "y")] <- name1
 
     results <- res1
 
    
-      if (length(date) == 4) {
-        start1 <- date[3]
-        end1 <- date[4]
+      if (length(dates) == 4) {
+        start1 <- dates[3]
+        end1 <- dates[4]
       } else {
-        start1 <- date[2] + 24 * 3600 ## start of next day
-        end1 <- date[3]
+        start1 <- dates[2] + 24 * 3600 ## start of next day
+        end1 <- dates[3]
       }
 
-      theData <- openair::selectByDate(dat, start = start1, end = end1)
+      theData <- openair::selectByDate(input_data, start = start1, end = end1)
 
       mod2 <- buildMod(
         theData,

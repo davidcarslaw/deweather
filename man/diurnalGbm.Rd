@@ -5,26 +5,26 @@
 \title{Plot diurnal changes, removing the effect of meteorology}
 \usage{
 diurnalGbm(
-  dat,
+  input_data,
   vars = c("ws", "wd", "hour", "weekday"),
   pollutant = "nox",
-  date = c("01/01/2012", "31/12/2012", "31/12/2013"),
+  dates = c("01/01/2012", "31/12/2012", "31/12/2013"),
   ylab = "value"
 )
 }
 \arguments{
-\item{dat}{A data frame to analyse.}
-
 \item{vars}{The explanatory variables used in the model.}
 
 \item{pollutant}{Name of the pollutant to apply meteorological normalisation
 to.}
 
+\item{ylab}{Label for y-axis.}
+
+\item{dat}{A data frame to analyse.}
+
 \item{date}{A vector of dates, length three. These dates are used to
 partition the data into two categories (before/after). The date format is
 UK e.g. \code{date = c("19/2/2005", "19/2/2007", "19/2/2010")}.}
-
-\item{ylab}{Label for y-axis.}
 }
 \value{
 Some data
