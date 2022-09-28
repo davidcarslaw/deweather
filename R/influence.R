@@ -1,24 +1,21 @@
+#' Plot a GBM influence plot
+#'
+#' @param dat Model object from running [buildMod()].
+#' @export
+#' @return Plot
+#' @author David Carslaw
 
-##' Plot a gbm influence plot
-##'
-##' 
-##' @title Influence plot
-##' @param dat Model object from running \code{buildMod}
-##' @export
-##' @return Plot
-##' @author David Carslaw
 gbmInf <- function(dat) {
+  if (!inherits(dat, "deweather")) {
+    stop("Need to supply a deweather object from buildMod.")
+  }
 
-    if (class(dat) != "deweather")
-        stop ("Need to supply a deweather object from buildMod.")
+  ## extract influence data from object
+  influ <- dat$influence
 
-    ## extract influence data from object
-    influ <- dat$influence
-
-    ggplot(influ, aes(var, mean)) +
-        geom_bar(stat = "identity") +
-        coord_flip() +
-        ylab("relative variable influence (%)") +
-        xlab("variable")
-
-    }
+  ggplot2::ggplot(influ, ggplot2::aes(.data$var, .data$mean)) +
+    ggplot2::geom_bar(stat = "identity") +
+    ggplot2::coord_flip() +
+    ggplot2::ylab("relative variable influence (%)") +
+    ggplot2::xlab("variable")
+}

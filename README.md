@@ -1,9 +1,12 @@
 
-<!-- Edit the README.Rmd only!!! The README.md is generated automatically from README.Rmd. -->
+<!-- README.md is generated from README.Rmd. Please edit that file -->
 
 # deweather: an R package to remove meteorological variation from air quality data
 
-<img src="inst/plume.png" alt="openair logo" width="35%" />
+<!-- badges: start -->
+<!-- badges: end -->
+
+<img src="man/figures/README-logo-plume.png" alt="openair logo" width="35%" />
 
 **deweather** is an R package developed for the purpose of ‘removing’
 the influence of meteorology from air quality time series data. It is
@@ -61,20 +64,20 @@ humidity, ambient temperature and cloud cover.
 ``` r
 library(deweather)
 head(road_data)
-##                  date nox no2 ethane isoprene benzene  ws  wd air_temp       RH
-## 1 1998-01-01 00:00:00 546  74     NA       NA      NA 1.0 280     3.60 89.41776
-## 2 1998-01-01 01:00:00  NA  NA     NA       NA      NA 1.0 230     3.50 90.67753
-## 3 1998-01-01 02:00:00  NA  NA     NA       NA      NA 1.5 180     4.25 87.60679
-## 4 1998-01-01 03:00:00 944  99     NA       NA      NA  NA  NA       NA       NA
-## 5 1998-01-01 04:00:00 894 149     NA       NA      NA 1.5 180     3.80 89.43347
-## 6 1998-01-01 05:00:00 506  80     NA       NA      NA 1.0 190     3.50 89.40989
-##   cl
-## 1  2
-## 2  2
-## 3  2
-## 4 NA
-## 5  1
-## 6 NA
+#>                  date nox no2 ethane isoprene benzene  ws  wd air_temp       RH
+#> 1 1998-01-01 00:00:00 546  74     NA       NA      NA 1.0 280     3.60 89.41776
+#> 2 1998-01-01 01:00:00  NA  NA     NA       NA      NA 1.0 230     3.50 90.67753
+#> 3 1998-01-01 02:00:00  NA  NA     NA       NA      NA 1.5 180     4.25 87.60679
+#> 4 1998-01-01 03:00:00 944  99     NA       NA      NA  NA  NA       NA       NA
+#> 5 1998-01-01 04:00:00 894 149     NA       NA      NA 1.5 180     3.80 89.43347
+#> 6 1998-01-01 05:00:00 506  80     NA       NA      NA 1.0 190     3.50 89.40989
+#>   cl
+#> 1  2
+#> 2  2
+#> 3  2
+#> 4 NA
+#> 5  1
+#> 6 NA
 ```
 
 For those interested in obtaining the data directly, the following code
@@ -86,16 +89,29 @@ library(worldmet)
 library(dplyr)
 
 # import AQ data
-road_data <- importAURN(site = "my1", year = 1998:2016, hc = TRUE)
+road_data <- importAURN(site = "my1",
+                        year = 1998:2016,
+                        hc = TRUE)
 
 # import met data
 met <- importNOAA(year = 1998:2016)
 
 # join together but ignore met data in road_data because it is modelled
-road_data <- left_join(select(road_data, -ws, -wd, -air_temp), met, by = "date")
+road_data <-
+  left_join(select(road_data,-ws,-wd,-air_temp), met, by = "date")
 
-road_data <- select(road_data, date, nox, no2, ethane, isoprene, 
-                    benzene, ws, wd, air_temp, RH, cl)
+road_data <- select(road_data,
+                    date,
+                    nox,
+                    no2,
+                    ethane,
+                    isoprene,
+                    benzene,
+                    ws,
+                    wd,
+                    air_temp,
+                    RH,
+                    cl)
 ```
 
 ## Construct and test model(s)
@@ -117,10 +133,10 @@ dat_part <- selectByDate(road_data, year = 2001:2004)
 testMod(dat = dat_part, 
         vars = c("trend", "ws", "wd", "hour", "weekday", "air_temp", "week"),
         pollutant = "no2")
-## [1] "Percent increase in RMSE using test data is 1%"
+#> [1] "Percent increase in RMSE using test data is 1%"
 ```
 
-![](tools/testMod-1.png)<!-- -->
+<img src="man/figures/README-testMod-1.png" width="100%" />
 
 The output shows by default the performance of the model when applied to
 a withheld random 20% (by default) of the data i.e. the model is
@@ -156,7 +172,7 @@ covariates at their mean level.
 plotAllPD(dw_model = mod_no2)
 ```
 
-![](tools/plotAll-1.png)<!-- -->
+<img src="man/figures/README-plotAll-1.png" width="100%" />
 
 ### Plot two-way interactions
 
@@ -173,7 +189,7 @@ useful covariate to add to the model.
 plot2Way(dw_model = mod_no2, variable = c("ws", "air_temp"))
 ```
 
-![](tools/plot2way-1.png)<!-- -->
+<img src="man/figures/README-plot2way-1.png" width="100%" />
 
 ## Apply meteorological averaging
 
@@ -182,7 +198,7 @@ An indication of the meteorologically-averaged trend is given by the
 model to predict many times with random sampling of meteorological
 conditions. This sampling is carried out by the `metSim` function. Note
 that in this case there is no need to supply the “trend” component
-because it is calculated using `metSim`
+because it is calculated using `metSim`.
 
 ``` r
 demet <- metSim(mod_no2, newdata = dat_part, 
@@ -197,7 +213,7 @@ ggplot(demet, aes(date, pred)) +
   geom_line()
 ```
 
-![](tools/plotTrend-1.png)<!-- -->
+<img src="man/figures/README-plotTrend-1.png" width="100%" />
 
 The plot is rather noisy due to relatively few samples of meteorology
 being considered (200 by default, set with `B = 200`). The noise could
@@ -212,7 +228,7 @@ ggplot(timeAverage(demet, "day"), aes(date, pred)) +
   ylab(quickText("no2 (ug/m3)"))
 ```
 
-![](tools/plotTrendAve-1.png)<!-- -->
+<img src="man/figures/README-plotTrendAve-1.png" width="100%" />
 
 ## References
 

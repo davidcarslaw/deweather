@@ -2,16 +2,15 @@
 % Please edit documentation in R/metSim.R
 \name{metSim}
 \alias{metSim}
-\title{Run random meteorology on a gbm model}
+\title{Function to run random meteorological simulations on a gbm model}
 \usage{
 metSim(dw_model, newdata, metVars = c("ws", "wd", "temp"), n.core = 4, B = 200)
 }
 \arguments{
-\item{dw_model}{Model object from running \code{buildMod}.}
+\item{dw_model}{Model object from running \code{\link[=buildMod]{buildMod()}}.}
 
-\item{newdata}{Data set to which to apply the model. If missing
-the data used to build the model in the first place will be
-used.}
+\item{newdata}{Data set to which to apply the model. If missing the data used
+to build the model in the first place will be used.}
 
 \item{metVars}{The variables that should be randomly varied.}
 

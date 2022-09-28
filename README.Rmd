@@ -1,32 +1,28 @@
 ---
-output: 
-  github_document: 
-    toc: FALSE
+output: github_document
 ---
 
-<!-- Edit the README.Rmd only!!! The README.md is generated automatically from README.Rmd. -->
+<!-- README.md is generated from README.Rmd. Please edit that file -->
 
-deweather: an R package to remove meteorological variation from air quality data
-========================================================
-
-
-```{r echo=FALSE}
+```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%",
   warning = FALSE,
   message = FALSE,
   eval = FALSE,
   cache = TRUE
 )
-knitr::opts_chunk$set(
-  fig.path = "tools/"
-)
-
 ```
 
+# deweather: an R package to remove meteorological variation from air quality data
 
+<!-- badges: start -->
+<!-- badges: end -->
 
-<img src="inst/plume.png" alt="openair logo" width="35%" />
+<img src="man/figures/README-logo-plume.png" alt="openair logo" width="35%" />
 
 **deweather** is an R package developed for the purpose of 'removing' the influence of meteorology from air quality time series data. It is part of the [openair](http://davidcarslaw.github.io/openair/) suite of packages designed to support the analysis of air quality data and related data.
 
@@ -38,7 +34,7 @@ The modelling can be computationally intensive and therefore **deweather** makes
 
 Installation of **deweather** from GitHub should be easy using the devtools package. 
 
-```{r}
+```{r install}
 require(devtools)
 install_github('davidcarslaw/deweather')
 ```
@@ -57,29 +53,42 @@ The **deweather** package comes with a comprehensive data set of air quality and
 
 The `road_data` data frame contains various pollutants such a NO~x~, NO~2~, ethane and isoprene as well as meteorological data including wind speed, wind direction, relative humidity, ambient temperature and cloud cover.
 
-```{r, eval=TRUE}
+```{r load-pkg, eval=TRUE}
 library(deweather)
 head(road_data)
 ```
 
 For those interested in obtaining the data directly, the following code can be used.
 
-```{r}
+```{r run-deweather}
 library(openair)
 library(worldmet)
 library(dplyr)
 
 # import AQ data
-road_data <- importAURN(site = "my1", year = 1998:2016, hc = TRUE)
+road_data <- importAURN(site = "my1",
+                        year = 1998:2016,
+                        hc = TRUE)
 
 # import met data
 met <- importNOAA(year = 1998:2016)
 
 # join together but ignore met data in road_data because it is modelled
-road_data <- left_join(select(road_data, -ws, -wd, -air_temp), met, by = "date")
+road_data <-
+  left_join(select(road_data,-ws,-wd,-air_temp), met, by = "date")
 
-road_data <- select(road_data, date, nox, no2, ethane, isoprene, 
-                    benzene, ws, wd, air_temp, RH, cl)
+road_data <- select(road_data,
+                    date,
+                    nox,
+                    no2,
+                    ethane,
+                    isoprene,
+                    benzene,
+                    ws,
+                    wd,
+                    air_temp,
+                    RH,
+                    cl)
 ```
 
 
@@ -136,7 +145,7 @@ plot2Way(dw_model = mod_no2, variable = c("ws", "air_temp"))
 
 ## Apply meteorological averaging
 
-An indication of the meteorologically-averaged trend is given by the `plotAllPD` function above. A better indication is given by using the model to predict many times with random sampling of meteorological conditions. This sampling is carried out by the `metSim` function. Note that in this case there is no need to supply the "trend" component because it is calculated using `metSim`
+An indication of the meteorologically-averaged trend is given by the `plotAllPD` function above. A better indication is given by using the model to predict many times with random sampling of meteorological conditions. This sampling is carried out by the `metSim` function. Note that in this case there is no need to supply the "trend" component because it is calculated using `metSim`.
 
 ```{r metSim, eval=TRUE}
 demet <- metSim(mod_no2, newdata = dat_part, 

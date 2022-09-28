@@ -18,13 +18,12 @@ diurnalGbm(
 
 \item{vars}{The explanatory variables used in the model.}
 
-\item{pollutant}{Name of the pollutant to apply meteorological
-normalisation to.}
+\item{pollutant}{Name of the pollutant to apply meteorological normalisation
+to.}
 
-\item{date}{A vector of dates, length three. These dates are used
-to parition the data into two categories (before/after). The
-date format is UK e.g. \code{date = c("19/2/2005",
-"19/2/2007", "19/2/2010")}.}
+\item{date}{A vector of dates, length three. These dates are used to
+partition the data into two categories (before/after). The date format is
+UK e.g. \code{date = c("19/2/2005", "19/2/2007", "19/2/2010")}.}
 
 \item{single}{Not used.}
 
@@ -34,10 +33,10 @@ date format is UK e.g. \code{date = c("19/2/2005",
 Some data
 }
 \description{
-This function calculates the diurnal profile of a pollutant with
-the effect of meteorology removed. Its primary use is to compare
-two periods to determine whether there has been a shift in diurnal
-profile e.g. due to some intervention.
+This function calculates the diurnal profile of a pollutant with the effect
+of meteorology removed. Its primary use is to compare two periods to
+determine whether there has been a shift in diurnal profile e.g. due to some
+intervention.
 }
 \author{
 David Carslaw

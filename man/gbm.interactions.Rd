@@ -7,13 +7,13 @@
 gbm.interactions(res)
 }
 \arguments{
-\item{res}{Model object from running \code{buildMod}.}
+\item{res}{Model object from running \code{\link[=buildMod]{buildMod()}}.}
 }
 \value{
 Interaction information.
 }
 \description{
-Two-way interactions
+Quantify most important 2-way interactions
 }
 \author{
 David Carslaw

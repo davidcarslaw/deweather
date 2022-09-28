@@ -6,7 +6,7 @@ Date: 2021-09-14
 Authors@R: c(person("David", "Carslaw", role = c("aut", "cre"), email =
     "david.carslaw@york.ac.uk"))
 Maintainer: David Carslaw <david.carslaw@york.ac.uk>
-Description: Tools to model and account for (or remove) the effect of
+Description: Model and account for (or remove) the effect of
     meteorology on atmospheric composition data. The technique uses boosted
     regression trees based on the gbm package. Code can also be run using multiple
     cores if available.
@@ -25,9 +25,13 @@ Imports:
     openair,
     mgcv,
     ggplot2,
-    gridExtra
+    gridExtra,
+    rlang,
+    stats,
+    magrittr
 License: GPL (>= 2)
 Encoding: UTF-8
 LazyLoad: yes
 LazyData: yes
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.1
+Roxygen: list(markdown = TRUE)

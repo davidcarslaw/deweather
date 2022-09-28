@@ -14,17 +14,12 @@ plotAllPD(dw_model, ylim = NULL, nrow = NULL, ...)
 \item{nrow}{Number of rows for th eplots.}
 
 \item{...}{extra plotting arguments.}
-
-\item{ylab}{The y-axis label to over-ride default.}
 }
 \value{
 A plot
 }
 \description{
-Function to plot all partial dependencies
-}
-\details{
-.
+Plot all partial dependencies
 }
 \author{
 David Carslaw
