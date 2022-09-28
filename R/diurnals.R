@@ -12,7 +12,6 @@
 #' @param date A vector of dates, length three. These dates are used to
 #'   partition the data into two categories (before/after). The date format is
 #'   UK e.g. \code{date = c("19/2/2005", "19/2/2007", "19/2/2010")}.
-#' @param single Not used.
 #' @param ylab Label for y-axis.
 #' @export
 #' @importFrom rlang .data
@@ -27,11 +26,9 @@ diurnalGbm <-
              "01/01/2012", "31/12/2012",
              "31/12/2013"
            ),
-           single = FALSE,
            ylab = "value") {
-    ## format dates
-    date <-
-      as.POSIXct(strptime(date, format = "%d/%m/%Y", "GMT"), "GMT")
+    
+    date <- lubridate::dmy(date, tz = "GMT")
 
     theData <- openair::selectByDate(dat, start = date[1], end = date[2])
 
@@ -47,11 +44,11 @@ diurnalGbm <-
 
     name1 <-
       paste(format(date[1], "%d %b %Y"), "to", format(date[2], "%d %b %Y"))
-    names(res1)[which(names(res1) == "y")] <- name1
+    names(res1$data)[which(names(res1$data) == "y")] <- name1
 
     results <- res1
 
-    if (!single) {
+   
       if (length(date) == 4) {
         start1 <- date[3]
         end1 <- date[4]
@@ -74,7 +71,7 @@ diurnalGbm <-
 
       name2 <-
         paste(format(start1, "%d %b %Y"), "to", format(end1, "%d %b %Y"))
-      names(res2)[which(names(res2) == "y")] <- name2
+      names(res2$data)[which(names(res2$data) == "y")] <- name2
 
       results <- merge(res1$data, res2$data, by = c("Hour", "Weekday"))
       results <-
@@ -147,40 +144,5 @@ diurnalGbm <-
         ggplot2::ylab(openair::quickText(ylab))
 
       print(plt)
-    } else {
-      results <-
-        dplyr::arrange(results, .data$Hour) ## order Hours/Weekdays
-
-      ## only need Weekday/sat/sun
-      ids <- which(results$Weekday %in% c("Sat", "Sun"))
-      results$Weekday <- as.character(results$Weekday)
-      results$Weekday[-ids] <- "Weekday"
-      results <-
-        results <- dplyr::group_by(results, .data$Weekday, .data$Hour) %>%
-        dplyr::summarise(dplyr::across(where(is.numeric), ~ mean(.x, na.rm = TRUE)))
-
-      results$Weekday <- ordered(
-        results$Weekday,
-        levels = c("Weekday", "Sat", "Sun"),
-        labels = c("Weekday", "Saturday", "Sunday")
-      )
-
-      plt <-
-        ggplot2::ggplot(
-          results,
-          ggplot2::aes(
-            x = .data$Hour,
-            y = .data$value,
-            colour = .data$variable
-          )
-        ) +
-        ggplot2::geom_line(size = 1) +
-        ggplot2::facet_grid(dplyr::vars(.data$Weekday)) +
-        ggplot2::theme(legend.position = "top") +
-        ggplot2::scale_x_continuous(breaks = c(0, 6, 12, 18))
-
-      print(plt)
-    }
-    print(plt)
-    invisible(list(results, plt))
+    
   }
