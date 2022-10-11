@@ -122,7 +122,7 @@ diurnalGbm <-
           )
         ) +
         ggplot2::geom_line(size = 1) +
-        ggplot2::facet_grid(dplyr::vars(.data$Weekday)) +
+        ggplot2::facet_wrap(dplyr::vars(.data$Weekday)) +
         ggplot2::theme(legend.position = "top") +
         ggplot2::geom_ribbon(
           data = data_neg,
