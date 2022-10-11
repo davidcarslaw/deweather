@@ -5,11 +5,11 @@
 #' determine whether there has been a shift in diurnal profile e.g. due to some
 #' intervention.
 #'
-#' @param dat A data frame to analyse.
+#' @param input_data A data frame to analyse.
 #' @param vars The explanatory variables used in the model.
 #' @param pollutant Name of the pollutant to apply meteorological normalisation
 #'   to.
-#' @param date A vector of dates, length three. These dates are used to
+#' @param dates A vector of dates, length three. These dates are used to
 #'   partition the data into two categories (before/after). The date format is
 #'   UK e.g. \code{date = c("19/2/2005", "19/2/2007", "19/2/2010")}.
 #' @param ylab Label for y-axis.
