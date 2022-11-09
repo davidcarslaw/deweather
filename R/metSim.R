@@ -17,6 +17,9 @@ metSim <- function(dw_model, newdata, metVars = c("ws", "wd", "temp"),
 
   ## extract the model
   mod <- dw_model$model
+  
+  # pollutant name
+  pollutant <- dw_model$model$response.name
 
   if (!"trend" %in% mod$var.names) {
     stop("The model must have a trend component as one of the explanatory variables.")
@@ -40,12 +43,15 @@ metSim <- function(dw_model, newdata, metVars = c("ws", "wd", "temp"),
     doPred(newdata, mod, metVars)
 
   parallel::stopCluster(cl)
+  
+  # use pollutant name
+  names(prediction)[2] <- pollutant
 
   ## Aggregate results
-  prediction <- dplyr::group_by(prediction, .data$date) %>%
-    dplyr::summarise(pred = mean(.data$pred))
+  dplyr::group_by(prediction, .data$date) %>%
+    dplyr::summarise({{ pollutant }} := mean(.data[[pollutant]]))
 
-  return(prediction)
+  return(dplyr::tibble(prediction))
 }
 
 
