@@ -2,7 +2,7 @@ Package: deweather
 Type: Package
 Title: Remove the influence of weather on air quality data
 Version: 0.7-1
-Date: 2021-11-09
+Date: 2022-11-09
 Authors@R: c(person("David", "Carslaw", role = c("aut", "cre"), email =
     "david.carslaw@york.ac.uk"))
 Maintainer: David Carslaw <david.carslaw@york.ac.uk>
