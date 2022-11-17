@@ -37,7 +37,6 @@ buildMod <- function(input_data, vars = c(
                      pollutant = "nox", sam.size = nrow(input_data),
                      n.trees = 200, simulate = FALSE,
                      B = 100, n.core = 4, seed = 123) {
-
   ## add other variables, select only those required for modelling
   input_data <- prepData(input_data)
   input_data <- dplyr::select(input_data, c("date", vars, pollutant))
@@ -102,7 +101,6 @@ extractPD <- function(vars, mod) {
 #' @noRd
 runGbm <- function(dat, eq, vars, return.mod, simulate, n.trees = n.trees,
                    seed = seed) {
-
   ## sub-sample the data for bootstrapping
   if (simulate) {
     dat <- dat[sample(nrow(dat), nrow(dat), replace = TRUE), ]

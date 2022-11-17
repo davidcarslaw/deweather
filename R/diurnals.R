@@ -27,7 +27,6 @@ diurnalGbm <-
              "31/12/2013"
            ),
            ylab = "value") {
-    
     dates <- lubridate::dmy(dates, tz = attr(input_data$date, "tzone"))
 
     theData <- openair::selectByDate(input_data, start = dates[1], end = dates[2])
@@ -48,101 +47,100 @@ diurnalGbm <-
 
     results <- res1
 
-   
-      if (length(dates) == 4) {
-        start1 <- dates[3]
-        end1 <- dates[4]
-      } else {
-        start1 <- dates[2] + 24 * 3600 ## start of next day
-        end1 <- dates[3]
-      }
 
-      theData <- openair::selectByDate(input_data, start = start1, end = end1)
+    if (length(dates) == 4) {
+      start1 <- dates[3]
+      end1 <- dates[4]
+    } else {
+      start1 <- dates[2] + 24 * 3600 ## start of next day
+      end1 <- dates[3]
+    }
 
-      mod2 <- buildMod(
-        theData,
-        vars = vars,
-        pollutant = pollutant,
-        B = 1,
-        sam.size = nrow(theData)
-      )
+    theData <- openair::selectByDate(input_data, start = start1, end = end1)
 
-      res2 <- plot2Way(mod2, variable = c("weekday", "hour"))
+    mod2 <- buildMod(
+      theData,
+      vars = vars,
+      pollutant = pollutant,
+      B = 1,
+      sam.size = nrow(theData)
+    )
 
-      name2 <-
-        paste(format(start1, "%d %b %Y"), "to", format(end1, "%d %b %Y"))
-      names(res2$data)[which(names(res2$data) == "y")] <- name2
+    res2 <- plot2Way(mod2, variable = c("weekday", "hour"))
 
-      results <- merge(res1$data, res2$data, by = c("Hour", "Weekday"))
-      results <-
-        dplyr::arrange(results, .data$Hour) ## order Hours/weekdays
+    name2 <-
+      paste(format(start1, "%d %b %Y"), "to", format(end1, "%d %b %Y"))
+    names(res2$data)[which(names(res2$data) == "y")] <- name2
 
-      ## only need weekday/sat/sun
-      ids <- which(results$Weekday %in% c("Sat", "Sun"))
-      results$Weekday <- as.character(results$Weekday)
-      results$Weekday[-ids] <- "Weekday"
+    results <- merge(res1$data, res2$data, by = c("Hour", "Weekday"))
+    results <-
+      dplyr::arrange(results, .data$Hour) ## order Hours/weekdays
 
-      results <-
-        dplyr::group_by(results, .data$Weekday, .data$Hour) %>%
-        dplyr::summarise(dplyr::across(where(is.numeric), ~ mean(.x, na.rm = TRUE)))
+    ## only need weekday/sat/sun
+    ids <- which(results$Weekday %in% c("Sat", "Sun"))
+    results$Weekday <- as.character(results$Weekday)
+    results$Weekday[-ids] <- "Weekday"
 
-      results$Weekday <- ordered(
-        results$Weekday,
-        levels = c("Weekday", "Sat", "Sun"),
-        labels = c("Weekday", "Saturday", "Sunday")
-      )
+    results <-
+      dplyr::group_by(results, .data$Weekday, .data$Hour) %>%
+      dplyr::summarise(dplyr::across(where(is.numeric), ~ mean(.x, na.rm = TRUE)))
 
-      ## difference
-      results$difference <- results[[4]] - results[[3]]
+    results$Weekday <- ordered(
+      results$Weekday,
+      levels = c("Weekday", "Sat", "Sun"),
+      labels = c("Weekday", "Saturday", "Sunday")
+    )
 
-      results <- tidyr::pivot_longer(
+    ## difference
+    results$difference <- results[[4]] - results[[3]]
+
+    results <- tidyr::pivot_longer(
+      results,
+      cols = -c(.data$Weekday, .data$Hour, .data$difference),
+      names_to = "variable"
+    )
+
+    ylim <- range(c(results$difference, results$value)) * 1.03
+
+    # data sets that provide postive and negative differences
+    id <- which(results$difference > 0)
+    data_neg <- results
+    data_neg$difference[id] <- 0
+
+    id <- which(results$difference < 0)
+    data_pos <- results
+    data_pos$difference[id] <- 0
+
+    plt <-
+      ggplot2::ggplot(
         results,
-        cols = -c(.data$Weekday, .data$Hour, .data$difference),
-        names_to = "variable"
-      )
+        ggplot2::aes(
+          x = .data$Hour,
+          y = .data$value,
+          colour = .data$variable
+        )
+      ) +
+      ggplot2::geom_line(size = 1) +
+      ggplot2::facet_wrap(dplyr::vars(.data$Weekday)) +
+      ggplot2::theme(legend.position = "top") +
+      ggplot2::geom_ribbon(
+        data = data_neg,
+        ggplot2::aes(ymin = 0, ymax = .data$difference),
+        fill = "dodgerblue",
+        colour = "dodgerblue"
+      ) +
+      ggplot2::geom_ribbon(
+        data = data_pos,
+        ggplot2::aes(ymin = 0, ymax = .data$difference),
+        fill = "firebrick1",
+        colour = "firebrick1"
+      ) +
+      ggplot2::scale_colour_manual(
+        values = c("turquoise4", "deeppink"),
+        name = "period"
+      ) +
+      ggplot2::scale_x_continuous(breaks = c(0, 6, 12, 18)) +
+      ggplot2::ylab(openair::quickText(ylab))
 
-      ylim <- range(c(results$difference, results$value)) * 1.03
-
-      # data sets that provide postive and negative differences
-      id <- which(results$difference > 0)
-      data_neg <- results
-      data_neg$difference[id] <- 0
-
-      id <- which(results$difference < 0)
-      data_pos <- results
-      data_pos$difference[id] <- 0
-
-      plt <-
-        ggplot2::ggplot(
-          results,
-          ggplot2::aes(
-            x = .data$Hour,
-            y = .data$value,
-            colour = .data$variable
-          )
-        ) +
-        ggplot2::geom_line(size = 1) +
-        ggplot2::facet_wrap(dplyr::vars(.data$Weekday)) +
-        ggplot2::theme(legend.position = "top") +
-        ggplot2::geom_ribbon(
-          data = data_neg,
-          ggplot2::aes(ymin = 0, ymax = .data$difference),
-          fill = "dodgerblue",
-          colour = "dodgerblue"
-        ) +
-        ggplot2::geom_ribbon(
-          data = data_pos,
-          ggplot2::aes(ymin = 0, ymax = .data$difference),
-          fill = "firebrick1",
-          colour = "firebrick1"
-        ) +
-        ggplot2::scale_colour_manual(
-          values = c("turquoise4", "deeppink"),
-          name = "period"
-        ) +
-        ggplot2::scale_x_continuous(breaks = c(0, 6, 12, 18)) +
-        ggplot2::ylab(openair::quickText(ylab))
-
-      print(plt)
-    
+    print(plt)
   }

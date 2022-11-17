@@ -17,7 +17,6 @@ testMod <- function(input_data, vars = c(
                     ),
                     pollutant = "nox", train.frac = 0.8,
                     n.trees = 200, seed = 123) {
-
   ## silence R check
   statistic <- value <- NULL
 

@@ -202,7 +202,6 @@ plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE,
 
 
   if (variable == "weekday") {
-
     ## change to weekday names
     dat$x <- factor(dat$x)
     weekday.names <- format(ISOdate(2000, 1, 2:8), "%a")

@@ -3,7 +3,6 @@ utils::globalVariables("where")
 #' y range taking account of expanded uncertainties
 #' @noRd
 rng <- function(x) {
-
   ## if no CI information, just return
   if (all(is.na(x[, c("lower", "upper")]))) {
     lims <- NULL

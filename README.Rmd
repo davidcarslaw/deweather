@@ -36,7 +36,7 @@ Installation of **deweather** from GitHub should be easy using the devtools pack
 
 ```{r install}
 require(devtools)
-install_github('davidcarslaw/deweather')
+install_github("davidcarslaw/deweather")
 ```
 
 
@@ -66,29 +66,33 @@ library(worldmet)
 library(dplyr)
 
 # import AQ data
-road_data <- importAURN(site = "my1",
-                        year = 1998:2016,
-                        hc = TRUE)
+road_data <- importAURN(
+  site = "my1",
+  year = 1998:2016,
+  hc = TRUE
+)
 
 # import met data
 met <- importNOAA(year = 1998:2016)
 
 # join together but ignore met data in road_data because it is modelled
 road_data <-
-  left_join(select(road_data,-ws,-wd,-air_temp), met, by = "date")
+  left_join(select(road_data, -ws, -wd, -air_temp), met, by = "date")
 
-road_data <- select(road_data,
-                    date,
-                    nox,
-                    no2,
-                    ethane,
-                    isoprene,
-                    benzene,
-                    ws,
-                    wd,
-                    air_temp,
-                    RH,
-                    cl)
+road_data <- select(
+  road_data,
+  date,
+  nox,
+  no2,
+  ethane,
+  isoprene,
+  benzene,
+  ws,
+  wd,
+  air_temp,
+  RH,
+  cl
+)
 ```
 
 
@@ -104,9 +108,11 @@ library(openair)
 dat_part <- selectByDate(road_data, year = 2001:2004)
 
 # test a model with commonly used covariates
-testMod(dat = dat_part, 
-        vars = c("trend", "ws", "wd", "hour", "weekday", "air_temp", "week"),
-        pollutant = "no2")
+testMod(
+  dat = dat_part,
+  vars = c("trend", "ws", "wd", "hour", "weekday", "air_temp", "week"),
+  pollutant = "no2"
+)
 ```
 
 The output shows by default the performance of the model when applied to a withheld random 20% (by default) of the data i.e. the model is evaluated against data nt used to build the model. Common model evaluation metrics are also given.
@@ -116,10 +122,12 @@ The output shows by default the performance of the model when applied to a withh
 Assuming that a good model can be developed, it can now be explored in more detail.
 
 ```{r buildMod, eval = TRUE}
-mod_no2 <- buildMod(dat = dat_part, 
-        vars = c("trend", "ws", "wd", "hour", "weekday", "air_temp", "week"),
-        pollutant = "no2",
-        n.core = 6)
+mod_no2 <- buildMod(
+  dat = dat_part,
+  vars = c("trend", "ws", "wd", "hour", "weekday", "air_temp", "week"),
+  pollutant = "no2",
+  n.core = 6
+)
 ```
 
 This function returns a `deweather` object that can be interogated as shown below.
@@ -148,8 +156,10 @@ plot2Way(dw_model = mod_no2, variable = c("ws", "air_temp"))
 An indication of the meteorologically-averaged trend is given by the `plotAllPD` function above. A better indication is given by using the model to predict many times with random sampling of meteorological conditions. This sampling is carried out by the `metSim` function. Note that in this case there is no need to supply the "trend" component because it is calculated using `metSim`.
 
 ```{r metSim, eval=TRUE}
-demet <- metSim(mod_no2, newdata = dat_part, 
-                metVars = c("ws", "wd", "hour", "weekday", "air_temp", "week"))
+demet <- metSim(mod_no2,
+  newdata = dat_part,
+  metVars = c("ws", "wd", "hour", "weekday", "air_temp", "week")
+)
 ```
 
 Now it is possible to plot the resulting trend.

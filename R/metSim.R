@@ -17,7 +17,7 @@ metSim <- function(dw_model, newdata, metVars = c("ws", "wd", "temp"),
 
   ## extract the model
   mod <- dw_model$model
-  
+
   # pollutant name
   pollutant <- dw_model$model$response.name
 
@@ -43,7 +43,7 @@ metSim <- function(dw_model, newdata, metVars = c("ws", "wd", "temp"),
     doPred(newdata, mod, metVars)
 
   parallel::stopCluster(cl)
-  
+
   # use pollutant name
   names(prediction)[2] <- pollutant
 
@@ -57,7 +57,6 @@ metSim <- function(dw_model, newdata, metVars = c("ws", "wd", "temp"),
 
 ## randomly sample from original data
 doPred <- function(mydata, mod, metVars) {
-
   ## random samples
   n <- nrow(mydata)
   id <- sample(1:n, n, replace = FALSE)
