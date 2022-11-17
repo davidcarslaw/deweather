@@ -47,7 +47,6 @@ prepData <- function(mydata, add = c(
                        "jday", "month"
                      ), local.tz = "Europe/London",
                      lag = NULL) {
-
   ## Some cheack to make sure data are OK.
   if (!"date" %in% names(mydata)) stop("No date field supplied.")
 
