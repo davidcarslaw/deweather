@@ -48,7 +48,7 @@ metSim <- function(dw_model, newdata, metVars = c("ws", "wd", "temp"),
   names(prediction)[2] <- pollutant
 
   ## Aggregate results
-  dplyr::group_by(prediction, .data$date) %>%
+  prediction <- dplyr::group_by(prediction, .data$date) %>%
     dplyr::summarise({{ pollutant }} := mean(.data[[pollutant]]))
 
   return(dplyr::tibble(prediction))
