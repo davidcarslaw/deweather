@@ -233,7 +233,7 @@ plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE,
 #'
 #' @param dw_model Model object from running \code{buildMod}.
 #' @param ylim y-axis label. Will default to pollutant name.
-#' @param nrow Number of rows for th eplots.
+#' @param nrow Number of rows for the plots.
 #' @param ... extra plotting arguments.
 #' @export
 #' @return A plot
@@ -256,9 +256,15 @@ plotAllPD <- function(dw_model, ylim = NULL, nrow = NULL, ...) {
   # extract first element of list, which is the plot
   thedata <- sapply(plots, "[", 2)
   plots <- sapply(plots, "[", 1)
-
+  
+  # plot all outputs
   do.call(gridExtra::grid.arrange, c(plots, nrow = nrow))
-
+  
+  # name plots & data for easy indexing
+  names(thedata) <- influ$var
+  names(plots) <- influ$var
+  
+  # invisibly return list
   invisible(list(plot = plots, data = thedata))
 }
 
