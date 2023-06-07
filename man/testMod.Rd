@@ -10,7 +10,8 @@ testMod(
   pollutant = "nox",
   train.frac = 0.8,
   n.trees = 200,
-  seed = 123
+  seed = 123,
+  plot = TRUE
 )
 }
 \arguments{
@@ -21,12 +22,16 @@ testMod(
 \item{pollutant}{The name of the variable to apply meteorological
 normalisation to.}
 
-\item{train.frac}{Fraction of data to train a model on. The model
-is tested against the withheld 0.2 proportion.}
+\item{train.frac}{Fraction of data to train a model on. The model is tested
+against the withheld 0.2 proportion.}
 
 \item{n.trees}{Number of trees to use.}
 
 \item{seed}{Random number seed for reproducibility in returned model.}
+
+\item{plot}{The default, \code{TRUE}, automatically prints a plot and two
+tables of statistics to review the model output. \code{FALSE} disables this
+behaviour.}
 }
 \value{
 Returns to be added.
