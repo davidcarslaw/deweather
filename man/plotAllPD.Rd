@@ -11,7 +11,7 @@ plotAllPD(dw_model, ylim = NULL, nrow = NULL, ...)
 
 \item{ylim}{y-axis label. Will default to pollutant name.}
 
-\item{nrow}{Number of rows for th eplots.}
+\item{nrow}{Number of rows for the plots.}
 
 \item{...}{extra plotting arguments.}
 }
