@@ -96,8 +96,8 @@ normalisation to.</p></dd>
 model building. While it is possible to use the full data set, for data
 sets spanning years the model building can take a very long time to run.
 Additionally, there will be diminishing returns in terms of model accuracy.
-If <code>sam.size</code> is greater than the number of number of rows of data,
-the number of rows of data is used instead.</p></dd>
+If <code>sam.size</code> is greater than the number of number of rows of data, the
+number of rows of data is used instead.</p></dd>
 
 
 <dt>n.trees</dt>
@@ -106,10 +106,9 @@ the number of rows of data is used instead.</p></dd>
 
 <dt>simulate</dt>
 <dd><p>Should the original time series be randomly sampled with
-replacement? The default is <code>FALSE</code>. Setting <code>simulate = TRUE</code>
-can be useful for estimating model uncertainties. In which case models
-should be run multiple times with <code>B = 1</code> and a different value of
-<code>seed</code> e.g. <code>seed = runif(1)</code>.</p></dd>
+replacement? The default is <code>FALSE</code>. Setting <code>simulate = TRUE</code> can be
+useful for estimating model uncertainties. In which case models should be
+run multiple times with <code>B = 1</code> and a different value of <code>seed</code> e.g. <code>seed = runif(1)</code>.</p></dd>
 
 
 <dt>B</dt>
@@ -130,6 +129,13 @@ should be run multiple times with <code>B = 1</code> and a different value of
 
 <p>Returns a list including the model, influence data frame and partial
 dependence data frame.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
+    <div class="dont-index"><p><code><a href="testMod.html">testMod()</a></code> for testing models before they are built.</p>
+<p><code><a href="metSim.html">metSim()</a></code> for using a built model with meteorological simulations.</p>
+<p><code><a href="plot2Way.html">plot2Way()</a></code>, <code><a href="plotInfluence.html">plotInfluence()</a></code> and <code><a href="plotPD.html">plotPD()</a></code> for visualising built
+models.</p></div>
     </div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
