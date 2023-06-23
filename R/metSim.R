@@ -7,7 +7,8 @@
 #' @param n.core Number of cores to use.
 #' @param B Number of simulations
 #' @export
-#' @return To add
+#' @return a [tibble][tibble::tibble-package]
+#' @seealso [buildMod()] to build a gbm model
 #' @author David Carslaw
 metSim <-
   function(dw_model,
@@ -28,7 +29,7 @@ metSim <-
     if (!"trend" %in% mod$var.names) {
       stop("The model must have a trend component as one of the explanatory variables.")
     }
-
+    
     if (missing(newdata)) {
       ## should already have variables
       newdata <- dw_model$data

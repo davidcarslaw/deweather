@@ -12,6 +12,7 @@
 #'   tables of statistics to review the model output. `FALSE` disables this
 #'   behaviour.
 #' @export
+#' @seealso [buildMod()] for fitting a final model
 #' @return Returns to be added.
 #' @author David Carslaw
 testMod <- function(input_data,

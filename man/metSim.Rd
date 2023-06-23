@@ -25,10 +25,13 @@ to build the model in the first place will be used.}
 \item{B}{Number of simulations}
 }
 \value{
-To add
+a \link[tibble:tibble-package]{tibble}
 }
 \description{
 Function to run random meteorological simulations on a gbm model
+}
+\seealso{
+\code{\link[=buildMod]{buildMod()}} to build a gbm model
 }
 \author{
 David Carslaw

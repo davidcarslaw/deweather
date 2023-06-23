@@ -32,6 +32,7 @@ Imports:
     rlang,
     scales,
     stats,
+    tibble,
     tidyr
 Encoding: UTF-8
 LazyData: yes

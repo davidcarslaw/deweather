@@ -39,6 +39,9 @@ Returns to be added.
 \description{
 Function to test different meteorological normalisation models.
 }
+\seealso{
+\code{\link[=buildMod]{buildMod()}} for fitting a final model
+}
 \author{
 David Carslaw
 }

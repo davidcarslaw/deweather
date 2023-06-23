@@ -4,5 +4,6 @@
 ## usethis namespace: start
 #' @importFrom foreach %dopar%
 #' @importFrom rlang :=
+#' @importFrom tibble tibble
 ## usethis namespace: end
 NULL
