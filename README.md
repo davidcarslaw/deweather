@@ -68,20 +68,16 @@ directly can be found
 ``` r
 library(deweather)
 head(road_data)
-#>                  date nox no2 ethane isoprene benzene  ws  wd air_temp       RH
-#> 1 1998-01-01 00:00:00 546  74     NA       NA      NA 1.0 280     3.60 89.41776
-#> 2 1998-01-01 01:00:00  NA  NA     NA       NA      NA 1.0 230     3.50 90.67753
-#> 3 1998-01-01 02:00:00  NA  NA     NA       NA      NA 1.5 180     4.25 87.60679
-#> 4 1998-01-01 03:00:00 944  99     NA       NA      NA  NA  NA       NA       NA
-#> 5 1998-01-01 04:00:00 894 149     NA       NA      NA 1.5 180     3.80 89.43347
-#> 6 1998-01-01 05:00:00 506  80     NA       NA      NA 1.0 190     3.50 89.40989
-#>   cl
-#> 1  2
-#> 2  2
-#> 3  2
-#> 4 NA
-#> 5  1
-#> 6  0
+#> # A tibble: 6 × 11
+#>   date                  nox   no2 ethane isoprene benzene    ws    wd air_temp
+#>   <dttm>              <dbl> <dbl>  <dbl>    <dbl>   <dbl> <dbl> <dbl>    <dbl>
+#> 1 1998-01-01 00:00:00   546    74     NA       NA      NA   1     280     3.6 
+#> 2 1998-01-01 01:00:00    NA    NA     NA       NA      NA   1     230     3.5 
+#> 3 1998-01-01 02:00:00    NA    NA     NA       NA      NA   1.5   180     4.25
+#> 4 1998-01-01 03:00:00   944    99     NA       NA      NA  NA      NA    NA   
+#> 5 1998-01-01 04:00:00   894   149     NA       NA      NA   1.5   180     3.8 
+#> 6 1998-01-01 05:00:00   506    80     NA       NA      NA   1     190     3.5 
+#> # ℹ 2 more variables: RH <dbl>, cl <dbl>
 ```
 
 ## Construct and test model(s)
@@ -105,7 +101,6 @@ testMod(
   vars = c("trend", "ws", "wd", "hour", "weekday", "air_temp", "week"),
   pollutant = "no2"
 )
-#> [1] "Percent increase in RMSE using test data is 0.9%"
 ```
 
 <img src="man/figures/README-testMod-1.png" width="100%" />
@@ -143,7 +138,7 @@ the covariates used in the model while holding the value of other
 covariates at their mean level.
 
 ``` r
-plotAllPD(mod_no2)
+plotPD(mod_no2)
 ```
 
 <img src="man/figures/README-plotAll-1.png" width="100%" />

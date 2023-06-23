@@ -62,7 +62,7 @@ The `testMod()` function is used to build and test various models to help derive
 
 In this example, we will restrict the data to model to 4 years. Note that variables such as `"hour"` and `"weekday"` are used as variables that can be used to explain some of the variation. `"hour"` for example very usefully acts as a proxy for the diurnal variation in emissions.
 
-```{r testMod, eval = TRUE}
+```{r testMod, eval = TRUE, fig.height=4.5}
 library(openair)
 # select only part of the data set
 dat_part <- selectByDate(road_data, year = 2001:2004)
@@ -99,7 +99,7 @@ This function returns a `deweather` object that can be interrogated as shown bel
 One of the benefits of the boosted regression tree approach is that the *partial dependencies* can be explored. In simple terms, the partial dependencies show the relationship between the pollutant of interest and the covariates used in the model while holding the value of other covariates at their mean level.
 
 ```{r plotAll, eval = TRUE, fig.width=7, fig.height=9}
-plotAllPD(mod_no2)
+plotPD(mod_no2)
 ```
 
 ### Plot two-way interactions
