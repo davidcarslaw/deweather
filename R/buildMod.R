@@ -30,8 +30,10 @@
 #'   dependence data frame.
 #' @author David Carslaw
 buildMod <- function(input_data,
-                     vars = c("trend", "ws", "wd", "hour",
-                              "weekday", "air_temp"),
+                     vars = c(
+                       "trend", "ws", "wd", "hour",
+                       "weekday", "air_temp"
+                     ),
                      pollutant = "nox",
                      sam.size = nrow(input_data),
                      n.trees = 200,
@@ -45,23 +47,23 @@ buildMod <- function(input_data,
     dplyr::select(input_data, c("date", vars, pollutant))
   input_data <-
     stats::na.omit(input_data) # only build model where all data are available - can always predict in gaps
-  
+
   variables <- paste(vars, collapse = "+")
   eq <- stats::formula(paste(pollutant, "~", variables))
-  
+
   # randomly sample data according to sam.size
   if (sam.size > nrow(input_data)) {
     sam.size <- nrow(input_data)
   }
-  
+
   if (simulate) {
     id <- sample(nrow(input_data), size = sam.size, replace = TRUE)
-    input_data <- input_data[id,]
+    input_data <- input_data[id, ]
   } else {
     id <- sample(nrow(input_data), size = sam.size)
-    input_data <- input_data[id,]
+    input_data <- input_data[id, ]
   }
-  
+
   ## if more than one simulation only return model ONCE
   if (B != 1L) {
     mod <- runGbm(
@@ -74,15 +76,16 @@ buildMod <- function(input_data,
       seed
     )
   }
-  
+
   # if model needs to be run multiple times
   res <- partialDep(input_data, eq, vars, B, n.core, n.trees, seed)
-  
-  if (B != 1)
+
+  if (B != 1) {
     Mod <- mod$model
-  else
+  } else {
     Mod <- res[[3]]
-  
+  }
+
   # return a list of model, data, partial deps
   result <-
     list(
@@ -92,7 +95,7 @@ buildMod <- function(input_data,
       pd = res[[1]]
     )
   class(result) <- "deweather"
-  
+
   return(result)
 }
 
@@ -100,26 +103,29 @@ buildMod <- function(input_data,
 #' @noRd
 extractPD <- function(vars, mod) {
   n <- 100 ## resolution of output
-  
-  if ("trend" %in% vars)
+
+  if ("trend" %in% vars) {
     n <- 500
-  
-  if (vars %in% c("hour", "hour.local"))
+  }
+
+  if (vars %in% c("hour", "hour.local")) {
     n <- 24
-  
+  }
+
   ## extract partial dependence values
   res <-
     gbm::plot.gbm(mod,
-                  vars,
-                  continuous.resolution = n,
-                  return.grid = TRUE)
+      vars,
+      continuous.resolution = n,
+      return.grid = TRUE
+    )
   res <- data.frame(
     y = res$y,
     var = vars,
     x = res[[vars]],
     var_type = ifelse(is.numeric(res[[vars]]), "numeric", "character")
   )
-  
+
   return(res)
 }
 
@@ -135,16 +141,17 @@ runGbm <-
            seed = seed) {
     ## sub-sample the data for bootstrapping
     if (simulate) {
-      dat <- dat[sample(nrow(dat), nrow(dat), replace = TRUE),]
+      dat <- dat[sample(nrow(dat), nrow(dat), replace = TRUE), ]
     }
-    
+
     # these models for AQ data are not very sensitive to tree sizes > 1000
     # make reproducible
-    if (!simulate)
+    if (!simulate) {
       set.seed(seed)
-    else
+    } else {
       set.seed(stats::runif(1))
-    
+    }
+
     mod <- gbm::gbm(
       eq,
       data = dat,
@@ -159,19 +166,19 @@ runGbm <-
       keep.data = TRUE,
       verbose = FALSE
     )
-    
+
     ## extract partial dependnece componets
-    
+
     pd <- lapply(vars, extractPD, mod)
     pd <- do.call(rbind, pd)
-    
+
     ## relative influence
     ri <- summary(mod, plotit = FALSE)
     ri$var <- stats::reorder(ri$var, ri$rel.inf)
-    
+
     if (return.mod) {
       result <- list(pd = pd, ri = ri, model = mod)
-      
+
       return(result)
     } else {
       return(list(pd, ri))
@@ -188,11 +195,12 @@ partialDep <-
            n.core = 4,
            n.trees,
            seed) {
-    if (B == 1)
+    if (B == 1) {
       return.mod <- TRUE
-    else
+    } else {
       return.mod <- FALSE
-    
+    }
+
     if (B == 1) {
       pred <- runGbm(
         dat,
@@ -206,7 +214,7 @@ partialDep <-
     } else {
       cl <- parallel::makeCluster(n.core)
       doParallel::registerDoParallel(cl)
-      
+
       pred <- foreach::foreach(
         i = 1:B,
         .inorder = FALSE,
@@ -221,12 +229,12 @@ partialDep <-
           simulate = TRUE,
           n.trees = n.trees
         )
-      
+
       parallel::stopCluster(cl)
     }
-    
+
     # partial dependence plots
-    
+
     if (B == 1) {
       pd <- pred$pd
       ri <- pred$ri
@@ -234,15 +242,15 @@ partialDep <-
     } else {
       pd <- lapply(pred, "[[", 1)
       pd <- do.call(rbind, pd)
-      
+
       ## relative influence
       ri <- lapply(pred, "[[", 2)
       ri <- do.call(rbind, ri)
-      
+
       mod <- pred[[1]]$model
     }
-    
-    
+
+
     resCI <-
       dplyr::group_by(pd, .data$var, .data$var_type, .data$x) %>%
       dplyr::summarise(
@@ -250,14 +258,14 @@ partialDep <-
         lower = stats::quantile(.data$y, probs = c(0.025)),
         upper = stats::quantile(.data$y, probs = c(0.975))
       )
-    
+
     resRI <- dplyr::group_by(ri, .data$var) %>%
       dplyr::summarise(
         mean = mean(.data$rel.inf),
         lower = stats::quantile(.data$rel.inf, probs = c(0.025)),
         upper = stats::quantile(.data$rel.inf, probs = c(0.975))
       )
-    
+
     if (return.mod) {
       return(list(resCI, resRI, mod))
     } else {
