@@ -3,7 +3,7 @@
 #' This is the main function to apply a gbm model to a data set.
 #'
 #' @param input_data Data frame to analyse. Must contain a POSIXct field called
-#'   \code{date}.
+#'   `date`.
 #' @param vars Explanatory variables to use. These variables will be used to
 #'   build the gbm model. Note that the model must include a trend component.
 #'   Several variables can be automatically calculated (see [prepData()] for
@@ -14,14 +14,14 @@
 #'   model building. While it is possible to use the full data set, for data
 #'   sets spanning years the model building can take a very long time to run.
 #'   Additionally, there will be diminishing returns in terms of model accuracy.
-#'   If \code{sam.size} is greater than the number of number of rows of data,
+#'   If `sam.size` is greater than the number of number of rows of data,
 #'   the number of rows of data is used instead.
 #' @param n.trees Number of trees to fit.
 #' @param simulate Should the original time series be randomly sampled with
-#'   replacement? The default is \code{FALSE}. Setting \code{simulate = TRUE}
+#'   replacement? The default is `FALSE`. Setting `simulate = TRUE`
 #'   can be useful for estimating model uncertainties. In which case models
-#'   should be run multiple times with \code{B = 1} and a different value of
-#'   \code{seed} e.g. \code{seed = runif(1)}.
+#'   should be run multiple times with `B = 1` and a different value of
+#'   `seed` e.g. `seed = runif(1)`.
 #' @param B Number of bootstrap simulations for partial dependence plots.
 #' @param n.core Number of cores to use for parallel processing.
 #' @param seed Random number seed for reproducibility in returned model.

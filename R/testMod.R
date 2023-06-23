@@ -8,8 +8,8 @@
 #'   against the withheld 0.2 proportion.
 #' @param n.trees Number of trees to use.
 #' @param seed Random number seed for reproducibility in returned model.
-#' @param plot The default, \code{TRUE}, automatically prints a plot and two
-#'   tables of statistics to review the model output. \code{FALSE} disables this
+#' @param plot The default, `TRUE`, automatically prints a plot and two
+#'   tables of statistics to review the model output. `FALSE` disables this
 #'   behaviour.
 #' @export
 #' @return Returns to be added.
