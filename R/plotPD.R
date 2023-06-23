@@ -190,7 +190,7 @@ plotAllPD <- function(dw_model,
 
   ## plot everything
   plots <- lapply(influ$var, plotPD,
-    dat = dw_model,
+    dw_model = dw_model,
     ylim = ylim, plotit = FALSE, ...
   )
 
