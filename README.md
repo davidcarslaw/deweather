@@ -1,12 +1,14 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# deweather: an R package to remove meteorological variation from air quality data
+# deweather: remove meteorological variation from air quality data <a href="https://davidcarslaw.github.io/deweather/"><img src="man/figures/logo.png" align="right" height="100" alt="deweather website" /></a>
 
 <!-- badges: start -->
-<!-- badges: end -->
 
-<img src="man/figures/README-logo-plume.png" alt="openair logo" width="35%" />
+[![R-CMD-check](https://github.com/davidcarslaw/deweather/workflows/R-CMD-check/badge.svg)](https://github.com/davidcarslaw/deweather/actions)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/deweather)](https://CRAN.R-project.org/package=deweather)
+<!-- badges: end -->
 
 **deweather** is an R package developed for the purpose of ‘removing’
 the influence of meteorology from air quality time series data. It is
@@ -27,11 +29,11 @@ Windows, Linux and Mac OSX.
 ## Installation
 
 Installation of **deweather** from GitHub should be easy using the
-devtools package.
+`{pak}` package.
 
 ``` r
-require(devtools)
-install_github('davidcarslaw/deweather')
+# install.packages("pak")
+pak::pak("davidcarslaw/deweather")
 ```
 
 ## Description
@@ -89,29 +91,33 @@ library(worldmet)
 library(dplyr)
 
 # import AQ data
-road_data <- importAURN(site = "my1",
-                        year = 1998:2016,
-                        hc = TRUE)
+road_data <- importAURN(
+  site = "my1",
+  year = 1998:2016,
+  hc = TRUE
+)
 
 # import met data
 met <- importNOAA(year = 1998:2016)
 
 # join together but ignore met data in road_data because it is modelled
 road_data <-
-  left_join(select(road_data,-ws,-wd,-air_temp), met, by = "date")
+  left_join(select(road_data, -ws, -wd, -air_temp), met, by = "date")
 
-road_data <- select(road_data,
-                    date,
-                    nox,
-                    no2,
-                    ethane,
-                    isoprene,
-                    benzene,
-                    ws,
-                    wd,
-                    air_temp,
-                    RH,
-                    cl)
+road_data <- select(
+  road_data,
+  date,
+  nox,
+  no2,
+  ethane,
+  isoprene,
+  benzene,
+  ws,
+  wd,
+  air_temp,
+  RH,
+  cl
+)
 ```
 
 ## Construct and test model(s)
@@ -130,9 +136,11 @@ library(openair)
 dat_part <- selectByDate(road_data, year = 2001:2004)
 
 # test a model with commonly used covariates
-testMod(dat = dat_part, 
-        vars = c("trend", "ws", "wd", "hour", "weekday", "air_temp", "week"),
-        pollutant = "no2")
+testMod(
+  dat_part,
+  vars = c("trend", "ws", "wd", "hour", "weekday", "air_temp", "week"),
+  pollutant = "no2"
+)
 #> [1] "Percent increase in RMSE using test data is 1%"
 ```
 
@@ -149,10 +157,12 @@ Assuming that a good model can be developed, it can now be explored in
 more detail.
 
 ``` r
-mod_no2 <- buildMod(dat = dat_part, 
-        vars = c("trend", "ws", "wd", "hour", "weekday", "air_temp", "week"),
-        pollutant = "no2",
-        n.core = 6)
+mod_no2 <- buildMod(
+  dat_part,
+  vars = c("trend", "ws", "wd", "hour", "weekday", "air_temp", "week"),
+  pollutant = "no2",
+  n.core = 6
+)
 ```
 
 This function returns a `deweather` object that can be interogated as
@@ -169,7 +179,7 @@ the covariates used in the model while holding the value of other
 covariates at their mean level.
 
 ``` r
-plotAllPD(dw_model = mod_no2)
+plotAllPD(mod_no2)
 ```
 
 <img src="man/figures/README-plotAll-1.png" width="100%" />
@@ -186,7 +196,7 @@ NO<sub>2</sub>. In fact, background O<sub>3</sub> would probably be a
 useful covariate to add to the model.
 
 ``` r
-plot2Way(dw_model = mod_no2, variable = c("ws", "air_temp"))
+plot2Way(mod_no2, variable = c("ws", "air_temp"))
 ```
 
 <img src="man/figures/README-plot2way-1.png" width="100%" />
@@ -201,8 +211,10 @@ that in this case there is no need to supply the “trend” component
 because it is calculated using `metSim`.
 
 ``` r
-demet <- metSim(mod_no2, newdata = dat_part, 
-                metVars = c("ws", "wd", "hour", "weekday", "air_temp", "week"))
+demet <- metSim(mod_no2,
+  newdata = dat_part,
+  metVars = c("ws", "wd", "hour", "weekday", "air_temp", "week")
+)
 ```
 
 Now it is possible to plot the resulting trend.

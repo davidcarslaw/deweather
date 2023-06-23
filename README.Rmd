@@ -17,12 +17,12 @@ knitr::opts_chunk$set(
 )
 ```
 
-# deweather: an R package to remove meteorological variation from air quality data
+# deweather: remove meteorological variation from air quality data <a href="https://davidcarslaw.github.io/deweather/"><img src="man/figures/logo.png" align="right" height="100" alt="deweather website" /></a>
 
 <!-- badges: start -->
+[![R-CMD-check](https://github.com/davidcarslaw/deweather/workflows/R-CMD-check/badge.svg)](https://github.com/davidcarslaw/deweather/actions)
+[![CRAN status](https://www.r-pkg.org/badges/version/deweather)](https://CRAN.R-project.org/package=deweather)
 <!-- badges: end -->
-
-<img src="man/figures/README-logo-plume.png" alt="openair logo" width="35%" />
 
 **deweather** is an R package developed for the purpose of 'removing' the influence of meteorology from air quality time series data. It is part of the [openair](http://davidcarslaw.github.io/openair/) suite of packages designed to support the analysis of air quality data and related data.
 
@@ -32,11 +32,11 @@ The modelling can be computationally intensive and therefore **deweather** makes
 
 ## Installation
 
-Installation of **deweather** from GitHub should be easy using the devtools package. 
+Installation of **deweather** from GitHub should be easy using the `{pak}` package. 
 
 ```{r install}
-require(devtools)
-install_github("davidcarslaw/deweather")
+# install.packages("pak")
+pak::pak("davidcarslaw/deweather")
 ```
 
 
@@ -109,7 +109,7 @@ dat_part <- selectByDate(road_data, year = 2001:2004)
 
 # test a model with commonly used covariates
 testMod(
-  dat = dat_part,
+  dat_part,
   vars = c("trend", "ws", "wd", "hour", "weekday", "air_temp", "week"),
   pollutant = "no2"
 )
@@ -123,7 +123,7 @@ Assuming that a good model can be developed, it can now be explored in more deta
 
 ```{r buildMod, eval = TRUE}
 mod_no2 <- buildMod(
-  dat = dat_part,
+  dat_part,
   vars = c("trend", "ws", "wd", "hour", "weekday", "air_temp", "week"),
   pollutant = "no2",
   n.core = 6
@@ -139,7 +139,7 @@ This function returns a `deweather` object that can be interogated as shown belo
 One of the benefits of the boosted regression tree approach is that the *partial dependencies* can be explored. In simple terms, the partial dependencies show the relationship between the pollutant of interest and the covariates used in the model while holding the value of other covariates at their mean level.
 
 ```{r plotAll, eval = TRUE, fig.width=7, fig.height=9}
-plotAllPD(dw_model = mod_no2)
+plotAllPD(mod_no2)
 ```
 
 ### Plot two-way interactions
@@ -147,7 +147,7 @@ plotAllPD(dw_model = mod_no2)
 It can be very useful to plot important two-way interactions. In this example the interaction between `ws` and `air_temp` is considered. The plot shows that NO~2~ tends to be high when the wind speed is low and the temperature is low i.e. stable atmospheric conditions. Also NO~2~ tends to be high when the temperature is high, which is most likely due to more O~3~ available to convert NO to NO~2~. In fact, background O~3~ would probably be a useful covariate to add to the model.
 
 ```{r plot2way, eval = TRUE, fig.width=5, fig.height=4.5}
-plot2Way(dw_model = mod_no2, variable = c("ws", "air_temp"))
+plot2Way(mod_no2, variable = c("ws", "air_temp"))
 ```
 
 

@@ -42,4 +42,9 @@ should be GMT time zone. This can be hourly data or higher resolution data.
 # basic structure
 head(road_data)
 }
+\seealso{
+Other built-in datasets: 
+\code{\link{dat}}
+}
+\concept{built-in datasets}
 \keyword{datasets}

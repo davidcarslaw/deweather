@@ -33,6 +33,7 @@
 #'   The same data is also provide in \code{'.csv'} format via the openair
 #'   project web site \url{http://www.openair-project.org}.
 #' @keywords datasets
+#' @family built-in datasets
 #' @examples
 #'
 #' # basic structure
@@ -66,6 +67,7 @@
 #'   The same data is also provide in \code{'.csv'} format via the openair
 #'   project web site \url{http://www.openair-project.org}.
 #' @keywords datasets
+#' @family built-in datasets
 #' @examples
 #'
 #' # basic structure
