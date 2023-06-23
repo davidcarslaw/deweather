@@ -114,20 +114,16 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://davidcarslaw.github.io/deweather/" class="external-link">deweather</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">road_data</span><span class="op">)</span></span>
-<span><span class="co">#&gt;                  date nox no2 ethane isoprene benzene  ws  wd air_temp       RH</span></span>
-<span><span class="co">#&gt; 1 1998-01-01 00:00:00 546  74     NA       NA      NA 1.0 280     3.60 89.41776</span></span>
-<span><span class="co">#&gt; 2 1998-01-01 01:00:00  NA  NA     NA       NA      NA 1.0 230     3.50 90.67753</span></span>
-<span><span class="co">#&gt; 3 1998-01-01 02:00:00  NA  NA     NA       NA      NA 1.5 180     4.25 87.60679</span></span>
-<span><span class="co">#&gt; 4 1998-01-01 03:00:00 944  99     NA       NA      NA  NA  NA       NA       NA</span></span>
-<span><span class="co">#&gt; 5 1998-01-01 04:00:00 894 149     NA       NA      NA 1.5 180     3.80 89.43347</span></span>
-<span><span class="co">#&gt; 6 1998-01-01 05:00:00 506  80     NA       NA      NA 1.0 190     3.50 89.40989</span></span>
-<span><span class="co">#&gt;   cl</span></span>
-<span><span class="co">#&gt; 1  2</span></span>
-<span><span class="co">#&gt; 2  2</span></span>
-<span><span class="co">#&gt; 3  2</span></span>
-<span><span class="co">#&gt; 4 NA</span></span>
-<span><span class="co">#&gt; 5  1</span></span>
-<span><span class="co">#&gt; 6  0</span></span></code></pre></div>
+<span><span class="co">#&gt; # A tibble: 6 × 11</span></span>
+<span><span class="co">#&gt;   date                  nox   no2 ethane isoprene benzene    ws    wd air_temp</span></span>
+<span><span class="co">#&gt;   &lt;dttm&gt;              &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt; 1 1998-01-01 00:00:00   546    74     NA       NA      NA   1     280     3.6 </span></span>
+<span><span class="co">#&gt; 2 1998-01-01 01:00:00    NA    NA     NA       NA      NA   1     230     3.5 </span></span>
+<span><span class="co">#&gt; 3 1998-01-01 02:00:00    NA    NA     NA       NA      NA   1.5   180     4.25</span></span>
+<span><span class="co">#&gt; 4 1998-01-01 03:00:00   944    99     NA       NA      NA  NA      NA    NA   </span></span>
+<span><span class="co">#&gt; 5 1998-01-01 04:00:00   894   149     NA       NA      NA   1.5   180     3.8 </span></span>
+<span><span class="co">#&gt; 6 1998-01-01 05:00:00   506    80     NA       NA      NA   1     190     3.5 </span></span>
+<span><span class="co">#&gt; # ℹ 2 more variables: RH &lt;dbl&gt;, cl &lt;dbl&gt;</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="construct-and-test-models">Construct and test model(s)<a class="anchor" aria-label="anchor" href="#construct-and-test-models"></a>
@@ -144,8 +140,7 @@
 <span>  <span class="va">dat_part</span>,</span>
 <span>  vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"trend"</span>, <span class="st">"ws"</span>, <span class="st">"wd"</span>, <span class="st">"hour"</span>, <span class="st">"weekday"</span>, <span class="st">"air_temp"</span>, <span class="st">"week"</span><span class="op">)</span>,</span>
 <span>  pollutant <span class="op">=</span> <span class="st">"no2"</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Percent increase in RMSE using test data is 0.9%"</span></span></code></pre></div>
+<span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-testMod-1.png" width="100%"></p>
 <p>The output shows by default the performance of the model when applied to a withheld random 20% (by default) of the data, i.e., the model is evaluated against data not used to build the model. Common model evaluation metrics are also given.</p>
 </div>
@@ -170,7 +165,7 @@
 </h3>
 <p>One of the benefits of the boosted regression tree approach is that the <em>partial dependencies</em> can be explored. In simple terms, the partial dependencies show the relationship between the pollutant of interest and the covariates used in the model while holding the value of other covariates at their mean level.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">plotAllPD</span><span class="op">(</span><span class="va">mod_no2</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/plotPD.html">plotPD</a></span><span class="op">(</span><span class="va">mod_no2</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-plotAll-1.png" width="100%"></p>
 </div>
 <div class="section level3">
