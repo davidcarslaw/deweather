@@ -1,4 +1,41 @@
-url: ~
+url: https://davidcarslaw.github.io/deweather/
 template:
   bootstrap: 5
+navbar:
+  title: deweather
+  type: default
+  left:
+  - text: Functions
+    href: reference/index.html
+  - text: News
+    href: news/index.html
+  right:
+  - icon: fa-github fa-lg
+    href: https://github.com/davidcarslaw/deweather
+reference:
+- title: Data
+  desc: In-built data to demonstrate deweather functions.
+  contents: has_concept("built-in datasets")
+- title: Build
+  desc: Functions to test and build `{deweather}` models
+  contents:
+  - testMod
+  - buildMod
+- title: Examine
+  desc: Functions to visualise or otherwise examine `buildMod()` outputs
+  contents:
+  - gbmInf
+  - plot2Way
+  - plotPD
+  - plotAllPD
+  - gbm.interactions
+- title: Predict
+  desc: Functions to use `{deweather}` models to predict air pollution concentrations
+  contents:
+  - metSim
+- title: Utility
+  desc: Other assorted functions to support `{deweather}`
+  contents:
+  - prepData
+  - diurnalGbm
 
