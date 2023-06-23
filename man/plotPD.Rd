@@ -7,9 +7,11 @@
 plotPD(
   dw_model,
   variable = "all",
-  ylim = NULL,
   intervals = 40,
+  ylim = NULL,
+  col = "tomato",
   nrow = NULL,
+  polar.wd = FALSE,
   auto.text = TRUE
 )
 }
@@ -19,20 +21,22 @@ plotPD(
 \item{variable}{The variable(s) to plot. Defaults to \code{"all"}, which plots all
 variables.}
 
-\item{ylim}{user-specified \code{ylim}.}
-
 \item{intervals}{Number of intervals to to calculate partial dependence over.}
+
+\item{ylim}{user-specified \code{ylim}.}
 
 \item{nrow}{Number of rows for the plots.}
 
-\item{auto.text}{Either \code{TRUE} (default) or \code{FALSE}. If \code{TRUE}
-titles and axis labels will automatically try and format pollutant names
-and units properly e.g.  by subscripting the `2' in NO2.}
+\item{polar.wd}{Plot the any wind direction components, labelled "wd", on a
+polar axis? Defaults to \code{FALSE}.}
+
+\item{auto.text}{Either \code{TRUE} (default) or \code{FALSE}. If \code{TRUE} titles and
+axis labels will automatically try and format pollutant names and units
+properly e.g.  by subscripting the `2' in NO2.}
 }
 \value{
 Invisibly returns a list containing the plot and the data used to
-make the plot for \code{\link[=plotPD]{plotPD()}} and \code{\link[=plot2Way]{plot2Way()}} to allow post processing,
-e.g., modifying the \code{ggplot}.
+make the plot to allow post processing, e.g., modifying the \code{ggplot}.
 }
 \description{
 Function to plot partial dependence plots with bootstrap uncertainties
