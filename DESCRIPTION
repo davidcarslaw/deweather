@@ -28,6 +28,7 @@ Imports:
     openair,
     parallel,
     rlang,
+    scales,
     stats,
     tidyr
 Encoding: UTF-8
