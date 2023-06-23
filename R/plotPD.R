@@ -5,12 +5,17 @@
 #'   variables.
 #' @param ylim user-specified `ylim`.
 #' @param intervals Number of intervals to to calculate partial dependence over.
+#' @param col Colour(s) to use for the lines/points/uncertainty ribbons. If
+#'   multiple colours are provided (e.g., `cols = c("tomato", "royalblue")`),
+#'   they will be cycled through until all variables are plotted.
 #' @param nrow Number of rows for the plots.
 #' @param polar.wd Plot the any wind direction components, labelled "wd", on a
 #'   polar axis? Defaults to `FALSE`.
 #' @param auto.text Either `TRUE` (default) or `FALSE`. If `TRUE` titles and
 #'   axis labels will automatically try and format pollutant names and units
 #'   properly e.g.  by subscripting the `2' in NO2.
+#' @param plot Should a plot be produced? `FALSE` can be useful when analysing
+#'   data to extract plot components and plotting them in other ways.
 #' @export
 #' @importFrom rlang .data
 #' @family deweather model plotting functions
@@ -24,7 +29,8 @@ plotPD <- function(dw_model,
                    col = "tomato",
                    nrow = NULL,
                    polar.wd = FALSE,
-                   auto.text = TRUE) {
+                   auto.text = TRUE,
+                   plot = TRUE) {
   if (!inherits(dw_model, "deweather")) {
     stop("Need to supply a deweather object from buildMod.")
   }
@@ -38,23 +44,27 @@ plotPD <- function(dw_model,
   }
 
   ## plot everything
-  plots <- lapply(
-    influ$var,
-    plot_pd_helper,
+  plots <- purrr::map2(
+    .x = influ$var,
+    .y = rep(col, length(influ$var))[seq_along(influ$var)],
+    .f = ~plot_pd_helper(
     dw_model = dw_model,
     ylim = ylim,
-    col = col,
+    variable = .x,
+    col = .y,
     polar.wd = polar.wd,
     intervals = intervals,
     auto.text = auto.text
-  )
+  ))
 
   # extract first element of list, which is the plot
   thedata <- sapply(plots, "[", 2)
   plots <- sapply(plots, "[", 1)
 
   # plot all outputs
-  do.call(gridExtra::grid.arrange, c(plots, nrow = nrow))
+  if (plot) {
+    do.call(gridExtra::grid.arrange, c(plots, nrow = nrow))
+  }
 
   # name plots & data for easy indexing
   names(thedata) <- influ$var
