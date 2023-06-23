@@ -32,16 +32,15 @@ normalisation to.}
 model building. While it is possible to use the full data set, for data
 sets spanning years the model building can take a very long time to run.
 Additionally, there will be diminishing returns in terms of model accuracy.
-If \code{sam.size} is greater than the number of number of rows of data,
-the number of rows of data is used instead.}
+If \code{sam.size} is greater than the number of number of rows of data, the
+number of rows of data is used instead.}
 
 \item{n.trees}{Number of trees to fit.}
 
 \item{simulate}{Should the original time series be randomly sampled with
-replacement? The default is \code{FALSE}. Setting \code{simulate = TRUE}
-can be useful for estimating model uncertainties. In which case models
-should be run multiple times with \code{B = 1} and a different value of
-\code{seed} e.g. \code{seed = runif(1)}.}
+replacement? The default is \code{FALSE}. Setting \code{simulate = TRUE} can be
+useful for estimating model uncertainties. In which case models should be
+run multiple times with \code{B = 1} and a different value of \code{seed} e.g. \code{seed = runif(1)}.}
 
 \item{B}{Number of bootstrap simulations for partial dependence plots.}
 
@@ -55,6 +54,14 @@ dependence data frame.
 }
 \description{
 This is the main function to apply a gbm model to a data set.
+}
+\seealso{
+\code{\link[=testMod]{testMod()}} for testing models before they are built.
+
+\code{\link[=metSim]{metSim()}} for using a built model with meteorological simulations.
+
+\code{\link[=plot2Way]{plot2Way()}}, \code{\link[=plotInfluence]{plotInfluence()}} and \code{\link[=plotPD]{plotPD()}} for visualising built
+models.
 }
 \author{
 David Carslaw

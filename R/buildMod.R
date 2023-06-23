@@ -14,18 +14,22 @@
 #'   model building. While it is possible to use the full data set, for data
 #'   sets spanning years the model building can take a very long time to run.
 #'   Additionally, there will be diminishing returns in terms of model accuracy.
-#'   If `sam.size` is greater than the number of number of rows of data,
-#'   the number of rows of data is used instead.
+#'   If `sam.size` is greater than the number of number of rows of data, the
+#'   number of rows of data is used instead.
 #' @param n.trees Number of trees to fit.
 #' @param simulate Should the original time series be randomly sampled with
-#'   replacement? The default is `FALSE`. Setting `simulate = TRUE`
-#'   can be useful for estimating model uncertainties. In which case models
-#'   should be run multiple times with `B = 1` and a different value of
-#'   `seed` e.g. `seed = runif(1)`.
+#'   replacement? The default is `FALSE`. Setting `simulate = TRUE` can be
+#'   useful for estimating model uncertainties. In which case models should be
+#'   run multiple times with `B = 1` and a different value of `seed` e.g. `seed
+#'   = runif(1)`.
 #' @param B Number of bootstrap simulations for partial dependence plots.
 #' @param n.core Number of cores to use for parallel processing.
 #' @param seed Random number seed for reproducibility in returned model.
 #' @export
+#' @seealso [testMod()] for testing models before they are built.
+#' @seealso [metSim()] for using a built model with meteorological simulations.
+#' @seealso [plot2Way()], [plotInfluence()] and [plotPD()] for visualising built
+#'   models.
 #' @return Returns a list including the model, influence data frame and partial
 #'   dependence data frame.
 #' @author David Carslaw
