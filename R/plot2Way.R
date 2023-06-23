@@ -1,22 +1,22 @@
 #' Plot two-way interactions from gbm model
 #'
 #' @param dw_model Model object from running [buildMod()].
-#' @param variable The variables to plot. Must be of length two
-#' e.g. `variables = c("ws", "wd"`.
+#' @param variable The variables to plot. Must be of length two e.g. `variables
+#'   = c("ws", "wd"`.
 #' @param res Resolution in x-y i.e. number of points in each dimension.
-#' @param exlude Should surfaces exlude predictions too far from
-#' original data? The default is `TRUE`.
+#' @param exlude Should surfaces exlude predictions too far from original data?
+#'   The default is `TRUE`.
 #' @param cols Colours to be used for plotting. Options include
-#' \dQuote{default}, \dQuote{increment}, \dQuote{heat}, \dQuote{jet}
-#' and user defined. For user defined the user can supply a list of
-#' colour names recognised by R (type `colours()` to see the
-#' full list). An example would be `cols = c("yellow", "green",
-#' "blue")`
-#' @param dist When plotting surfaces, `dist` controls how far from the
-#' original data the predictions should be made. See
-#' `exclude.too.far` from the `mgcv` package. Data are
-#' first transformed to a unit square. Values should be between 0 and
-#' 1.
+#'   \dQuote{default}, \dQuote{increment}, \dQuote{heat}, \dQuote{jet} and user
+#'   defined. For user defined the user can supply a list of colour names
+#'   recognised by R (type `colours()` to see the full list). An example would
+#'   be `cols = c("yellow", "green", "blue")`
+#' @param dist When plotting surfaces, `dist` controls how far from the original
+#'   data the predictions should be made. See `exclude.too.far` from the `mgcv`
+#'   package. Data are first transformed to a unit square. Values should be
+#'   between 0 and 1.
+#' @param plot Should a plot be produced? `FALSE` can be useful when analysing
+#'   data to extract plot components and plotting them in other ways.
 #' @param ... Other arguments to be passed for plotting.
 #' @export
 #' @return To add
@@ -28,6 +28,7 @@ plot2Way <- function(dw_model,
                      exlude = TRUE,
                      cols = "default",
                      dist = 0.05,
+                     plot = TRUE,
                      ...) {
   if (!inherits(dw_model, "deweather")) {
     stop("Need to supply a deweather object from buildMod.")
@@ -43,7 +44,6 @@ plot2Way <- function(dw_model,
     continuous.resolution = res,
     return.grid = TRUE
   )
-
 
   ## exclude predictions too far from data (from mgcv)
 
@@ -67,8 +67,6 @@ plot2Way <- function(dw_model,
     res$trend <- res$date
   }
 
-
-
   if (all(sapply(res, is.numeric))) {
     var1 <- variable[1]
     var2 <- variable[2]
@@ -87,7 +85,9 @@ plot2Way <- function(dw_model,
         ggplot2::labs(fill = openair::quickText(mod$response.name))
     }
 
-    print(plt)
+    if (plot) {
+      print(plt)
+    }
   } else {
     var1 <- variable[1]
     var2 <- variable[2]
@@ -123,7 +123,9 @@ plot2Way <- function(dw_model,
       ) +
       ggplot2::labs(fill = openair::quickText(mod$response.name))
 
-    print(plt)
+    if (plot) {
+      print(plt)
+    }
   }
 
   invisible(list(plot = plt, data = res))

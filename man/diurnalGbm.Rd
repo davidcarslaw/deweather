@@ -9,7 +9,8 @@ diurnalGbm(
   vars = c("ws", "wd", "hour", "weekday"),
   pollutant = "nox",
   dates = c("01/01/2012", "31/12/2012", "31/12/2013"),
-  ylab = "value"
+  ylab = "value",
+  plot = TRUE
 )
 }
 \arguments{
@@ -25,6 +26,9 @@ partition the data into two categories (before/after). The date format is
 UK e.g. \code{date = c("19/2/2005", "19/2/2007", "19/2/2010")}.}
 
 \item{ylab}{Label for y-axis.}
+
+\item{plot}{Should a plot be produced? \code{FALSE} can be useful when analysing
+data to extract plot components and plotting them in other ways.}
 }
 \value{
 Some data

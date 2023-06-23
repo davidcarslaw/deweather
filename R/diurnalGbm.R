@@ -13,6 +13,8 @@
 #'   partition the data into two categories (before/after). The date format is
 #'   UK e.g. `date = c("19/2/2005", "19/2/2007", "19/2/2010")`.
 #' @param ylab Label for y-axis.
+#' @param plot Should a plot be produced? `FALSE` can be useful when analysing
+#'   data to extract plot components and plotting them in other ways.
 #' @export
 #' @importFrom rlang .data
 #' @return Some data
@@ -25,7 +27,8 @@ diurnalGbm <-
              "01/01/2012", "31/12/2012",
              "31/12/2013"
            ),
-           ylab = "value") {
+           ylab = "value",
+           plot = TRUE) {
     dates <- lubridate::dmy(dates, tz = attr(input_data$date, "tzone"))
 
     theData <- openair::selectByDate(input_data, start = dates[1], end = dates[2])
@@ -38,7 +41,7 @@ diurnalGbm <-
       sam.size = nrow(theData)
     )
 
-    res1 <- plot2Way(mod1, variable = c("weekday", "hour"))
+    res1 <- plot2Way(mod1, variable = c("weekday", "hour"), plot = FALSE)
 
     name1 <-
       paste(format(dates[1], "%d %b %Y"), "to", format(dates[2], "%d %b %Y"))
@@ -65,7 +68,7 @@ diurnalGbm <-
       sam.size = nrow(theData)
     )
 
-    res2 <- plot2Way(mod2, variable = c("weekday", "hour"))
+    res2 <- plot2Way(mod2, variable = c("weekday", "hour"), plot = FALSE)
 
     name2 <-
       paste(format(start1, "%d %b %Y"), "to", format(end1, "%d %b %Y"))
@@ -141,5 +144,9 @@ diurnalGbm <-
       ggplot2::scale_x_continuous(breaks = c(0, 6, 12, 18)) +
       ggplot2::ylab(openair::quickText(ylab))
 
-    print(plt)
+    if (plot) {
+      print(plt)
+    }
+    
+    return(list(plot = plt, data = results))
   }
