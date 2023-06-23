@@ -1,57 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>http://davidcarslaw.github.io/deweather/404.html</loc>
+    <loc>https://davidcarslaw.github.io/deweather/404.html</loc>
   </url>
   <url>
-    <loc>http://davidcarslaw.github.io/deweather/authors.html</loc>
+    <loc>https://davidcarslaw.github.io/deweather/CODE_OF_CONDUCT.html</loc>
   </url>
   <url>
-    <loc>http://davidcarslaw.github.io/deweather/index.html</loc>
+    <loc>https://davidcarslaw.github.io/deweather/CONTRIBUTING.html</loc>
   </url>
   <url>
-    <loc>http://davidcarslaw.github.io/deweather/reference/buildMod.html</loc>
+    <loc>https://davidcarslaw.github.io/deweather/authors.html</loc>
   </url>
   <url>
-    <loc>http://davidcarslaw.github.io/deweather/reference/dat.html</loc>
+    <loc>https://davidcarslaw.github.io/deweather/index.html</loc>
   </url>
   <url>
-    <loc>http://davidcarslaw.github.io/deweather/reference/deweather-package.html</loc>
+    <loc>https://davidcarslaw.github.io/deweather/news/index.html</loc>
   </url>
   <url>
-    <loc>http://davidcarslaw.github.io/deweather/reference/diurnalGbm.html</loc>
+    <loc>https://davidcarslaw.github.io/deweather/reference/buildMod.html</loc>
   </url>
   <url>
-    <loc>http://davidcarslaw.github.io/deweather/reference/gbm.interactions.html</loc>
+    <loc>https://davidcarslaw.github.io/deweather/reference/dat.html</loc>
   </url>
   <url>
-    <loc>http://davidcarslaw.github.io/deweather/reference/gbmInf.html</loc>
+    <loc>https://davidcarslaw.github.io/deweather/reference/deweather-package.html</loc>
   </url>
   <url>
-    <loc>http://davidcarslaw.github.io/deweather/reference/index.html</loc>
+    <loc>https://davidcarslaw.github.io/deweather/reference/diurnalGbm.html</loc>
   </url>
   <url>
-    <loc>http://davidcarslaw.github.io/deweather/reference/metSim.html</loc>
+    <loc>https://davidcarslaw.github.io/deweather/reference/gbm.interactions.html</loc>
   </url>
   <url>
-    <loc>http://davidcarslaw.github.io/deweather/reference/pipe.html</loc>
+    <loc>https://davidcarslaw.github.io/deweather/reference/gbmInf.html</loc>
   </url>
   <url>
-    <loc>http://davidcarslaw.github.io/deweather/reference/plot2Way.html</loc>
+    <loc>https://davidcarslaw.github.io/deweather/reference/index.html</loc>
   </url>
   <url>
-    <loc>http://davidcarslaw.github.io/deweather/reference/plotAllPD.html</loc>
+    <loc>https://davidcarslaw.github.io/deweather/reference/metSim.html</loc>
   </url>
   <url>
-    <loc>http://davidcarslaw.github.io/deweather/reference/plotPD.html</loc>
+    <loc>https://davidcarslaw.github.io/deweather/reference/pipe.html</loc>
   </url>
   <url>
-    <loc>http://davidcarslaw.github.io/deweather/reference/prepData.html</loc>
+    <loc>https://davidcarslaw.github.io/deweather/reference/plot2Way.html</loc>
   </url>
   <url>
-    <loc>http://davidcarslaw.github.io/deweather/reference/road_data.html</loc>
+    <loc>https://davidcarslaw.github.io/deweather/reference/plotAllPD.html</loc>
   </url>
   <url>
-    <loc>http://davidcarslaw.github.io/deweather/reference/testMod.html</loc>
+    <loc>https://davidcarslaw.github.io/deweather/reference/plotPD.html</loc>
+  </url>
+  <url>
+    <loc>https://davidcarslaw.github.io/deweather/reference/prepData.html</loc>
+  </url>
+  <url>
+    <loc>https://davidcarslaw.github.io/deweather/reference/road_data.html</loc>
+  </url>
+  <url>
+    <loc>https://davidcarslaw.github.io/deweather/reference/testMod.html</loc>
   </url>
 </urlset>

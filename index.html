@@ -5,20 +5,27 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="Model and account for (or remove) the effect of
-    meteorology on atmospheric composition data. The technique uses boosted
-    regression trees based on the gbm package. Code can also be run using multiple
+<meta name="description" content="Model and account for (or remove) the effect of meteorology
+    on atmospheric composition data. The technique uses boosted regression
+    trees based on the gbm package. Code can also be run using multiple
     cores if available.">
 <title>Remove the influence of weather on air quality data • deweather</title>
+<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="apple-touch-icon.png">
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="apple-touch-icon-120x120.png">
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="apple-touch-icon-76x76.png">
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="apple-touch-icon-60x60.png">
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Remove the influence of weather on air quality data">
-<meta property="og:description" content="Model and account for (or remove) the effect of
-    meteorology on atmospheric composition data. The technique uses boosted
-    regression trees based on the gbm package. Code can also be run using multiple
+<meta property="og:description" content="Model and account for (or remove) the effect of meteorology
+    on atmospheric composition data. The technique uses boosted regression
+    trees based on the gbm package. Code can also be run using multiple
     cores if available.">
+<meta property="og:image" content="https://davidcarslaw.github.io/deweather/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -28,7 +35,7 @@
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     
 
-    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
+    <nav class="navbar fixed-top navbar-default navbar-expand-lg bg-light"><div class="container">
     
     <a class="navbar-brand me-2" href="index.html">deweather</a>
 
@@ -42,7 +49,18 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="nav-item">
-  <a class="nav-link" href="reference/index.html">Reference</a>
+  <a class="nav-link" href="reference/index.html">Functions</a>
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="news/index.html">News</a>
+</li>
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-case-studies-external-">Case Studies (External)</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-case-studies-external-">
+    <a class="external-link dropdown-item" href="https://www.sciencedirect.com/science/article/pii/S004896971834244X">(2019) Using meteorological normalisation to detect interventions in air quality time series</a>
+    <a class="external-link dropdown-item" href="https://www.sciencedirect.com/science/article/abs/pii/S1352231012001355">(2012) A short-term intervention study — Impact of airport closure due to the eruption of Eyjafjallajökull on near-field air quality</a>
+    <a class="external-link dropdown-item" href="https://www.sciencedirect.com/science/article/abs/pii/S1352231009003069">(2009) Analysis of air pollution data at a mixed source location using boosted regression trees. Atmospheric Environment</a>
+  </div>
 </li>
       </ul>
 <form class="form-inline my-2 my-lg-0" role="search">
@@ -51,8 +69,8 @@
 
       <ul class="navbar-nav">
 <li class="nav-item">
-  <a class="external-link nav-link" href="http://github.com/davidcarslaw/deweather/" aria-label="github">
-    <span class="fab fa fab fa-github fa-lg"></span>
+  <a class="external-link nav-link" href="https://github.com/davidcarslaw/deweather">
+    <span class="fa fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -64,21 +82,23 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="deweather-an-r-package-to-remove-meteorological-variation-from-air-quality-data">deweather: an R package to remove meteorological variation from air quality data<a class="anchor" aria-label="anchor" href="#deweather-an-r-package-to-remove-meteorological-variation-from-air-quality-data"></a>
-</h1></div>
+<div class="page-header">
+<img src="logo.png" class="logo" alt=""><h1 id="deweather-remove-meteorological-variation-from-air-quality-data-">deweather: remove meteorological variation from air quality data 
+<a class="anchor" aria-label="anchor" href="#deweather-remove-meteorological-variation-from-air-quality-data-"></a>
+</h1>
+</div>
 <!-- badges: start -->
-<!-- badges: end -->
-<p><img src="reference/figures/README-logo-plume.png" alt="openair logo" width="35%"></p>
+
 <p><strong>deweather</strong> is an R package developed for the purpose of ‘removing’ the influence of meteorology from air quality time series data. It is part of the <a href="http://davidcarslaw.github.io/openair/" class="external-link">openair</a> suite of packages designed to support the analysis of air quality data and related data.</p>
 <p>The <strong>deweather</strong> package uses a <em>boosted regression tree</em> approach for modelling air quality data. These and similar techniques provide powerful tools for building statistical models of air quality data. They are able to take account of the many complex interactions between variables as well as non-linear relationships between the variables.</p>
 <p>The modelling can be computationally intensive and therefore <strong>deweather</strong> makes use of the parallel processing, which should work on Windows, Linux and Mac OSX.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>Installation of <strong>deweather</strong> from GitHub should be easy using the devtools package.</p>
+<p>Installation of <strong>deweather</strong> from GitHub should be easy using the <a href="https://pak.r-lib.org/" class="external-link">pak</a> package.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span></span>
-<span><span class="fu">install_github</span><span class="op">(</span><span class="st">'davidcarslaw/deweather'</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># install.packages("pak")</span></span>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="http://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"davidcarslaw/deweather"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="description">Description<a class="anchor" aria-label="anchor" href="#description"></a>
@@ -92,7 +112,7 @@
 <p>The <strong>deweather</strong> package comes with a comprehensive data set of air quality and meteorological data. The air quality data is from Marylebone Road in central London (obtained from the <strong>openair</strong> package) and the meteorological data from Heathrow Airport (obtained from the <strong>worldmet</strong> package).</p>
 <p>The <code>road_data</code> data frame contains various pollutants such a NO<sub>x</sub>, NO<sub>2</sub>, ethane and isoprene as well as meteorological data including wind speed, wind direction, relative humidity, ambient temperature and cloud cover.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://github.com/davidcarslaw/dweather" class="external-link">deweather</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://github.com/davidcarslaw/deweather" class="external-link">deweather</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">road_data</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                  date nox no2 ethane isoprene benzene  ws  wd air_temp       RH</span></span>
 <span><span class="co">#&gt; 1 1998-01-01 00:00:00 546  74     NA       NA      NA 1.0 280     3.60 89.41776</span></span>
@@ -115,29 +135,33 @@
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># import AQ data</span></span>
-<span><span class="va">road_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://davidcarslaw.github.io/openair/reference/importAURN.html" class="external-link">importAURN</a></span><span class="op">(</span>site <span class="op">=</span> <span class="st">"my1"</span>,</span>
-<span>                        year <span class="op">=</span> <span class="fl">1998</span><span class="op">:</span><span class="fl">2016</span>,</span>
-<span>                        hc <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">road_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://davidcarslaw.github.io/openair/reference/importAURN.html" class="external-link">importAURN</a></span><span class="op">(</span></span>
+<span>  site <span class="op">=</span> <span class="st">"my1"</span>,</span>
+<span>  year <span class="op">=</span> <span class="fl">1998</span><span class="op">:</span><span class="fl">2016</span>,</span>
+<span>  hc <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># import met data</span></span>
 <span><span class="va">met</span> <span class="op">&lt;-</span> <span class="fu">importNOAA</span><span class="op">(</span>year <span class="op">=</span> <span class="fl">1998</span><span class="op">:</span><span class="fl">2016</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># join together but ignore met data in road_data because it is modelled</span></span>
 <span><span class="va">road_data</span> <span class="op">&lt;-</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">road_data</span>,<span class="op">-</span><span class="va">ws</span>,<span class="op">-</span><span class="va">wd</span>,<span class="op">-</span><span class="va">air_temp</span><span class="op">)</span>, <span class="va">met</span>, by <span class="op">=</span> <span class="st">"date"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">road_data</span>, <span class="op">-</span><span class="va">ws</span>, <span class="op">-</span><span class="va">wd</span>, <span class="op">-</span><span class="va">air_temp</span><span class="op">)</span>, <span class="va">met</span>, by <span class="op">=</span> <span class="st">"date"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">road_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">road_data</span>,</span>
-<span>                    <span class="va">date</span>,</span>
-<span>                    <span class="va">nox</span>,</span>
-<span>                    <span class="va">no2</span>,</span>
-<span>                    <span class="va">ethane</span>,</span>
-<span>                    <span class="va">isoprene</span>,</span>
-<span>                    <span class="va">benzene</span>,</span>
-<span>                    <span class="va">ws</span>,</span>
-<span>                    <span class="va">wd</span>,</span>
-<span>                    <span class="va">air_temp</span>,</span>
-<span>                    <span class="va">RH</span>,</span>
-<span>                    <span class="va">cl</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">road_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span></span>
+<span>  <span class="va">road_data</span>,</span>
+<span>  <span class="va">date</span>,</span>
+<span>  <span class="va">nox</span>,</span>
+<span>  <span class="va">no2</span>,</span>
+<span>  <span class="va">ethane</span>,</span>
+<span>  <span class="va">isoprene</span>,</span>
+<span>  <span class="va">benzene</span>,</span>
+<span>  <span class="va">ws</span>,</span>
+<span>  <span class="va">wd</span>,</span>
+<span>  <span class="va">air_temp</span>,</span>
+<span>  <span class="va">RH</span>,</span>
+<span>  <span class="va">cl</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="construct-and-test-models">Construct and test model(s)<a class="anchor" aria-label="anchor" href="#construct-and-test-models"></a>
@@ -150,9 +174,11 @@
 <span><span class="va">dat_part</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://davidcarslaw.github.io/openair/reference/selectByDate.html" class="external-link">selectByDate</a></span><span class="op">(</span><span class="va">road_data</span>, year <span class="op">=</span> <span class="fl">2001</span><span class="op">:</span><span class="fl">2004</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># test a model with commonly used covariates</span></span>
-<span><span class="fu"><a href="reference/testMod.html">testMod</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">dat_part</span>, </span>
-<span>        vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"trend"</span>, <span class="st">"ws"</span>, <span class="st">"wd"</span>, <span class="st">"hour"</span>, <span class="st">"weekday"</span>, <span class="st">"air_temp"</span>, <span class="st">"week"</span><span class="op">)</span>,</span>
-<span>        pollutant <span class="op">=</span> <span class="st">"no2"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/testMod.html">testMod</a></span><span class="op">(</span></span>
+<span>  <span class="va">dat_part</span>,</span>
+<span>  vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"trend"</span>, <span class="st">"ws"</span>, <span class="st">"wd"</span>, <span class="st">"hour"</span>, <span class="st">"weekday"</span>, <span class="st">"air_temp"</span>, <span class="st">"week"</span><span class="op">)</span>,</span>
+<span>  pollutant <span class="op">=</span> <span class="st">"no2"</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "Percent increase in RMSE using test data is 1%"</span></span></code></pre></div>
 <p><img src="reference/figures/README-testMod-1.png" width="100%"></p>
 <p>The output shows by default the performance of the model when applied to a withheld random 20% (by default) of the data i.e. the model is evaluated against data nt used to build the model. Common model evaluation metrics are also given.</p>
@@ -162,10 +188,12 @@
 </h2>
 <p>Assuming that a good model can be developed, it can now be explored in more detail.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mod_no2</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/buildMod.html">buildMod</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">dat_part</span>, </span>
-<span>        vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"trend"</span>, <span class="st">"ws"</span>, <span class="st">"wd"</span>, <span class="st">"hour"</span>, <span class="st">"weekday"</span>, <span class="st">"air_temp"</span>, <span class="st">"week"</span><span class="op">)</span>,</span>
-<span>        pollutant <span class="op">=</span> <span class="st">"no2"</span>,</span>
-<span>        n.core <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">mod_no2</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/buildMod.html">buildMod</a></span><span class="op">(</span></span>
+<span>  <span class="va">dat_part</span>,</span>
+<span>  vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"trend"</span>, <span class="st">"ws"</span>, <span class="st">"wd"</span>, <span class="st">"hour"</span>, <span class="st">"weekday"</span>, <span class="st">"air_temp"</span>, <span class="st">"week"</span><span class="op">)</span>,</span>
+<span>  pollutant <span class="op">=</span> <span class="st">"no2"</span>,</span>
+<span>  n.core <span class="op">=</span> <span class="fl">6</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p>This function returns a <code>deweather</code> object that can be interogated as shown below.</p>
 </div>
 <div class="section level2">
@@ -176,7 +204,7 @@
 </h3>
 <p>One of the benefits of the boosted regression tree approach is that the <em>partial dependencies</em> can be explored. In simple terms, the partial dependencies show the relationship between the pollutant of interest and the covariates used in the model while holding the value of other covariates at their mean level.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/plotAllPD.html">plotAllPD</a></span><span class="op">(</span>dw_model <span class="op">=</span> <span class="va">mod_no2</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/plotAllPD.html">plotAllPD</a></span><span class="op">(</span><span class="va">mod_no2</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-plotAll-1.png" width="100%"></p>
 </div>
 <div class="section level3">
@@ -184,7 +212,7 @@
 </h3>
 <p>It can be very useful to plot important two-way interactions. In this example the interaction between <code>ws</code> and <code>air_temp</code> is considered. The plot shows that NO<sub>2</sub> tends to be high when the wind speed is low and the temperature is low i.e. stable atmospheric conditions. Also NO<sub>2</sub> tends to be high when the temperature is high, which is most likely due to more O<sub>3</sub> available to convert NO to NO<sub>2</sub>. In fact, background O<sub>3</sub> would probably be a useful covariate to add to the model.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/plot2Way.html">plot2Way</a></span><span class="op">(</span>dw_model <span class="op">=</span> <span class="va">mod_no2</span>, variable <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ws"</span>, <span class="st">"air_temp"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/plot2Way.html">plot2Way</a></span><span class="op">(</span><span class="va">mod_no2</span>, variable <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ws"</span>, <span class="st">"air_temp"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-plot2way-1.png" width="100%"></p>
 </div>
 </div>
@@ -193,8 +221,10 @@
 </h2>
 <p>An indication of the meteorologically-averaged trend is given by the <code>plotAllPD</code> function above. A better indication is given by using the model to predict many times with random sampling of meteorological conditions. This sampling is carried out by the <code>metSim</code> function. Note that in this case there is no need to supply the “trend” component because it is calculated using <code>metSim</code>.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">demet</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/metSim.html">metSim</a></span><span class="op">(</span><span class="va">mod_no2</span>, newdata <span class="op">=</span> <span class="va">dat_part</span>, </span>
-<span>                metVars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ws"</span>, <span class="st">"wd"</span>, <span class="st">"hour"</span>, <span class="st">"weekday"</span>, <span class="st">"air_temp"</span>, <span class="st">"week"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">demet</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/metSim.html">metSim</a></span><span class="op">(</span><span class="va">mod_no2</span>,</span>
+<span>  newdata <span class="op">=</span> <span class="va">dat_part</span>,</span>
+<span>  metVars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ws"</span>, <span class="st">"wd"</span>, <span class="st">"hour"</span>, <span class="st">"weekday"</span>, <span class="st">"air_temp"</span>, <span class="st">"week"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p>Now it is possible to plot the resulting trend.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
@@ -233,6 +263,13 @@
 </ul>
 </div>
 
+<div class="community">
+<h2 data-toc-skip>Community</h2>
+<ul class="list-unstyled">
+<li><a href="CONTRIBUTING.html">Contributing guide</a></li>
+<li><a href="CODE_OF_CONDUCT.html">Code of conduct</a></li>
+</ul>
+</div>
 
 <div class="citation">
 <h2 data-toc-skip>Citation</h2>
@@ -248,7 +285,13 @@
 </ul>
 </div>
 
-
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/davidcarslaw/deweather/actions" class="external-link"><img src="https://github.com/davidcarslaw/deweather/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://CRAN.R-project.org/package=deweather" class="external-link"><img src="https://www.r-pkg.org/badges/version/deweather" alt="CRAN status"></a></li>
+</ul>
+</div>
 
   </aside>
 </div>
