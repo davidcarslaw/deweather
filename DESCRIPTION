@@ -1,37 +1,37 @@
-Package: deweather
 Type: Package
+Package: deweather
 Title: Remove the influence of weather on air quality data
 Version: 0.7-1
 Date: 2022-11-09
-Authors@R: c(person("David", "Carslaw", role = c("aut", "cre"), email =
-    "david.carslaw@york.ac.uk"))
+Authors@R: 
+    person("David", "Carslaw", , "david.carslaw@york.ac.uk", role = c("aut", "cre"))
 Maintainer: David Carslaw <david.carslaw@york.ac.uk>
-Description: Model and account for (or remove) the effect of
-    meteorology on atmospheric composition data. The technique uses boosted
-    regression trees based on the gbm package. Code can also be run using multiple
+Description: Model and account for (or remove) the effect of meteorology
+    on atmospheric composition data. The technique uses boosted regression
+    trees based on the gbm package. Code can also be run using multiple
     cores if available.
-URL: http://github.com/davidcarslaw/dweather
+License: GPL (>= 2)
+URL: http://github.com/davidcarslaw/deweather
 BugReports: http://github.com/davidcarslaw/deweather/issues
 Depends:
     R (>= 2.15.1)
 Imports:
-    gbm,
     doParallel,
-    parallel,
-    foreach,
     dplyr,
-    tidyr,
-    lubridate,
-    openair,
-    mgcv,
+    foreach,
+    gbm,
     ggplot2,
     gridExtra,
+    lubridate,
+    magrittr,
+    mgcv,
+    openair,
+    parallel,
     rlang,
     stats,
-    magrittr
-License: GPL (>= 2)
+    tidyr
 Encoding: UTF-8
-LazyLoad: yes
 LazyData: yes
-RoxygenNote: 7.2.3
+LazyLoad: yes
 Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
