@@ -4,7 +4,13 @@
 \alias{metSim}
 \title{Function to run random meteorological simulations on a gbm model}
 \usage{
-metSim(dw_model, newdata, metVars = c("ws", "wd", "temp"), n.core = 4, B = 200)
+metSim(
+  dw_model,
+  newdata,
+  metVars = c("ws", "wd", "air_temp"),
+  n.core = 4,
+  B = 200
+)
 }
 \arguments{
 \item{dw_model}{Model object from running \code{\link[=buildMod]{buildMod()}}.}

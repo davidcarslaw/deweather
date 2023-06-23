@@ -22,7 +22,7 @@
 #' @return To add
 #' @author David Carslaw
 plot2Way <- function(dw_model,
-                     variable = c("ws", "temp"),
+                     variable = c("ws", "air_temp"),
                      res = 100,
                      exlude = TRUE,
                      cols = "default",
@@ -36,9 +36,11 @@ plot2Way <- function(dw_model,
   data <- dw_model$data
   mod <- dw_model$model
   
-  res <- gbm::plot.gbm(mod,
-                       i.var = variable, continuous.resolution = res,
-                       return.grid = TRUE
+  res <- gbm::plot.gbm(
+    mod,
+    i.var = variable,
+    continuous.resolution = res,
+    return.grid = TRUE
   )
   
   
@@ -71,9 +73,11 @@ plot2Way <- function(dw_model,
     var2 <- variable[2]
     
     
-    plt <- ggplot2::ggplot(res, ggplot2::aes(.data[[var1]], .data[[var2]], fill = .data[["y"]])) +
+    plt <-
+      ggplot2::ggplot(res, ggplot2::aes(.data[[var1]], .data[[var2]], fill = .data[["y"]])) +
       ggplot2::geom_raster() +
-      ggplot2::scale_fill_gradientn(colours = openair::openColours(cols, 100), na.value = "transparent")
+      ggplot2::scale_fill_gradientn(colours = openair::openColours(cols, 100),
+                                    na.value = "transparent")
     
     if (any(is.na(res$y))) {
       plt <- plt +
@@ -107,12 +111,11 @@ plot2Way <- function(dw_model,
       var1 <- "Weekday"
     }
     
-    plt <- ggplot2::ggplot(res, ggplot2::aes(.data[[var1]], .data[[var2]], fill = .data[["y"]])) +
+    plt <-
+      ggplot2::ggplot(res, ggplot2::aes(.data[[var1]], .data[[var2]], fill = .data[["y"]])) +
       ggplot2::geom_tile() +
-      ggplot2::scale_fill_gradientn(
-        colours = openair::openColours(cols, 100),
-        na.value = "transparent"
-      ) +
+      ggplot2::scale_fill_gradientn(colours = openair::openColours(cols, 100),
+                                    na.value = "transparent") +
       ggplot2::labs(fill = openair::quickText(mod$response.name))
     
     print(plt)
