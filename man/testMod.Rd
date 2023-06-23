@@ -6,7 +6,7 @@
 \usage{
 testMod(
   input_data,
-  vars = c("trend", "ws", "wd", "hour", "weekday", "temp"),
+  vars = c("trend", "ws", "wd", "hour", "weekday", "air_temp"),
   pollutant = "nox",
   train.frac = 0.8,
   n.trees = 200,

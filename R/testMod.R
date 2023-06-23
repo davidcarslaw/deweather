@@ -14,12 +14,14 @@
 #' @export
 #' @return Returns to be added.
 #' @author David Carslaw
-testMod <- function(input_data, vars = c(
-  "trend", "ws", "wd", "hour",
-  "weekday", "temp"
-),
-pollutant = "nox", train.frac = 0.8,
-n.trees = 200, seed = 123, plot = TRUE) {
+testMod <- function(input_data,
+                    vars = c("trend", "ws", "wd", "hour",
+                             "weekday", "air_temp"),
+                    pollutant = "nox",
+                    train.frac = 0.8,
+                    n.trees = 200,
+                    seed = 123,
+                    plot = TRUE) {
   ## silence R check
   statistic <- value <- NULL
   
@@ -38,42 +40,73 @@ n.trees = 200, seed = 123, plot = TRUE) {
   
   # make reproducible
   set.seed(seed)
-  id <- sample(1:nrow(input_data), size = train.frac * nrow(input_data))
+  id <-
+    sample(1:nrow(input_data), size = train.frac * nrow(input_data))
   train.dat <- input_data[id, ]
   pred.dat <- input_data[-id, ]
   
-  mod <- runGbm(train.dat, eq, vars,
-                return.mod = TRUE, simulate = FALSE,
-                n.trees = n.trees, seed
+  mod <- runGbm(
+    train.dat,
+    eq,
+    vars,
+    return.mod = TRUE,
+    simulate = FALSE,
+    n.trees = n.trees,
+    seed
   )
   
   # predictions based on training data
-  pred_train <- gbm::predict.gbm(mod$model, newdata = train.dat, n.trees = n.trees)
+  pred_train <-
+    gbm::predict.gbm(mod$model, newdata = train.dat, n.trees = n.trees)
   
   pred_train <- data.frame(train.dat, pred = pred_train)
   
   ## calculate key model statistics
-  stats_train <- openair::modStats(pred_train, obs = pollutant, mod = "pred")
+  stats_train <-
+    openair::modStats(pred_train, obs = pollutant, mod = "pred")
   stats_train <- as.data.frame(t(stats_train))
   names(stats_train) <- "value"
   stats_train$statistic <- rownames(stats_train)
   stats_train <- stats_train[-1, ]
-  stats_train <- dplyr::select(stats_train, .data$statistic, .data$value)
+  stats_train <-
+    dplyr::select(stats_train, .data$statistic, .data$value)
   stats_train$value <- as.numeric(as.character(stats_train$value))
   stats_train$value <- round(stats_train$value, 2)
   
   
   # predictions based on test data
   
-  pred <- gbm::predict.gbm(mod$model, newdata = pred.dat, n.trees = n.trees)
+  pred <-
+    gbm::predict.gbm(mod$model, newdata = pred.dat, n.trees = n.trees)
   
   pred <- data.frame(pred.dat, pred = pred)
   
-  plt <- ggplot2::ggplot(pred, ggplot2::aes(.data[["pred"]], .data[[pollutant]])) +
-    ggplot2::geom_point(fill = "grey30", color = "white", pch = 21, size = 2.5) +
-    ggplot2::geom_abline(slope = 1, intercept = 0, col = "deeppink", lwd = 1.5) +
-    ggplot2::geom_abline(slope = 0.5, intercept = 0, col = "turquoise4", lty = 5) +
-    ggplot2::geom_abline(slope = 2, intercept = 0, col = "turquoise4", lty = 5) +
+  plt <-
+    ggplot2::ggplot(pred, ggplot2::aes(.data[["pred"]], .data[[pollutant]])) +
+    ggplot2::geom_point(
+      fill = "grey30",
+      color = "white",
+      pch = 21,
+      size = 2.5
+    ) +
+    ggplot2::geom_abline(
+      slope = 1,
+      intercept = 0,
+      col = "deeppink",
+      lwd = 1.5
+    ) +
+    ggplot2::geom_abline(
+      slope = 0.5,
+      intercept = 0,
+      col = "turquoise4",
+      lty = 5
+    ) +
+    ggplot2::geom_abline(
+      slope = 2,
+      intercept = 0,
+      col = "turquoise4",
+      lty = 5
+    ) +
     ggplot2::xlab("predicted") +
     ggplot2::ylab("measured")
   
@@ -87,22 +120,21 @@ n.trees = 200, seed = 123, plot = TRUE) {
   stats$value <- as.numeric(as.character(stats$value))
   stats$value <- round(stats$value, 2)
   
-  head_train <- data.frame(
-    statistic = "Training", value = NA,
-    stringsAsFactors = FALSE
-  )
+  head_train <- data.frame(statistic = "Training",
+                           value = NA,
+                           stringsAsFactors = FALSE)
   
-  head_test <- data.frame(
-    statistic = "Test data", value = NA,
-    stringsAsFactors = FALSE
-  )
+  head_test <- data.frame(statistic = "Test data",
+                          value = NA,
+                          stringsAsFactors = FALSE)
   
   stats <- dplyr::bind_rows(head_test, stats)
   stats_train <- dplyr::bind_rows(head_train, stats_train)
   
   # print % difference in RMSE
   if (plot) {
-    diff_rmse <- round(100 * (stats$value[8] - stats_train$value[8]) / stats$value[8], 1)
+    diff_rmse <-
+      round(100 * (stats$value[8] - stats_train$value[8]) / stats$value[8], 1)
     print(paste0("Percent increase in RMSE using test data is ", diff_rmse, "%"))
   }
   
@@ -124,5 +156,9 @@ n.trees = 200, seed = 123, plot = TRUE) {
     )
   out_stats <- dplyr::tibble(out_stats[-1, ])
   
-  invisible(list(pred = dplyr::tibble(pred), stats = out_stats, plot = plt))
+  invisible(list(
+    pred = dplyr::tibble(pred),
+    stats = out_stats,
+    plot = plt
+  ))
 }

@@ -6,7 +6,7 @@
 \usage{
 buildMod(
   input_data,
-  vars = c("trend", "ws", "wd", "hour", "weekday", "temp"),
+  vars = c("trend", "ws", "wd", "hour", "weekday", "air_temp"),
   pollutant = "nox",
   sam.size = nrow(input_data),
   n.trees = 200,

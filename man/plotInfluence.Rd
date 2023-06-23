@@ -4,10 +4,10 @@
 \alias{plotInfluence}
 \title{Plot a GBM influence plot}
 \usage{
-plotInfluence(dat)
+plotInfluence(dw_model)
 }
 \arguments{
-\item{dat}{Model object from running \code{\link[=buildMod]{buildMod()}}.}
+\item{dw_model}{Model object from running \code{\link[=buildMod]{buildMod()}}.}
 }
 \value{
 Plot

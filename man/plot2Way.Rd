@@ -6,7 +6,7 @@
 \usage{
 plot2Way(
   dw_model,
-  variable = c("ws", "temp"),
+  variable = c("ws", "air_temp"),
   res = 100,
   exlude = TRUE,
   cols = "default",
@@ -15,7 +15,7 @@ plot2Way(
 )
 }
 \arguments{
-\item{dw_model}{Model object from running \code{buildMod}.}
+\item{dw_model}{Model object from running \code{\link[=buildMod]{buildMod()}}.}
 
 \item{variable}{The variables to plot. Must be of length two
 e.g. \verb{variables = c("ws", "wd"}.}

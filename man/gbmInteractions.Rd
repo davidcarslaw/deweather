@@ -4,10 +4,10 @@
 \alias{gbmInteractions}
 \title{Quantify most important 2-way interactions}
 \usage{
-gbmInteractions(res)
+gbmInteractions(dw_model)
 }
 \arguments{
-\item{res}{Model object from running \code{\link[=buildMod]{buildMod()}}.}
+\item{dw_model}{Model object from running \code{\link[=buildMod]{buildMod()}}.}
 }
 \value{
 Interaction information.

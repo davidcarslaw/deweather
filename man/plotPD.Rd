@@ -5,7 +5,7 @@
 \title{Function to plot partial dependence plots with bootstrap uncertainties}
 \usage{
 plotPD(
-  dat,
+  dw_model,
   variable,
   ylim = NULL,
   plotit = TRUE,
@@ -15,7 +15,7 @@ plotPD(
 )
 }
 \arguments{
-\item{dat}{Model object from running \code{\link[=buildMod]{buildMod()}}.}
+\item{dw_model}{Model object from running \code{\link[=buildMod]{buildMod()}}.}
 
 \item{variable}{The variable to plot.}
 
