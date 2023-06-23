@@ -6,7 +6,7 @@
 
 * The default values for `vars` in any model-building function now uses "air_temp" over "temp". This brings it in line with `road_data` and `{worldmet}` outputs.
 
-* `gbm.interaction()` has been renamed `gbmInteraction()` for consistency with other functions.
+* `gbm.interactions()` has been renamed `gbmInteractions()` for consistency with other functions.
 
 * `gbmInf()` has been renamed `plotInfluence()` to be more descriptive and consistent with other plotting functions.
 
