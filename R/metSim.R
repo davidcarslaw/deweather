@@ -16,9 +16,7 @@ metSim <-
            metVars = c("ws", "wd", "air_temp"),
            n.core = 4,
            B = 200) {
-    if (!inherits(dw_model, "deweather")) {
-      stop("Need to supply a deweather object from buildMod.")
-    }
+    check_dwmod(dw_model)
 
     ## extract the model
     mod <- dw_model$model
@@ -75,8 +73,8 @@ doPred <- function(mydata, mod, metVars) {
   })
 
   prediction <- gbm::predict.gbm(mod, mydata, mod$n.trees)
-
+  
   prediction <- data.frame(date = mydata$date, pred = prediction)
-
+  
   return(prediction)
 }

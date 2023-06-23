@@ -13,9 +13,7 @@
 plotInfluence <- function(dw_model,
                           col = "grey30",
                           sort = TRUE) {
-  if (!inherits(dw_model, "deweather")) {
-    stop("Need to supply a deweather object from buildMod.")
-  }
+  check_dwmod(dw_model)
 
   ## extract influence data from object
   influ <- dw_model$influence

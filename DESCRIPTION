@@ -16,6 +16,7 @@ BugReports: http://github.com/davidcarslaw/deweather/issues
 Depends:
     R (>= 2.15.1)
 Imports:
+    cli,
     doParallel,
     dplyr,
     forcats,

@@ -31,23 +31,23 @@ testMod <- function(input_data,
   ## add other variables, select only those required for modelling
   input_data <- prepData(input_data)
   input_data <- input_data[(c("date", vars, pollutant))]
-
+  
   variables <- paste(vars, collapse = "+")
   eq <- stats::formula(paste(pollutant, "~", variables))
-
+  
   ## make sure no NA in response
   id <- which(is.na(input_data[[pollutant]]))
   if (length(id) > 0) {
     input_data <- input_data[-id, ]
   }
-
+  
   # make reproducible
   set.seed(seed)
   id <-
     sample(1:nrow(input_data), size = train.frac * nrow(input_data))
   train.dat <- input_data[id, ]
   pred.dat <- input_data[-id, ]
-
+  
   mod <- runGbm(
     train.dat,
     eq,
@@ -57,13 +57,13 @@ testMod <- function(input_data,
     n.trees = n.trees,
     seed
   )
-
+  
   # predictions based on training data
   pred_train <-
     gbm::predict.gbm(mod$model, newdata = train.dat, n.trees = n.trees)
-
+  
   pred_train <- data.frame(train.dat, pred = pred_train)
-
+  
   ## calculate key model statistics
   stats_train <-
     openair::modStats(pred_train, obs = pollutant, mod = "pred")
@@ -75,15 +75,15 @@ testMod <- function(input_data,
     dplyr::select(stats_train, .data$statistic, .data$value)
   stats_train$value <- as.numeric(as.character(stats_train$value))
   stats_train$value <- round(stats_train$value, 2)
-
-
+  
+  
   # predictions based on test data
-
+  
   pred <-
     gbm::predict.gbm(mod$model, newdata = pred.dat, n.trees = n.trees)
-
+  
   pred <- data.frame(pred.dat, pred = pred)
-
+  
   plt <-
     ggplot2::ggplot(pred, ggplot2::aes(.data[["pred"]], .data[[pollutant]])) +
     ggplot2::geom_point(
@@ -112,7 +112,7 @@ testMod <- function(input_data,
     ) +
     ggplot2::xlab("predicted") +
     ggplot2::ylab("measured")
-
+  
   ## calculate key model statistics
   stats <- openair::modStats(pred, obs = pollutant, mod = "pred")
   stats <- as.data.frame(t(stats))
@@ -122,7 +122,7 @@ testMod <- function(input_data,
   stats <- dplyr::select(stats, .data$statistic, .data$value)
   stats$value <- as.numeric(as.character(stats$value))
   stats$value <- round(stats$value, 2)
-
+  
   stats_both <-
     dplyr::left_join(
       dplyr::rename(stats_train, "train" = .data$value),
@@ -136,7 +136,7 @@ testMod <- function(input_data,
     # print % difference in RMSE
     diff_rmse <- (stats["RMSE", "value"] - stats_train["RMSE", "value"]) / stats["RMSE", "value"]
     diff_rmse <- scales::label_percent(accuracy = 0.1)(diff_rmse)
-    print(paste0("Percent increase in RMSE using test data is ", diff_rmse))
+    cli::cli_inform(c("i" = "Percent increase in RMSE using test data is {.strong {diff_rmse}}"))
     
     # get table of stats
     tbl <-
