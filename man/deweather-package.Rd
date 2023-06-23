@@ -6,12 +6,14 @@
 \alias{deweather-package}
 \title{deweather: Remove the influence of weather on air quality data}
 \description{
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
 Model and account for (or remove) the effect of meteorology on atmospheric composition data. The technique uses boosted regression trees based on the gbm package. Code can also be run using multiple cores if available.
 }
 \seealso{
 Useful links:
 \itemize{
-  \item \url{http://github.com/davidcarslaw/dweather}
+  \item \url{http://davidcarslaw.github.io/deweather/}
   \item Report bugs at \url{http://github.com/davidcarslaw/deweather/issues}
 }
 

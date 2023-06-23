@@ -44,7 +44,7 @@ it can be very difficult to know whether a change in concentration is
 due to emissions or meteorology.
 
 The **deweather** package uses a powerful statistical technique based on
-*boosted regression trees* using the **gbm** package (Ridgeway, 2017).
+*boosted regression trees* using the `{gbm}` package (Ridgeway, 2017).
 Statistical models are developed to explain concentrations using
 meteorological and other variables. These models can be tested on
 randomly withheld data with the aim of developing the most appropriate
@@ -54,14 +54,16 @@ model.
 
 The **deweather** package comes with a comprehensive data set of air
 quality and meteorological data. The air quality data is from Marylebone
-Road in central London (obtained from the **openair** package) and the
+Road in central London (obtained from the `{openair}` package) and the
 meteorological data from Heathrow Airport (obtained from the
-**worldmet** package).
+`{worldmet}` package).
 
 The `road_data` data frame contains various pollutants such a
 NO<sub>x</sub>, NO<sub>2</sub>, ethane and isoprene as well as
 meteorological data including wind speed, wind direction, relative
-humidity, ambient temperature and cloud cover.
+humidity, ambient temperature and cloud cover. Code to obtain this data
+directly can be found
+[here](https://github.com/davidcarslaw/deweather/data-raw/road_data.R).
 
 ``` r
 library(deweather)
@@ -79,56 +81,18 @@ head(road_data)
 #> 3  2
 #> 4 NA
 #> 5  1
-#> 6 NA
-```
-
-For those interested in obtaining the data directly, the following code
-can be used.
-
-``` r
-library(openair)
-library(worldmet)
-library(dplyr)
-
-# import AQ data
-road_data <- importAURN(
-  site = "my1",
-  year = 1998:2016,
-  hc = TRUE
-)
-
-# import met data
-met <- importNOAA(year = 1998:2016)
-
-# join together but ignore met data in road_data because it is modelled
-road_data <-
-  left_join(select(road_data, -ws, -wd, -air_temp), met, by = "date")
-
-road_data <- select(
-  road_data,
-  date,
-  nox,
-  no2,
-  ethane,
-  isoprene,
-  benzene,
-  ws,
-  wd,
-  air_temp,
-  RH,
-  cl
-)
+#> 6  0
 ```
 
 ## Construct and test model(s)
 
-The `testMod` function is used to build and test various models to help
-derive the most appropriate.
+The `testMod()` function is used to build and test various models to
+help derive the most appropriate.
 
 In this example, we will restrict the data to model to 4 years. Note
-that variables such as `hour` and `weekday` are used as variables that
-can be used to explain some of the variation. `hour` for example very
-usefully acts as a proxy for the diurnal variation in emissions.
+that variables such as `"hour"` and `"weekday"` are used as variables
+that can be used to explain some of the variation. `"hour"` for example
+very usefully acts as a proxy for the diurnal variation in emissions.
 
 ``` r
 library(openair)
@@ -141,14 +105,14 @@ testMod(
   vars = c("trend", "ws", "wd", "hour", "weekday", "air_temp", "week"),
   pollutant = "no2"
 )
-#> [1] "Percent increase in RMSE using test data is 1%"
+#> [1] "Percent increase in RMSE using test data is 0.9%"
 ```
 
 <img src="man/figures/README-testMod-1.png" width="100%" />
 
 The output shows by default the performance of the model when applied to
-a withheld random 20% (by default) of the data i.e. the model is
-evaluated against data nt used to build the model. Common model
+a withheld random 20% (by default) of the data, i.e., the model is
+evaluated against data not used to build the model. Common model
 evaluation metrics are also given.
 
 ## Build a model
@@ -165,7 +129,7 @@ mod_no2 <- buildMod(
 )
 ```
 
-This function returns a `deweather` object that can be interogated as
+This function returns a `deweather` object that can be interrogated as
 shown below.
 
 ## Examine the partial dependencies
@@ -187,11 +151,11 @@ plotAllPD(mod_no2)
 ### Plot two-way interactions
 
 It can be very useful to plot important two-way interactions. In this
-example the interaction between `ws` and `air_temp` is considered. The
-plot shows that NO<sub>2</sub> tends to be high when the wind speed is
-low and the temperature is low i.e. stable atmospheric conditions. Also
-NO<sub>2</sub> tends to be high when the temperature is high, which is
-most likely due to more O<sub>3</sub> available to convert NO to
+example the interaction between `"ws"` and `"air_temp"` is considered.
+The plot shows that NO<sub>2</sub> tends to be high when the wind speed
+is low and the temperature is low, i.e., stable atmospheric conditions.
+Also NO<sub>2</sub> tends to be high when the temperature is high, which
+is most likely due to more O<sub>3</sub> available to convert NO to
 NO<sub>2</sub>. In fact, background O<sub>3</sub> would probably be a
 useful covariate to add to the model.
 
@@ -204,11 +168,11 @@ plot2Way(mod_no2, variable = c("ws", "air_temp"))
 ## Apply meteorological averaging
 
 An indication of the meteorologically-averaged trend is given by the
-`plotAllPD` function above. A better indication is given by using the
+`plotAllPD()` function above. A better indication is given by using the
 model to predict many times with random sampling of meteorological
-conditions. This sampling is carried out by the `metSim` function. Note
-that in this case there is no need to supply the “trend” component
-because it is calculated using `metSim`.
+conditions. This sampling is carried out by the `metSim()` function.
+Note that in this case there is no need to supply the `"trend"`
+component because it is calculated using `metSim()`.
 
 ``` r
 demet <- metSim(mod_no2,
@@ -221,7 +185,7 @@ Now it is possible to plot the resulting trend.
 
 ``` r
 library(ggplot2)
-ggplot(demet, aes(date, pred)) +
+ggplot(demet, aes(date, no2)) +
   geom_line()
 ```
 
@@ -235,29 +199,29 @@ example:
 
 ``` r
 library(ggplot2)
-ggplot(timeAverage(demet, "day"), aes(date, pred)) +
+ggplot(timeAverage(demet, "day"), aes(date, no2)) +
   geom_line(col = "dodgerblue", size = 1) +
-  ylab(quickText("no2 (ug/m3)"))
+  labs(y = quickText("no2 (ug/m3)"))
 ```
 
 <img src="man/figures/README-plotTrendAve-1.png" width="100%" />
 
 ## References
 
-Grange, S. K. and Carslaw, D. C. (2019) Using meteorological
-normalisation to detect interventions in air quality time series,
-Science of The Total Environment. 653, pp. 578–588. doi:
-10.1016/j.scitotenv.2018.10.344.
+- Grange, S. K. and Carslaw, D. C. (2019) Using meteorological
+  normalisation to detect interventions in air quality time series,
+  Science of The Total Environment. 653, pp. 578–588. doi:
+  10.1016/j.scitotenv.2018.10.344.
 
-Carslaw, D.C. and P.J. Taylor (2009). Analysis of air pollution data at
-a mixed source location using boosted regression trees. Atmospheric
-Environment. Vol. 43, pp. 3563–3570.
+- Carslaw, D.C. and P.J. Taylor (2009). Analysis of air pollution data
+  at a mixed source location using boosted regression trees. Atmospheric
+  Environment. Vol. 43, pp. 3563–3570.
 
-Carslaw, D.C., Williams, M.L. and B. Barratt A short-term intervention
-study — impact of airport closure on near-field air quality due to the
-eruption of Eyjafjallajökull. (2012) Atmospheric Environment, Vol. 54,
-328–336.
+- Carslaw, D.C., Williams, M.L. and B. Barratt A short-term intervention
+  study — impact of airport closure on near-field air quality due to the
+  eruption of Eyjafjallajökull. (2012) Atmospheric Environment, Vol. 54,
+  328–336.
 
-Greg Ridgeway with contributions from others (2017). gbm: Generalized
-Boosted Regression Models. Rpackage version 2.1.3.
-(<https://CRAN.R-project.org/package=gbm>)
+- Greg Ridgeway with contributions from others (2017). gbm: Generalized
+  Boosted Regression Models. Rpackage version 2.1.3.
+  (<https://CRAN.R-project.org/package=gbm>)
