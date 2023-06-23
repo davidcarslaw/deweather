@@ -11,7 +11,7 @@
 #'   to.
 #' @param dates A vector of dates, length three. These dates are used to
 #'   partition the data into two categories (before/after). The date format is
-#'   UK e.g. \code{date = c("19/2/2005", "19/2/2007", "19/2/2010")}.
+#'   UK e.g. `date = c("19/2/2005", "19/2/2007", "19/2/2010")`.
 #' @param ylab Label for y-axis.
 #' @export
 #' @importFrom rlang .data

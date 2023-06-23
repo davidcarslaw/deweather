@@ -1,7 +1,7 @@
 #' Example data for deweather
 #'
-#' The \code{road_data} dataset is provided as an example dataset as part of the
-#' \code{deweather} package. The dataset contains hourly measurements of air
+#' The `road_data` dataset is provided as an example dataset as part of the
+#' `deweather` package. The dataset contains hourly measurements of air
 #' pollutant concentrations, wind speed and wind direction collected at the
 #' Marylebone (London) air quality monitoring supersite between 1st January 1998
 #' and 23rd June 2005.
