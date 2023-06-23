@@ -6,8 +6,7 @@
 #' @author David Carslaw
 gbmInteractions <- function(dw_model) {
   ## Edited version from dismo package to rank 2-way interactions
-
-  if (!inherits(dw_model, "deweather")) stop("Need to supply a deweather object from buildMod.")
+  check_dwmod(dw_model)
 
   gbm.object <- dw_model$model
 
@@ -51,18 +50,18 @@ gbmInteractions <- function(dw_model) {
         levels = levels(data[, i])
       )
     }
-
+    
     x.length <- length(x.var)
     cat(i, " ")
     for (j in (i + 1):n.preds) {
       if (is.vector(data[, j])) {
         y.var <- seq(min(data[, j], na.rm = T),
-          max(data[, j], na.rm = T),
-          length = 20
+                     max(data[, j], na.rm = T),
+                     length = 20
         )
       } else {
         y.var <- factor(names(table(data[, j])),
-          levels = levels(data[, j])
+                        levels = levels(data[, j])
         )
       }
       y.length <- length(y.var)
@@ -89,18 +88,18 @@ gbmInteractions <- function(dw_model) {
         }
       }
       prediction <- gbm::predict.gbm(gbm.object, pred.frame,
-        n.trees = n.trees, type = "link"
+                                     n.trees = n.trees, type = "link"
       )
-
+      
       interaction.test.model <-
         stats::lm(prediction ~ as.factor(pred.frame[, 1]) + as.factor(pred.frame[, 2]))
-
+      
       interaction.flag <- round(mean(stats::resid(interaction.test.model)^2) *
-        1000, 2)
+                                  1000, 2)
       cross.tab[i, j] <- interaction.flag
     }
   }
-
+  
   search.index <- ((n.preds^2) + 1) - rank(cross.tab, ties.method = "first")
   n.important <- max(2, round(0.1 * ((n.preds^2) / 2), 0))
   var1.names <- rep(" ", n.important)
@@ -108,7 +107,7 @@ gbmInteractions <- function(dw_model) {
   var2.names <- rep(" ", n.important)
   var2.index <- rep(0, n.important)
   int.size <- rep(0, n.important)
-
+  
   for (i in 1:n.important) {
     index.match <- match(i, search.index)
     j <- trunc(index.match / n.preds) + 1

@@ -30,9 +30,7 @@ plot2Way <- function(dw_model,
                      dist = 0.05,
                      plot = TRUE,
                      ...) {
-  if (!inherits(dw_model, "deweather")) {
-    stop("Need to supply a deweather object from buildMod.")
-  }
+  check_dwmod(dw_model)
 
   ## extract from deweather object
   data <- dw_model$data
@@ -79,19 +77,19 @@ plot2Way <- function(dw_model,
         colours = openair::openColours(cols, 100),
         na.value = "transparent"
       )
-
+    
     if (any(is.na(res$y))) {
       plt <- plt +
         ggplot2::labs(fill = openair::quickText(mod$response.name))
     }
-
+    
     if (plot) {
       print(plt)
     }
   } else {
     var1 <- variable[1]
     var2 <- variable[2]
-
+    
     ## need to rename variables that use openair dates
     if ("hour" %in% variable) {
       id <- which(variable == "hour")
@@ -101,19 +99,19 @@ plot2Way <- function(dw_model,
       #  res$Hour <- factor(round(res$Hour))
       var1 <- "Hour"
     }
-
+    
     if ("weekday" %in% variable) {
       id <- which(variable == "weekday")
       variable[id] <- "Weekday"
       var2 <- variable[which(variable != "Weekday")]
       res <- dplyr::rename(res, Weekday = .data$weekday)
-
+      
       weekday.names <- format(ISOdate(2000, 1, 2:8), "%a")
       levels(res$Weekday) <- sort(weekday.names)
       res$Weekday <- ordered(res$Weekday, levels = weekday.names)
       var1 <- "Weekday"
     }
-
+    
     plt <-
       ggplot2::ggplot(res, ggplot2::aes(.data[[var1]], .data[[var2]], fill = .data[["y"]])) +
       ggplot2::geom_tile() +
@@ -122,11 +120,11 @@ plot2Way <- function(dw_model,
         na.value = "transparent"
       ) +
       ggplot2::labs(fill = openair::quickText(mod$response.name))
-
+    
     if (plot) {
       print(plt)
     }
   }
-
+  
   invisible(list(plot = plt, data = res))
 }
