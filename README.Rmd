@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# deweather <a href="https://davidcarslaw.github.io/deweather/"><img src="man/figures/logo.png" align="right" height="100" alt="deweather website" /></a>
+# deweather: remove meteorological variation from air quality data <a href="https://davidcarslaw.github.io/deweather/"><img src="man/figures/logo.png" align="right" height="100" alt="deweather website" /></a>
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/davidcarslaw/deweather/workflows/R-CMD-check/badge.svg)](https://github.com/davidcarslaw/deweather/actions)
@@ -32,11 +32,11 @@ The modelling can be computationally intensive and therefore **deweather** makes
 
 ## Installation
 
-Installation of **deweather** from GitHub should be easy using the devtools package. 
+Installation of **deweather** from GitHub should be easy using the `{pak}` package. 
 
 ```{r install}
-require(devtools)
-install_github("davidcarslaw/deweather")
+# install.packages("pak")
+pak::pak("davidcarslaw/deweather")
 ```
 
 
