@@ -147,7 +147,7 @@ runGbm <-
     if (simulate) {
       dat <- dat[sample(nrow(dat), nrow(dat), replace = TRUE), ]
     }
-
+    
     # these models for AQ data are not very sensitive to tree sizes > 1000
     # make reproducible
     if (!simulate) {
@@ -155,7 +155,7 @@ runGbm <-
     } else {
       set.seed(stats::runif(1))
     }
-
+    
     mod <- gbm::gbm(
       eq,
       data = dat,
@@ -170,19 +170,19 @@ runGbm <-
       keep.data = TRUE,
       verbose = FALSE
     )
-
+    
     ## extract partial dependnece componets
-
+    
     pd <- lapply(vars, extractPD, mod)
     pd <- do.call(rbind, pd)
-
+    
     ## relative influence
     ri <- summary(mod, plotit = FALSE)
     ri$var <- stats::reorder(ri$var, ri$rel.inf)
-
+    
     if (return.mod) {
       result <- list(pd = pd, ri = ri, model = mod)
-
+      
       return(result)
     } else {
       return(list(pd, ri))
@@ -204,7 +204,7 @@ partialDep <-
     } else {
       return.mod <- FALSE
     }
-
+    
     if (B == 1) {
       pred <- runGbm(
         dat,
@@ -218,7 +218,7 @@ partialDep <-
     } else {
       cl <- parallel::makeCluster(n.core)
       doParallel::registerDoParallel(cl)
-
+      
       pred <- foreach::foreach(
         i = 1:B,
         .inorder = FALSE,
@@ -233,12 +233,12 @@ partialDep <-
           simulate = TRUE,
           n.trees = n.trees
         )
-
+      
       parallel::stopCluster(cl)
     }
-
+    
     # partial dependence plots
-
+    
     if (B == 1) {
       pd <- pred$pd
       ri <- pred$ri
@@ -246,15 +246,15 @@ partialDep <-
     } else {
       pd <- lapply(pred, "[[", 1)
       pd <- do.call(rbind, pd)
-
+      
       ## relative influence
       ri <- lapply(pred, "[[", 2)
       ri <- do.call(rbind, ri)
-
+      
       mod <- pred[[1]]$model
     }
-
-
+    
+    
     resCI <-
       dplyr::group_by(pd, .data$var, .data$var_type, .data$x) %>%
       dplyr::summarise(
@@ -262,14 +262,14 @@ partialDep <-
         lower = stats::quantile(.data$y, probs = c(0.025)),
         upper = stats::quantile(.data$y, probs = c(0.975))
       )
-
+    
     resRI <- dplyr::group_by(ri, .data$var) %>%
       dplyr::summarise(
         mean = mean(.data$rel.inf),
         lower = stats::quantile(.data$rel.inf, probs = c(0.025)),
         upper = stats::quantile(.data$rel.inf, probs = c(0.975))
       )
-
+    
     if (return.mod) {
       return(list(resCI, resRI, mod))
     } else {

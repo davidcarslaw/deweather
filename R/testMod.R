@@ -123,49 +123,37 @@ testMod <- function(input_data,
   stats$value <- as.numeric(as.character(stats$value))
   stats$value <- round(stats$value, 2)
 
-  head_train <- data.frame(
-    statistic = "Training",
-    value = NA,
-    stringsAsFactors = FALSE
-  )
-
-  head_test <- data.frame(
-    statistic = "Test data",
-    value = NA,
-    stringsAsFactors = FALSE
-  )
-
-  stats <- dplyr::bind_rows(head_test, stats)
-  stats_train <- dplyr::bind_rows(head_train, stats_train)
-
-  # print % difference in RMSE
-  if (plot) {
-    diff_rmse <-
-      round(100 * (stats$value[8] - stats_train$value[8]) / stats$value[8], 1)
-    print(paste0("Percent increase in RMSE using test data is ", diff_rmse, "%"))
-  }
-
-  tbl <- gridExtra::tableGrob(stats, rows = NULL)
-  tbl_train <- gridExtra::tableGrob(stats_train, rows = NULL)
-
-  # plotting side effect (disabled with `plot` arg)
-  if (plot) {
-    gridExtra::grid.arrange(plt, tbl, tbl_train, nrow = 1, as.table = TRUE)
-  }
-
-  # prep stats output
-  out_stats <-
+  stats_both <-
     dplyr::left_join(
-      stats,
-      stats_train,
-      by = c("statistic"),
-      suffix = c("_test", "_train")
-    )
-  out_stats <- dplyr::tibble(out_stats[-1, ])
-
+      dplyr::rename(stats_train, "train" = .data$value),
+      dplyr::rename(stats, "test" = .data$value),
+      by = "statistic"
+    ) %>%
+    dplyr::tibble()
+  
+  # plotting side effect - disabled w/ `plot` arg
+  if (plot) {
+    # print % difference in RMSE
+    diff_rmse <- (stats["RMSE", "value"] - stats_train["RMSE", "value"]) / stats["RMSE", "value"]
+    diff_rmse <- scales::label_percent(accuracy = 0.1)(diff_rmse)
+    print(paste0("Percent increase in RMSE using test data is ", diff_rmse))
+    
+    # get table of stats
+    tbl <-
+      gridExtra::tableGrob(dplyr::rename(
+        stats_both,
+        "training data" = "train",
+        "testing data" = "test"
+      ),
+      rows = NULL)
+    
+    # print plot
+    gridExtra::grid.arrange(plt, tbl, nrow = 1, as.table = TRUE)
+  }
+  
   invisible(list(
     pred = dplyr::tibble(pred),
-    stats = out_stats,
+    stats = stats_both,
     plot = plt
   ))
 }

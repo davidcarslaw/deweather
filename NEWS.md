@@ -34,6 +34,8 @@
 
 * `testMod()` invisibly returns its table of statisitcs along with its plot. (#9)
 
+* `testMod()` now prints one plot and one table rather than one plot and two tables. This ensures the printed plot will be less distorted.
+
 * The lists returned by `plotPD()` are now named, making them easier to index. (#10)
 
 ## Bug fixes
