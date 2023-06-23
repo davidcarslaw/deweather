@@ -1,6 +1,6 @@
 #' Plot two-way interactions from gbm model
 #'
-#' @param dw_model Model object from running `buildMod`.
+#' @param dw_model Model object from running [buildMod()].
 #' @param variable The variables to plot. Must be of length two
 #' e.g. `variables = c("ws", "wd"`.
 #' @param res Resolution in x-y i.e. number of points in each dimension.
@@ -21,8 +21,13 @@
 #' @export
 #' @return To add
 #' @author David Carslaw
-plot2Way <- function(dw_model, variable = c("ws", "temp"), res = 100,
-                     exlude = TRUE, cols = "default", dist = 0.05, ...) {
+plot2Way <- function(dw_model,
+                     variable = c("ws", "temp"),
+                     res = 100,
+                     exlude = TRUE,
+                     cols = "default",
+                     dist = 0.05,
+                     ...) {
   if (!inherits(dw_model, "deweather")) {
     stop("Need to supply a deweather object from buildMod.")
   }
