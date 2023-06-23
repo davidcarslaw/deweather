@@ -19,12 +19,12 @@ plotInfluence <- function(dw_model,
 
   ## extract influence data from object
   influ <- dw_model$influence
-  
+
   # sort variables?
-  if (sort){
+  if (sort) {
     influ$var <- forcats::fct_reorder(influ$var, influ$mean)
   }
-  
+
   # deal with special colours
   if (!col %in% c("var", "mean")) {
     the_aes <- ggplot2::aes(y = .data$var, x = .data$mean)
@@ -33,16 +33,18 @@ plotInfluence <- function(dw_model,
   } else {
     the_aes <- ggplot2::aes(y = .data$var, x = .data$mean, fill = .data[[col]])
     bar <- ggplot2::geom_bar(stat = "identity")
-    lab <- switch (col,
-                   var = "variable",
-                   mean = "relative\ninfluence (%)"
+    lab <- switch(col,
+      var = "variable",
+      mean = "relative\ninfluence (%)"
     )
   }
 
   ggplot2::ggplot(influ, mapping = the_aes) +
-    bar + 
-    ggplot2::labs(x = "relative variable influence (%)",
-                  y = "variable",
-                  fill = lab) +
+    bar +
+    ggplot2::labs(
+      x = "relative variable influence (%)",
+      y = "variable",
+      fill = lab
+    ) +
     ggplot2::scale_x_continuous(labels = scales::label_percent(scale = 1))
 }

@@ -28,6 +28,7 @@ Imports:
     mgcv,
     openair,
     parallel,
+    purrr,
     rlang,
     scales,
     stats,
