@@ -21,6 +21,13 @@ A plot
 \description{
 Plot all partial dependencies
 }
+\seealso{
+Other deweather model plotting functions: 
+\code{\link{plot2Way}()},
+\code{\link{plotInfluence}()},
+\code{\link{plotPD}()}
+}
 \author{
 David Carslaw
 }
+\concept{deweather model plotting functions}

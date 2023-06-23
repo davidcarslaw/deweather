@@ -45,6 +45,13 @@ To add
 \description{
 Plot two-way interactions from gbm model
 }
+\seealso{
+Other deweather model plotting functions: 
+\code{\link{plotAllPD}()},
+\code{\link{plotInfluence}()},
+\code{\link{plotPD}()}
+}
 \author{
 David Carslaw
 }
+\concept{deweather model plotting functions}
