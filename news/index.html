@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">deweather</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7-1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,10 +53,45 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.7.2" id="deweather-072">deweather 0.7.2<a class="anchor" aria-label="anchor" href="#deweather-072"></a></h2>
+<div class="section level3">
+<h3 id="breaking-changes-0-7-2">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-7-2"></a></h3>
+<ul><li><p>All functions which expect a <a href="http://davidcarslaw.github.io/deweather/" class="external-link">deweather</a> object now use the argument name <code>dw_model</code> for consistency.</p></li>
+<li><p>The default values for <code>vars</code> in any model-building function now uses “air_temp” over “temp”. This brings it in line with <code>road_data</code> and <a href="https://davidcarslaw.github.io/worldmet/index.html" class="external-link">worldmet</a> outputs.</p></li>
+<li><p><code>gbm.interaction()</code> has been renamed <code>gbmInteraction()</code> for consistency with other functions.</p></li>
+<li><p><code>gbmInf()</code> has been renamed <code><a href="../reference/plotInfluence.html">plotInfluence()</a></code> to be more descriptive and consistent with other plotting functions.</p></li>
+<li><p><code>plotAllPD()</code> has been combined with <code><a href="../reference/plotPD.html">plotPD()</a></code> and has therefore been removed.</p></li>
+<li><p><code>dat</code> is no longer exported. Users should use <code>road_data</code> to demo <a href="http://davidcarslaw.github.io/deweather/" class="external-link">deweather</a> functions.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="new-features-0-7-2">New features<a class="anchor" aria-label="anchor" href="#new-features-0-7-2"></a></h3>
+<ul><li>
+<p><code><a href="../reference/plotPD.html">plotPD()</a></code> now holds all the functionality for plotting partial dependency plots, deprecating <code>plotAllPD()</code>. (<a href="http://github.com/davidcarslaw/deweather/issues/12" class="external-link">#12</a>)</p>
+<ul><li><p>By default, all partial dependencies are plotted (similar to <code>plotAllPD()</code>). The <code>variable</code> argument allows users to specify specific variables (similar to the old <code><a href="../reference/plotPD.html">plotPD()</a></code>). Multiple variables can be provided.</p></li>
+<li><p>The <code>col</code> argument controls the colour of the PD plots. If multiple colours are specified, they are repeated until all variables have been visualised.</p></li>
+<li><p>The <code>polar.wd</code> argument will optionally show the wind direction PD on polar coordinates.</p></li>
+</ul></li>
+<li>
+<p><code><a href="../reference/plotInfluence.html">plotInfluence()</a></code> (previously <code>gmbInf()</code>) has gained two new arguments:</p>
+<ul><li><p><code>sort</code> (defaults to <code>TRUE</code>) will sort the variables by their mean influence, ordering the values on the y-axis.</p></li>
+<li><p><code>col</code> controls the colours. Users can specify <code>var</code> (which makes each bar a different colour) or <code>mean</code> (which colours by the x-axis values).</p></li>
+</ul></li>
+<li><p>Many plotting functions have received the <code>plot</code> argument to suppress printing their plots, bringing <a href="http://davidcarslaw.github.io/deweather/" class="external-link">deweather</a> in line with recent versions of <a href="https://davidcarslaw.github.io/openair/" class="external-link">openair</a>.</p></li>
+<li><p><code><a href="../reference/testMod.html">testMod()</a></code> invisibly returns its table of statisitcs along with its plot. (<a href="http://github.com/davidcarslaw/deweather/issues/9" class="external-link">#9</a>)</p></li>
+<li><p>The lists returned by <code><a href="../reference/plotPD.html">plotPD()</a></code> are now named, making them easier to index. (<a href="http://github.com/davidcarslaw/deweather/issues/10" class="external-link">#10</a>)</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-0-7-2">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-7-2"></a></h3>
+<ul><li>
+<code><a href="../reference/diurnalGbm.html">diurnalGbm()</a></code> now no longer plots extra 2-way graphs as it performs its internal calculations.</li>
+</ul></div>
+</div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.7-1" id="deweather-07-1">deweather 0.7-1<a class="anchor" aria-label="anchor" href="#deweather-07-1"></a></h2>
 <ul><li>Development version of <a href="http://davidcarslaw.github.io/deweather/" class="external-link">deweather</a>.</li>
 </ul></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
