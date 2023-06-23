@@ -11,31 +11,33 @@ plot2Way(
   exlude = TRUE,
   cols = "default",
   dist = 0.05,
+  plot = TRUE,
   ...
 )
 }
 \arguments{
 \item{dw_model}{Model object from running \code{\link[=buildMod]{buildMod()}}.}
 
-\item{variable}{The variables to plot. Must be of length two
-e.g. \verb{variables = c("ws", "wd"}.}
+\item{variable}{The variables to plot. Must be of length two e.g. \verb{variables = c("ws", "wd"}.}
 
 \item{res}{Resolution in x-y i.e. number of points in each dimension.}
 
-\item{exlude}{Should surfaces exlude predictions too far from
-original data? The default is \code{TRUE}.}
+\item{exlude}{Should surfaces exlude predictions too far from original data?
+The default is \code{TRUE}.}
 
 \item{cols}{Colours to be used for plotting. Options include
-\dQuote{default}, \dQuote{increment}, \dQuote{heat}, \dQuote{jet}
-and user defined. For user defined the user can supply a list of
-colour names recognised by R (type \code{colours()} to see the
-full list). An example would be \code{cols = c("yellow", "green", "blue")}}
+\dQuote{default}, \dQuote{increment}, \dQuote{heat}, \dQuote{jet} and user
+defined. For user defined the user can supply a list of colour names
+recognised by R (type \code{colours()} to see the full list). An example would
+be \code{cols = c("yellow", "green", "blue")}}
 
-\item{dist}{When plotting surfaces, \code{dist} controls how far from the
-original data the predictions should be made. See
-\code{exclude.too.far} from the \code{mgcv} package. Data are
-first transformed to a unit square. Values should be between 0 and
-1.}
+\item{dist}{When plotting surfaces, \code{dist} controls how far from the original
+data the predictions should be made. See \code{exclude.too.far} from the \code{mgcv}
+package. Data are first transformed to a unit square. Values should be
+between 0 and 1.}
+
+\item{plot}{Should a plot be produced? \code{FALSE} can be useful when analysing
+data to extract plot components and plotting them in other ways.}
 
 \item{...}{Other arguments to be passed for plotting.}
 }
