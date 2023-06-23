@@ -63,7 +63,7 @@ NO<sub>x</sub>, NO<sub>2</sub>, ethane and isoprene as well as
 meteorological data including wind speed, wind direction, relative
 humidity, ambient temperature and cloud cover. Code to obtain this data
 directly can be found
-[here](https://github.com/davidcarslaw/deweather/data-raw/road_data.R).
+[here](https://github.com/davidcarslaw/deweather/blob/master/data-raw/road_data.R).
 
 ``` r
 library(deweather)
