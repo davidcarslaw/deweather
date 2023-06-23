@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# deweather <a href="https://davidcarslaw.github.io/deweather/"><img src="man/figures/logo.png" align="right" height="100" alt="deweather website" /></a>
+# deweather: remove meteorological variation from air quality data <a href="https://davidcarslaw.github.io/deweather/"><img src="man/figures/logo.png" align="right" height="100" alt="deweather website" /></a>
 
 <!-- badges: start -->
 
@@ -29,11 +29,11 @@ Windows, Linux and Mac OSX.
 ## Installation
 
 Installation of **deweather** from GitHub should be easy using the
-devtools package.
+`{pak}` package.
 
 ``` r
-require(devtools)
-install_github("davidcarslaw/deweather")
+# install.packages("pak")
+pak::pak("davidcarslaw/deweather")
 ```
 
 ## Description
