@@ -4,8 +4,7 @@
 #' @export
 #' @return Interaction information.
 #' @author David Carslaw
-
-gbm.interactions <- function(res) {
+gbmInteractions <- function(res) {
   ## Edited version from dismo package to rank 2-way interactions
 
   if (!inherits(res, "deweather")) stop("Need to supply a deweather object from buildMod.")

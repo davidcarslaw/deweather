@@ -17,7 +17,6 @@
 #' @importFrom rlang .data
 #' @return Some data
 #' @author David Carslaw
-
 diurnalGbm <-
   function(input_data,
            vars = c("ws", "wd", "hour", "weekday"),
