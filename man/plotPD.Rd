@@ -39,6 +39,13 @@ processing, e.g., modifying the \code{ggplot}.
 \description{
 Function to plot partial dependence plots with bootstrap uncertainties
 }
+\seealso{
+Other deweather model plotting functions: 
+\code{\link{plot2Way}()},
+\code{\link{plotAllPD}()},
+\code{\link{plotInfluence}()}
+}
 \author{
 David Carslaw
 }
+\concept{deweather model plotting functions}

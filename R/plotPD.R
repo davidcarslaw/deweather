@@ -11,6 +11,7 @@
 #' @param ... other arguments for plotting.
 #' @export
 #' @importFrom rlang .data
+#' @family deweather model plotting functions
 #' @return Invisibly returns a list containing the plot and the data used to
 #'   make the plot for [plotPD()] and [plot2Way()] to allow post
 #'   processing, e.g., modifying the \code{ggplot}.
@@ -172,6 +173,7 @@ plotPD <- function(dw_model,
 #' @param nrow Number of rows for the plots.
 #' @param ... extra plotting arguments.
 #' @export
+#' @family deweather model plotting functions
 #' @return A plot
 #' @author David Carslaw
 plotAllPD <- function(dw_model,

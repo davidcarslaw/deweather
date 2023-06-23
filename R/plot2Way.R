@@ -20,6 +20,7 @@
 #' @param ... Other arguments to be passed for plotting.
 #' @export
 #' @return To add
+#' @family deweather model plotting functions
 #' @author David Carslaw
 plot2Way <- function(dw_model,
                      variable = c("ws", "air_temp"),

@@ -3,6 +3,7 @@
 #' @param dw_model Model object from running [buildMod()].
 #' @export
 #' @return Plot
+#' @family deweather model plotting functions
 #' @author David Carslaw
 plotInfluence <- function(dw_model) {
   if (!inherits(dw_model, "deweather")) {

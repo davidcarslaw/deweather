@@ -15,6 +15,13 @@ Plot
 \description{
 Plot a GBM influence plot
 }
+\seealso{
+Other deweather model plotting functions: 
+\code{\link{plot2Way}()},
+\code{\link{plotAllPD}()},
+\code{\link{plotPD}()}
+}
 \author{
 David Carslaw
 }
+\concept{deweather model plotting functions}
