@@ -18,6 +18,7 @@ Depends:
 Imports:
     doParallel,
     dplyr,
+    forcats,
     foreach,
     gbm,
     ggplot2,
