@@ -32,11 +32,11 @@ reference:
 - title: Examine
   desc: Functions to visualise or otherwise examine `buildMod()` outputs
   contents:
-  - gbmInf
+  - plotInfluence
   - plot2Way
   - plotPD
   - plotAllPD
-  - gbm.interactions
+  - gbmInteractions
 - title: Predict
   desc: Functions to use `{deweather}` models to predict air pollution concentrations
   contents:

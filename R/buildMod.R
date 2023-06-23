@@ -29,7 +29,6 @@
 #' @return Returns a list including the model, influence data frame and partial
 #'   dependence data frame.
 #' @author David Carslaw
-
 buildMod <- function(input_data, vars = c(
                        "trend", "ws", "wd", "hour",
                        "weekday", "temp"
@@ -132,5 +131,71 @@ runGbm <- function(dat, eq, vars, return.mod, simulate, n.trees = n.trees,
     return(result)
   } else {
     return(list(pd, ri))
+  }
+}
+
+#' @noRd
+#' @importFrom rlang .data
+partialDep <- function(dat, eq, vars, B = 100, n.core = 4, n.trees, seed) {
+  if (B == 1) return.mod <- TRUE else return.mod <- FALSE
+  
+  if (B == 1) {
+    pred <- runGbm(dat, eq, vars,
+                   return.mod = TRUE, simulate = FALSE,
+                   n.trees = n.trees, seed
+    )
+  } else {
+    cl <- parallel::makeCluster(n.core)
+    doParallel::registerDoParallel(cl)
+    
+    pred <- foreach::foreach(
+      i = 1:B, .inorder = FALSE,
+      .packages = "gbm", .export = "runGbm"
+    ) %dopar%
+      runGbm(dat, eq, vars,
+             return.mod = FALSE, simulate = TRUE,
+             n.trees = n.trees
+      )
+    
+    parallel::stopCluster(cl)
+  }
+  
+  # partial dependence plots
+  
+  if (B == 1) {
+    pd <- pred$pd
+    ri <- pred$ri
+    mod <- pred$model
+  } else {
+    pd <- lapply(pred, "[[", 1)
+    pd <- do.call(rbind, pd)
+    
+    ## relative influence
+    ri <- lapply(pred, "[[", 2)
+    ri <- do.call(rbind, ri)
+    
+    mod <- pred[[1]]$model
+  }
+  
+  
+  resCI <-
+    dplyr::group_by(pd, .data$var, .data$var_type, .data$x) %>%
+    dplyr::summarise(
+      mean = mean(.data$y),
+      lower = stats::quantile(.data$y, probs = c(0.025)),
+      upper = stats::quantile(.data$y, probs = c(0.975))
+    )
+  
+  resRI <- dplyr::group_by(ri, .data$var) %>%
+    dplyr::summarise(
+      mean = mean(.data$rel.inf),
+      lower = stats::quantile(.data$rel.inf, probs = c(0.025)),
+      upper = stats::quantile(.data$rel.inf, probs = c(0.975))
+    )
+  
+  if (return.mod) {
+    return(list(resCI, resRI, mod))
+  } else {
+    return(list(resCI, resRI))
   }
 }
