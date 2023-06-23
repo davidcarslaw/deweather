@@ -22,19 +22,13 @@
     <loc>https://davidcarslaw.github.io/deweather/reference/buildMod.html</loc>
   </url>
   <url>
-    <loc>https://davidcarslaw.github.io/deweather/reference/dat.html</loc>
-  </url>
-  <url>
     <loc>https://davidcarslaw.github.io/deweather/reference/deweather-package.html</loc>
   </url>
   <url>
     <loc>https://davidcarslaw.github.io/deweather/reference/diurnalGbm.html</loc>
   </url>
   <url>
-    <loc>https://davidcarslaw.github.io/deweather/reference/gbm.interactions.html</loc>
-  </url>
-  <url>
-    <loc>https://davidcarslaw.github.io/deweather/reference/gbmInf.html</loc>
+    <loc>https://davidcarslaw.github.io/deweather/reference/gbmInteractions.html</loc>
   </url>
   <url>
     <loc>https://davidcarslaw.github.io/deweather/reference/index.html</loc>
@@ -50,6 +44,9 @@
   </url>
   <url>
     <loc>https://davidcarslaw.github.io/deweather/reference/plotAllPD.html</loc>
+  </url>
+  <url>
+    <loc>https://davidcarslaw.github.io/deweather/reference/plotInfluence.html</loc>
   </url>
   <url>
     <loc>https://davidcarslaw.github.io/deweather/reference/plotPD.html</loc>

@@ -49,7 +49,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Function to plot partial dependence plots with bootstrap uncertainties</h1>
-      <small class="dont-index">Source: <a href="http://github.com/davidcarslaw/deweather/blob/HEAD/R/partialDep.R" class="external-link"><code>R/partialDep.R</code></a></small>
+      <small class="dont-index">Source: <a href="http://github.com/davidcarslaw/deweather/blob/HEAD/R/plotPD.R" class="external-link"><code>R/plotPD.R</code></a></small>
       <div class="d-none name"><code>plotPD.Rd</code></div>
     </div>
 
@@ -60,7 +60,7 @@
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">plotPD</span><span class="op">(</span></span>
-<span>  <span class="va">dat</span>,</span>
+<span>  <span class="va">dw_model</span>,</span>
 <span>  <span class="va">variable</span>,</span>
 <span>  ylim <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  plotit <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -72,7 +72,7 @@
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt>dat</dt>
+    <dl><dt>dw_model</dt>
 <dd><p>Model object from running <code><a href="buildMod.html">buildMod()</a></code>.</p></dd>
 
 
@@ -109,6 +109,13 @@ and units properly e.g.  by subscripting the `2' in NO2.</p></dd>
 <p>Invisibly returns a list containing the plot and the data used to
 make the plot for <code>plotPD()</code> and <code><a href="plot2Way.html">plot2Way()</a></code> to allow post
 processing, e.g., modifying the <code>ggplot</code>.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
+    <div class="dont-index"><p>Other deweather model plotting functions: 
+<code><a href="plot2Way.html">plot2Way</a>()</code>,
+<code><a href="plotAllPD.html">plotAllPD</a>()</code>,
+<code><a href="plotInfluence.html">plotInfluence</a>()</code></p></div>
     </div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>

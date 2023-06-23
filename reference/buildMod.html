@@ -49,7 +49,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Function to apply meteorological normalisation</h1>
-      <small class="dont-index">Source: <a href="http://github.com/davidcarslaw/deweather/blob/HEAD/R/boosting.R" class="external-link"><code>R/boosting.R</code></a></small>
+      <small class="dont-index">Source: <a href="http://github.com/davidcarslaw/deweather/blob/HEAD/R/buildMod.R" class="external-link"><code>R/buildMod.R</code></a></small>
       <div class="d-none name"><code>buildMod.Rd</code></div>
     </div>
 
@@ -61,7 +61,7 @@
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">buildMod</span><span class="op">(</span></span>
 <span>  <span class="va">input_data</span>,</span>
-<span>  vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"trend"</span>, <span class="st">"ws"</span>, <span class="st">"wd"</span>, <span class="st">"hour"</span>, <span class="st">"weekday"</span>, <span class="st">"temp"</span><span class="op">)</span>,</span>
+<span>  vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"trend"</span>, <span class="st">"ws"</span>, <span class="st">"wd"</span>, <span class="st">"hour"</span>, <span class="st">"weekday"</span>, <span class="st">"air_temp"</span><span class="op">)</span>,</span>
 <span>  pollutant <span class="op">=</span> <span class="st">"nox"</span>,</span>
 <span>  sam.size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">input_data</span><span class="op">)</span>,</span>
 <span>  n.trees <span class="op">=</span> <span class="fl">200</span>,</span>
