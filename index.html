@@ -170,7 +170,7 @@
 </h3>
 <p>One of the benefits of the boosted regression tree approach is that the <em>partial dependencies</em> can be explored. In simple terms, the partial dependencies show the relationship between the pollutant of interest and the covariates used in the model while holding the value of other covariates at their mean level.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/plotAllPD.html">plotAllPD</a></span><span class="op">(</span><span class="va">mod_no2</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">plotAllPD</span><span class="op">(</span><span class="va">mod_no2</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-plotAll-1.png" width="100%"></p>
 </div>
 <div class="section level3">
@@ -185,7 +185,7 @@
 <div class="section level2">
 <h2 id="apply-meteorological-averaging">Apply meteorological averaging<a class="anchor" aria-label="anchor" href="#apply-meteorological-averaging"></a>
 </h2>
-<p>An indication of the meteorologically-averaged trend is given by the <code><a href="reference/plotAllPD.html">plotAllPD()</a></code> function above. A better indication is given by using the model to predict many times with random sampling of meteorological conditions. This sampling is carried out by the <code><a href="reference/metSim.html">metSim()</a></code> function. Note that in this case there is no need to supply the <code>"trend"</code> component because it is calculated using <code><a href="reference/metSim.html">metSim()</a></code>.</p>
+<p>An indication of the meteorologically-averaged trend is given by the <code>plotAllPD()</code> function above. A better indication is given by using the model to predict many times with random sampling of meteorological conditions. This sampling is carried out by the <code><a href="reference/metSim.html">metSim()</a></code> function. Note that in this case there is no need to supply the <code>"trend"</code> component because it is calculated using <code><a href="reference/metSim.html">metSim()</a></code>.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">demet</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/metSim.html">metSim</a></span><span class="op">(</span><span class="va">mod_no2</span>,</span>
 <span>  newdata <span class="op">=</span> <span class="va">dat_part</span>,</span>
