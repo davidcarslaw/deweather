@@ -11,7 +11,7 @@ Description: Model and account for (or remove) the effect of meteorology
     trees based on the gbm package. Code can also be run using multiple
     cores if available.
 License: GPL (>= 2)
-URL: http://github.com/davidcarslaw/deweather, http://davidcarslaw.github.io/deweather/
+URL: http://davidcarslaw.github.io/deweather/
 BugReports: http://github.com/davidcarslaw/deweather/issues
 Depends:
     R (>= 2.15.1)
