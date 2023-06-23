@@ -1,6 +1,6 @@
 #' Function to plot partial dependence plots with bootstrap uncertainties
 #'
-#' @param dat Model object from running [buildMod()].
+#' @param dw_model Model object from running [buildMod()].
 #' @param variable The variable to plot.
 #' @param ylim user-specified \code{ylim}.
 #' @param plotit Should a plot be produced?
@@ -15,18 +15,22 @@
 #'   make the plot for [plotPD()] and [plot2Way()] to allow post
 #'   processing, e.g., modifying the \code{ggplot}.
 #' @author David Carslaw
-plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE,
+plotPD <- function(dw_model,
+                   variable,
+                   ylim = NULL,
+                   plotit = TRUE,
                    intervals = 40,
-                   auto.text = TRUE, ...) {
-  if (!inherits(dat, "deweather")) {
+                   auto.text = TRUE,
+                   ...) {
+  if (!inherits(dw_model, "deweather")) {
     stop("Need to supply a deweather object from buildMod.")
   }
   
   ## extract from deweather object
-  influ <- dat$influence
-  mod <- dat$model
-  data <- dat$data
-  dat <- dat$pd
+  influ <- dw_model$influence
+  mod <- dw_model$model
+  data <- dw_model$data
+  dat <- dw_model$pd
   
   ## make sure variable is character
   variable <- as.character(variable)
@@ -170,7 +174,10 @@ plotPD <- function(dat, variable, ylim = NULL, plotit = TRUE,
 #' @export
 #' @return A plot
 #' @author David Carslaw
-plotAllPD <- function(dw_model, ylim = NULL, nrow = NULL, ...) {
+plotAllPD <- function(dw_model,
+                      ylim = NULL,
+                      nrow = NULL,
+                      ...) {
   if (!inherits(dw_model, "deweather")) {
     stop("Need to supply a deweather object from buildMod.")
   }

@@ -1,21 +1,21 @@
 #' Quantify most important 2-way interactions
 #'
-#' @param res Model object from running [buildMod()].
+#' @param dw_model Model object from running [buildMod()].
 #' @export
 #' @return Interaction information.
 #' @author David Carslaw
-gbmInteractions <- function(res) {
+gbmInteractions <- function(dw_model) {
   ## Edited version from dismo package to rank 2-way interactions
 
-  if (!inherits(res, "deweather")) stop("Need to supply a deweather object from buildMod.")
+  if (!inherits(dw_model, "deweather")) stop("Need to supply a deweather object from buildMod.")
 
-  gbm.object <- res$model
+  gbm.object <- dw_model$model
 
   gbm.call <- gbm.object$call
   n.trees <- gbm.object$n.trees
   depth <- gbm.object$interaction.depth
 
-  alldat <- res$data
+  alldat <- dw_model$data
 
   ## don't need date
   if ("date" %in% names(alldat)) {

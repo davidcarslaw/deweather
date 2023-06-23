@@ -1,16 +1,16 @@
 #' Plot a GBM influence plot
 #'
-#' @param dat Model object from running [buildMod()].
+#' @param dw_model Model object from running [buildMod()].
 #' @export
 #' @return Plot
 #' @author David Carslaw
-plotInfluence <- function(dat) {
-  if (!inherits(dat, "deweather")) {
+plotInfluence <- function(dw_model) {
+  if (!inherits(dw_model, "deweather")) {
     stop("Need to supply a deweather object from buildMod.")
   }
   
   ## extract influence data from object
-  influ <- dat$influence
+  influ <- dw_model$influence
   
   ggplot2::ggplot(influ, ggplot2::aes(y = .data$var, x = .data$mean)) +
     ggplot2::geom_bar(stat = "identity") +
