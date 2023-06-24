@@ -242,5 +242,5 @@ plot_pd_helper <- function(dw_model,
       theme_pd_plot()
   }
   
-  return(list(plot = plt, data = dat))
+  return(list(plot = plt, data = dplyr::ungroup(dat)))
 }
