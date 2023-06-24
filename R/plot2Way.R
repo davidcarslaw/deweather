@@ -126,5 +126,5 @@ plot2Way <- function(dw_model,
     }
   }
   
-  invisible(list(plot = plt, data = res))
+  invisible(list(plot = plt, data = dplyr::tibble(res)))
 }
