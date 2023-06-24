@@ -32,7 +32,7 @@
   
 * Many plotting functions have received the `plot` argument to suppress printing their plots, bringing `{deweather}` in line with recent versions of `{openair}`.
 
-* `testMod()` invisibly returns its table of statisitcs along with its plot. (#9)
+* `testMod()` invisibly returns its table of statistics along with its plot. (#9)
 
 * `testMod()` now prints one plot and one table rather than one plot and two tables. This ensures the printed plot will be less distorted.
 

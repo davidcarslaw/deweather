@@ -37,7 +37,7 @@
 #'   and follows local time rather than UTC.
 #' @param lag Variables(s) to lag. Any variables included here will add new
 #'   columns to the data frame. For example `lag = "ws"` with add a new
-#'   columns `lag1ws`. Adding some varaibles here can improve the
+#'   columns `lag1ws`. Adding some variables here can improve the
 #'   explanatory power of the models. Variables are lagged by one unit of time.
 #' @export
 #' @return A data frame with new variables.
