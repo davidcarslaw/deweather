@@ -10,7 +10,7 @@
 status](https://www.r-pkg.org/badges/version/deweather)](https://CRAN.R-project.org/package=deweather)
 <!-- badges: end -->
 
-**deweather** is an R package developed for the purpose of ‘removing’
+**deweather** is an R package developed for the purpose of “removing”
 the influence of meteorology from air quality time series data. It is
 part of the [openair](http://davidcarslaw.github.io/openair/) suite of
 packages designed to support the analysis of air quality data and
@@ -203,20 +203,23 @@ ggplot(timeAverage(demet, "day"), aes(date, no2)) +
 
 ## References
 
-- Grange, S. K. and Carslaw, D. C. (2019) Using meteorological
-  normalisation to detect interventions in air quality time series,
+- Grange, S. K. and Carslaw, D. C. (2019) [Using meteorological
+  normalisation to detect interventions in air quality time
+  series](https://www.sciencedirect.com/science/article/pii/S004896971834244X),
   Science of The Total Environment. 653, pp. 578–588. doi:
   10.1016/j.scitotenv.2018.10.344.
 
-- Carslaw, D.C. and P.J. Taylor (2009). Analysis of air pollution data
-  at a mixed source location using boosted regression trees. Atmospheric
-  Environment. Vol. 43, pp. 3563–3570.
+- Carslaw, D.C., Williams, M.L. and B. Barratt (2012) [A short-term
+  intervention study — impact of airport closure on near-field air
+  quality due to the eruption of
+  Eyjafjallajökull](https://www.sciencedirect.com/science/article/abs/pii/S1352231012001355),
+  Atmospheric Environment, Vol. 54, 328–336.
 
-- Carslaw, D.C., Williams, M.L. and B. Barratt A short-term intervention
-  study — impact of airport closure on near-field air quality due to the
-  eruption of Eyjafjallajökull. (2012) Atmospheric Environment, Vol. 54,
-  328–336.
+- Carslaw, D.C. and P.J. Taylor (2009). [Analysis of air pollution data
+  at a mixed source location using boosted regression
+  trees](https://www.sciencedirect.com/science/article/abs/pii/S1352231009003069),
+  Atmospheric Environment. Vol. 43, pp. 3563–3570.
 
-- Greg Ridgeway with contributions from others (2017). gbm: Generalized
-  Boosted Regression Models. Rpackage version 2.1.3.
-  (<https://CRAN.R-project.org/package=gbm>)
+- Greenwell B, Boehmke B, Cunningham J, Developers G (2022). *gbm:
+  Generalized Boosted Regression Models*. R package version 2.1.8.1,
+  <https://CRAN.R-project.org/package=gbm>.
