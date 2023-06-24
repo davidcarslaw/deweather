@@ -4,7 +4,7 @@
 #' @param variable The variables to plot. Must be of length two e.g. `variables
 #'   = c("ws", "wd"`.
 #' @param res Resolution in x-y i.e. number of points in each dimension.
-#' @param exlude Should surfaces exlude predictions too far from original data?
+#' @param exclude Should surfaces exclude predictions too far from original data?
 #'   The default is `TRUE`.
 #' @param cols Colours to be used for plotting. Options include
 #'   \dQuote{default}, \dQuote{increment}, \dQuote{heat}, \dQuote{jet} and user
@@ -25,7 +25,7 @@
 plot2Way <- function(dw_model,
                      variable = c("ws", "air_temp"),
                      res = 100,
-                     exlude = TRUE,
+                     exclude = TRUE,
                      cols = "default",
                      dist = 0.05,
                      plot = TRUE,
@@ -45,7 +45,7 @@ plot2Way <- function(dw_model,
 
   ## exclude predictions too far from data (from mgcv)
 
-  if (exlude && all(sapply(res[variable], is.numeric))) {
+  if (exclude && all(sapply(res[variable], is.numeric))) {
     sub <- stats::na.omit(data[, variable]) ## pairs of variables
     x <- sub[[variable[1]]] ## x data
     y <- sub[[variable[2]]] ## y data
