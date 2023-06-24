@@ -8,7 +8,7 @@ plot2Way(
   dw_model,
   variable = c("ws", "air_temp"),
   res = 100,
-  exlude = TRUE,
+  exclude = TRUE,
   cols = "default",
   dist = 0.05,
   plot = TRUE,
@@ -22,7 +22,7 @@ plot2Way(
 
 \item{res}{Resolution in x-y i.e. number of points in each dimension.}
 
-\item{exlude}{Should surfaces exlude predictions too far from original data?
+\item{exclude}{Should surfaces exclude predictions too far from original data?
 The default is \code{TRUE}.}
 
 \item{cols}{Colours to be used for plotting. Options include

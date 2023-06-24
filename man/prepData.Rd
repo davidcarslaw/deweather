@@ -22,7 +22,7 @@ and follows local time rather than UTC.}
 
 \item{lag}{Variables(s) to lag. Any variables included here will add new
 columns to the data frame. For example \code{lag = "ws"} with add a new
-columns \code{lag1ws}. Adding some varaibles here can improve the
+columns \code{lag1ws}. Adding some variables here can improve the
 explanatory power of the models. Variables are lagged by one unit of time.}
 }
 \value{
