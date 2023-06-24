@@ -261,14 +261,16 @@ partialDep <-
         mean = mean(.data$y),
         lower = stats::quantile(.data$y, probs = c(0.025)),
         upper = stats::quantile(.data$y, probs = c(0.975))
-      )
+      ) %>%
+      dplyr::ungroup()
     
     resRI <- dplyr::group_by(ri, .data$var) %>%
       dplyr::summarise(
         mean = mean(.data$rel.inf),
         lower = stats::quantile(.data$rel.inf, probs = c(0.025)),
         upper = stats::quantile(.data$rel.inf, probs = c(0.975))
-      )
+      ) %>%
+      dplyr::ungroup()
     
     if (return.mod) {
       return(list(resCI, resRI, mod))
