@@ -47,10 +47,18 @@ round_any <- function(x, accuracy, f = round) {
 #' function to check if an object is a dw model
 #' @noRd
 check_dwmod <- function(dw_model){
+  if (missing(dw_model)) {
+    cli::cli_abort(
+      c("x" = "No {.field dw_model} has been provided.",
+        "i" = "Please supply a {.pkg deweather} model from {.fun buildMod}."),
+      call = NULL
+    )
+  }
+  
   if (!inherits(dw_model, "deweather")) {
     cli::cli_abort(
-      c("x" = "Provided {.field dw_model} is of class {.class {class(dw_model)}}",
-        "i" = "Please supply a {.pkg deweather} object from {.fun buildMod}."),
+      c("x" = "Provided {.field dw_model} is of class {.class {class(dw_model)}}.",
+        "i" = "Please supply a {.pkg deweather} model from {.fun buildMod}."),
       call = NULL
     )
   }
