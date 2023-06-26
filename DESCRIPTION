@@ -34,7 +34,8 @@ Imports:
     scales,
     stats,
     tibble,
-    tidyr
+    tidyr,
+    utils
 Encoding: UTF-8
 Language: en-GB
 LazyData: yes

@@ -38,6 +38,8 @@
 
 * The lists returned by `plotPD()` are now named, making them easier to index. (#10)
 
+* `{deweather}` model objects now have nicer `print()`, `plot()`, `head()`, `tail()` and `summary()` methods.
+
 ## Bug fixes
 
 * `diurnalGbm()` now no longer plots extra 2-way graphs as it performs its internal calculations.
