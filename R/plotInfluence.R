@@ -19,8 +19,8 @@ plotInfluence <- function(dw_model,
   influ <- dw_model$influence
 
   # sort variables?
-  if (sort) {
-    influ$var <- forcats::fct_reorder(influ$var, influ$mean)
+  if (!sort) {
+    influ$var <- as.character(influ$var)
   }
 
   # deal with special colours
