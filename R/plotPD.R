@@ -103,7 +103,7 @@ plot_pd_helper <- function(dw_model,
   dat <- dat[dat$var == variable, ]
   
   # if type is numeric
-  if (dat$var_type[1] == "numeric") {
+  if (dat$var_type[1] == "numeric" && variable!= "trend") {
     dat$x <- as.numeric(dat$x)
     gap <- prettyGap(dat$x, intervals)
     dat$x <- round_any(dat$x, gap)
@@ -158,7 +158,8 @@ plot_pd_helper <- function(dw_model,
   }
   
   if (variable == "trend") {
-    dat <- decimalDate(dat, date = "x")
+    dat <- mutate(dat, date = as.POSIXct(as.numeric(x), tz = attr(data$date, "tzone"))) 
+  
     
     plt <- ggplot2::ggplot(dat, ggplot2::aes(.data$date, .data$mean,
                                              ymin = .data$lower, ymax = .data$upper

@@ -109,7 +109,7 @@ extractPD <- function(vars, mod) {
   n <- 100 ## resolution of output
 
   if ("trend" %in% vars) {
-    n <- 500
+    n <- 100
   }
 
   if (vars %in% c("hour", "hour.local")) {
@@ -254,13 +254,21 @@ partialDep <-
       mod <- pred[[1]]$model
     }
     
-    
+    # TODO
+    # note that because of do.call the x value is character
+    # x can take many intervals but we want to cut up into a sensible number
+    # a better way would be not to use do.call and keep in lists
     resCI <-
-      dplyr::group_by(pd, .data$var, .data$var_type, .data$x) %>%
+      dplyr::group_by(pd, var, var_type) %>%
+      dplyr::mutate(x_bin = ifelse(var_type == "numeric", as.character(
+        cut(as.numeric(x), 50, include.lowest = TRUE)
+      ), x)) %>%
+      dplyr::group_by(var, var_type, x_bin) %>%
       dplyr::summarise(
-        mean = mean(.data$y),
-        lower = stats::quantile(.data$y, probs = c(0.025)),
-        upper = stats::quantile(.data$y, probs = c(0.975))
+        x = ifelse(is.numeric(x), mean(x), x),
+        mean = mean(y),
+        lower = quantile(y, probs = 0.025),
+        upper = quantile(y, probs = 0.975)
       ) %>%
       dplyr::ungroup()
     
