@@ -60,7 +60,7 @@ prepData <- function(mydata, add = c(
 
   if ("weekday" %in% add) mydata$weekday <- as.factor(format(mydata$date, "%A"))
 
-  if ("trend" %in% add) mydata$trend <- lubridate::decimal_date(mydata$date)
+  if ("trend" %in% add) mydata$trend <- as.numeric(mydata$date)
 
   if ("week" %in% add) mydata$week <- as.numeric(format(mydata$date, "%W"))
 
