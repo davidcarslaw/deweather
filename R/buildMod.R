@@ -24,7 +24,26 @@
 #'   = runif(1)`.
 #' @param B Number of bootstrap simulations for partial dependence plots.
 #' @param n.core Number of cores to use for parallel processing.
+#' @param shrinkage a shrinkage parameter applied to each tree in the expansion.
+#'   Also known as the learning rate or step-size reduction; 0.001 to 0.1
+#'   usually work, but a smaller learning rate typically requires more trees.
+#'   Default is 0.1.
+#' @param interaction.depth Integer specifying the maximum depth of each tree
+#'   (i.e., the highest level of variable interactions allowed). A value of 1
+#'   implies an additive model, a value of 2 implies a model with up to 2-way
+#'   interactions, etc. Default is 5.
+#' @param bag.fraction he fraction of the training set observations randomly
+#'   selected to propose the next tree in the expansion. This introduces
+#'   randomnesses into the model fit. If bag.fraction < 1 then running the same
+#'   model twice will result in similar but different.
+#' @param n.minobsinnode Integer specifying the minimum number of observations
+#'   in the terminal nodes of the trees. Note that this is the actual number of
+#'   observations, not the total weight.
+#' @param cv.folds Number of cross-validation folds to perform. If cv.folds>1
+#'   then gbm, in addition to the usual fit, will perform a cross-validation,
+#'   calculate an estimate of generalization error returned in \code{cv.error}.
 #' @param seed Random number seed for reproducibility in returned model.
+#'
 #' @export
 #' @seealso [testMod()] for testing models before they are built.
 #' @seealso [metSim()] for using a built model with meteorological simulations.
@@ -41,6 +60,11 @@ buildMod <- function(input_data,
                      pollutant = "nox",
                      sam.size = nrow(input_data),
                      n.trees = 200,
+                     shrinkage = 0.1,
+                     interaction.depth = 5,
+                     bag.fraction = 0.5,
+                     n.minobsinnode = 10,
+                     cv.folds = 0,
                      simulate = FALSE,
                      B = 100,
                      n.core = 4,
@@ -77,12 +101,22 @@ buildMod <- function(input_data,
       return.mod = TRUE,
       simulate = simulate,
       n.trees = n.trees,
+      shrinkage = shrinkage,
+      interaction.depth = interaction.depth,
+      bag.fraction = bag.fraction,
+      n.minobsinnode = n.minobsinnode,
+      cv.folds = cv.folds,
       seed
     )
   }
 
   # if model needs to be run multiple times
-  res <- partialDep(input_data, eq, vars, B, n.core, n.trees, seed)
+  res <- partialDep(input_data, eq, vars, B, n.core, n.trees = n.trees, 
+                    shrinkage = shrinkage,
+                    interaction.depth = interaction.depth,
+                    bag.fraction = bag.fraction,
+                    n.minobsinnode = n.minobsinnode,
+                    cv.folds = cv.folds, seed = seed)
 
   if (B != 1) {
     Mod <- mod$model
@@ -142,6 +176,11 @@ runGbm <-
            return.mod,
            simulate,
            n.trees = n.trees,
+           shrinkage = shrinkage,
+           interaction.depth = interaction.depth,
+           bag.fraction = bag.fraction,
+           n.minobsinnode = n.minobsinnode,
+           cv.folds = cv.folds,
            seed = seed) {
     ## sub-sample the data for bootstrapping
     if (simulate) {
@@ -161,12 +200,12 @@ runGbm <-
       data = dat,
       distribution = "gaussian",
       n.trees = n.trees,
-      shrinkage = 0.1,
-      interaction.depth = 6,
-      bag.fraction = 0.5,
+      shrinkage = shrinkage,
+      interaction.depth = interaction.depth,
+      bag.fraction = bag.fraction,
       train.fraction = 1,
-      n.minobsinnode = 10,
-      # cv.folds=5,
+      n.minobsinnode = n.minobsinnode,
+      cv.folds = cv.folds,
       keep.data = TRUE,
       verbose = FALSE
     )
@@ -197,7 +236,12 @@ partialDep <-
            vars,
            B = 100,
            n.core = 4,
-           n.trees,
+           n.trees = n.trees,
+           shrinkage = shrinkage,
+           interaction.depth = interaction.depth,
+           bag.fraction = bag.fraction,
+           n.minobsinnode = n.minobsinnode,
+           cv.folds = cv.folds,
            seed) {
     if (B == 1) {
       return.mod <- TRUE
@@ -213,6 +257,11 @@ partialDep <-
         return.mod = TRUE,
         simulate = FALSE,
         n.trees = n.trees,
+        shrinkage = shrinkage,
+        interaction.depth = interaction.depth,
+        bag.fraction = bag.fraction,
+        n.minobsinnode = n.minobsinnode,
+        cv.folds = cv.folds,
         seed
       )
     } else {
@@ -231,7 +280,12 @@ partialDep <-
           vars,
           return.mod = FALSE,
           simulate = TRUE,
-          n.trees = n.trees
+          n.trees = n.trees,
+          shrinkage = shrinkage,
+          interaction.depth = interaction.depth,
+          bag.fraction = bag.fraction,
+          n.minobsinnode = n.minobsinnode,
+          cv.folds = cv.folds
         )
       
       parallel::stopCluster(cl)
