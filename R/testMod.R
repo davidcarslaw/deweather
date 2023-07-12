@@ -55,6 +55,11 @@ testMod <- function(input_data,
     return.mod = TRUE,
     simulate = FALSE,
     n.trees = n.trees,
+    shrinkage = shrinkage,
+    interaction.depth = interaction.depth,
+    bag.fraction = bag.fraction,
+    n.minobsinnode = n.minobsinnode,
+    cv.folds = cv.folds,
     seed
   )
   
