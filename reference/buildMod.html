@@ -65,6 +65,11 @@
 <span>  pollutant <span class="op">=</span> <span class="st">"nox"</span>,</span>
 <span>  sam.size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">input_data</span><span class="op">)</span>,</span>
 <span>  n.trees <span class="op">=</span> <span class="fl">200</span>,</span>
+<span>  shrinkage <span class="op">=</span> <span class="fl">0.1</span>,</span>
+<span>  interaction.depth <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>  bag.fraction <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  n.minobsinnode <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  cv.folds <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  simulate <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  B <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>  n.core <span class="op">=</span> <span class="fl">4</span>,</span>
@@ -102,6 +107,39 @@ number of rows of data is used instead.</p></dd>
 
 <dt>n.trees</dt>
 <dd><p>Number of trees to fit.</p></dd>
+
+
+<dt>shrinkage</dt>
+<dd><p>a shrinkage parameter applied to each tree in the expansion.
+Also known as the learning rate or step-size reduction; 0.001 to 0.1
+usually work, but a smaller learning rate typically requires more trees.
+Default is 0.1.</p></dd>
+
+
+<dt>interaction.depth</dt>
+<dd><p>Integer specifying the maximum depth of each tree
+(i.e., the highest level of variable interactions allowed). A value of 1
+implies an additive model, a value of 2 implies a model with up to 2-way
+interactions, etc. Default is 5.</p></dd>
+
+
+<dt>bag.fraction</dt>
+<dd><p>he fraction of the training set observations randomly
+selected to propose the next tree in the expansion. This introduces
+randomnesses into the model fit. If bag.fraction &lt; 1 then running the same
+model twice will result in similar but different.</p></dd>
+
+
+<dt>n.minobsinnode</dt>
+<dd><p>Integer specifying the minimum number of observations
+in the terminal nodes of the trees. Note that this is the actual number of
+observations, not the total weight.</p></dd>
+
+
+<dt>cv.folds</dt>
+<dd><p>Number of cross-validation folds to perform. If cv.folds&gt;1
+then gbm, in addition to the usual fit, will perform a cross-validation,
+calculate an estimate of generalization error returned in <code>cv.error</code>.</p></dd>
 
 
 <dt>simulate</dt>
