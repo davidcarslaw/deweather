@@ -106,6 +106,7 @@ testMod <- function(input_data,
   if (is.na(n.trees)) {
     n.trees <- min_MSE
     print(paste("Optimum number of trees is", n.trees))
+    print(paste("RMSE from cross-validation is", round(sqrt(CV_mod$cv.error[min_MSE]), 2)))
   }
   
   mod <- runGbm(
