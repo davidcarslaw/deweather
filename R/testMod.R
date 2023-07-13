@@ -108,45 +108,46 @@ testMod <- function(input_data,
     print(paste("Optimum number of trees is", n.trees))
     print(paste("RMSE from cross-validation is", round(sqrt(CV_mod$cv.error[min_MSE]), 2)))
   }
-  
-  mod <- runGbm(
-    train.dat,
-    eq,
-    vars,
-    return.mod = TRUE,
-    simulate = FALSE,
-    n.trees = n.trees,
-    shrinkage = shrinkage,
-    interaction.depth = interaction.depth,
-    bag.fraction = bag.fraction,
-    n.minobsinnode = n.minobsinnode,
-    cv.folds = cv.folds,
-    seed
-  )
-  
+
   # predictions based on training data
   pred_train <-
-    gbm::predict.gbm(mod$model, newdata = train.dat, n.trees = n.trees)
+    gbm::predict.gbm(
+      CV_mod,
+      newdata = train.dat,
+      n.trees = n.trees,
+      shrinkage = shrinkage,
+      interaction.depth = interaction.depth,
+      bag.fraction = bag.fraction,
+      n.minobsinnode = n.minobsinnode,
+      seed = seed
+    )
   
-  pred_train <- data.frame(train.dat, pred = pred_train)
+  pred_train <- tibble(train.dat, pred = pred_train)
   
   ## calculate key model statistics
   stats_train <-
     openair::modStats(pred_train, obs = pollutant, mod = "pred")
-  stats_train <- as.data.frame(t(stats_train))
-  names(stats_train) <- "value"
-  stats_train$statistic <- rownames(stats_train)
-  stats_train <- stats_train[-1, ]
-  stats_train <-
-    dplyr::select(stats_train, .data$statistic, .data$value)
-  stats_train$value <- as.numeric(as.character(stats_train$value))
-  stats_train$value <- round(stats_train$value, 2)
   
+  stats_train <- stats_train %>% 
+    pivot_longer(cols= -1) %>% 
+    rename(statistic = name) %>% 
+    select(-1) %>% 
+    mutate(value = round(value, 2)) %>% 
+    filter(!statistic %in% c("P", "COE", "IOA"))
   
   # predictions based on test data
-  
+
   pred <-
-    gbm::predict.gbm(mod$model, newdata = pred.dat, n.trees = n.trees)
+    gbm::predict.gbm(
+      CV_mod,
+      newdata = pred.dat,
+      n.trees = n.trees,
+      shrinkage = shrinkage,
+      interaction.depth = interaction.depth,
+      bag.fraction = bag.fraction,
+      n.minobsinnode = n.minobsinnode,
+      seed = seed
+    )
   
   pred <- data.frame(pred.dat, pred = pred)
   
@@ -181,14 +182,14 @@ testMod <- function(input_data,
   
   ## calculate key model statistics
   stats <- openair::modStats(pred, obs = pollutant, mod = "pred")
-  stats <- as.data.frame(t(stats))
-  names(stats) <- "value"
-  stats$statistic <- rownames(stats)
-  stats <- stats[-1, ]
-  stats <- dplyr::select(stats, .data$statistic, .data$value)
-  stats$value <- as.numeric(as.character(stats$value))
-  stats$value <- round(stats$value, 2)
   
+  stats <- stats %>% 
+    pivot_longer(cols= -1) %>% 
+    rename(statistic = name) %>% 
+    select(-1) %>% 
+    mutate(value = round(value, 2)) %>% 
+    filter(!statistic %in% c("P", "COE", "IOA"))
+
   stats_both <-
     dplyr::left_join(
       dplyr::rename(stats_train, "train" = .data$value),
@@ -200,7 +201,7 @@ testMod <- function(input_data,
   # plotting side effect - disabled w/ `plot` arg
   if (plot) {
     # print % difference in RMSE
-    diff_rmse <- (stats["RMSE", "value"] - stats_train["RMSE", "value"]) / stats["RMSE", "value"]
+    diff_rmse <- (stats$value[stats$statistic == "RMSE"] - stats_train$value[stats_train$statistic == "RMSE"]) / stats$value[stats$statistic == "RMSE"]
     diff_rmse <- scales::label_percent(accuracy = 0.1)(diff_rmse)
     cli::cli_inform(c("i" = "Percent increase in RMSE using test data is {.strong {diff_rmse}}"))
     
