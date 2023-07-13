@@ -50,7 +50,7 @@ prepData <- function(mydata, add = c(
   ## Some cheack to make sure data are OK.
   if (!"date" %in% names(mydata)) stop("No date field supplied.")
 
-  if ("hour" %in% add) mydata$hour <- as.numeric(format(mydata$date, "%H"))
+  if ("hour" %in% add) mydata$hour <- lubridate::hour(mydata$date)
 
   if ("hour.local" %in% add) {
     mydata$hour.local <- as.numeric(format(as.POSIXct(format(mydata$date,
