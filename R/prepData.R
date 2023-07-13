@@ -53,9 +53,7 @@ prepData <- function(mydata, add = c(
   if ("hour" %in% add) mydata$hour <- lubridate::hour(mydata$date)
 
   if ("hour.local" %in% add) {
-    mydata$hour.local <- as.numeric(format(as.POSIXct(format(mydata$date,
-      tz = local.tz
-    )), "%H"))
+    mydata$hour.local <- lubridate::hour(with_tz(mydata$date, local.tz))
   }
 
   if ("weekday" %in% add) mydata$weekday <- as.factor(format(mydata$date, "%A"))
