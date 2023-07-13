@@ -9,7 +9,12 @@ testMod(
   vars = c("trend", "ws", "wd", "hour", "weekday", "air_temp"),
   pollutant = "nox",
   train.frac = 0.8,
-  n.trees = 200,
+  n.trees = NA,
+  shrinkage = 0.1,
+  interaction.depth = 5,
+  bag.fraction = 0.5,
+  n.minobsinnode = 10,
+  cv.folds = 5,
   seed = 123,
   plot = TRUE
 )
@@ -25,13 +30,37 @@ normalisation to.}
 \item{train.frac}{Fraction of data to train a model on. The model is tested
 against the withheld 0.2 proportion.}
 
-\item{n.trees}{Number of trees to use.}
+\item{n.trees}{Number of trees to use. If \code{n.trees = NA} then the
+function will conduct cross-validation to calculate the optimum number.}
+
+\item{shrinkage}{a shrinkage parameter applied to each tree in the expansion.
+Also known as the learning rate or step-size reduction; 0.001 to 0.1
+usually work, but a smaller learning rate typically requires more trees.
+Default is 0.1.}
+
+\item{interaction.depth}{Integer specifying the maximum depth of each tree
+(i.e., the highest level of variable interactions allowed). A value of 1
+implies an additive model, a value of 2 implies a model with up to 2-way
+interactions, etc. Default is 5.}
+
+\item{bag.fraction}{he fraction of the training set observations randomly
+selected to propose the next tree in the expansion. This introduces
+randomnesses into the model fit. If bag.fraction < 1 then running the same
+model twice will result in similar but different.}
+
+\item{n.minobsinnode}{Integer specifying the minimum number of observations
+in the terminal nodes of the trees. Note that this is the actual number of
+observations, not the total weight.}
+
+\item{cv.folds}{Number of cross-validation folds to perform if \code{n.trees
+  = NA}. If \code{cv.folds > 1} then gbm, in addition to the usual fit, will
+perform a cross-validation, calculate an estimate of generalization error
+returned in \code{cv.error}.}
 
 \item{seed}{Random number seed for reproducibility in returned model.}
 
-\item{plot}{The default, \code{TRUE}, automatically prints a plot and two
-tables of statistics to review the model output. \code{FALSE} disables this
-behaviour.}
+\item{plot}{The default, \code{TRUE}, automatically prints a plot and two tables
+of statistics to review the model output. \code{FALSE} disables this behaviour.}
 }
 \value{
 Returns to be added.
