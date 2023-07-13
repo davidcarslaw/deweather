@@ -64,7 +64,12 @@
 <span>  vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"trend"</span>, <span class="st">"ws"</span>, <span class="st">"wd"</span>, <span class="st">"hour"</span>, <span class="st">"weekday"</span>, <span class="st">"air_temp"</span><span class="op">)</span>,</span>
 <span>  pollutant <span class="op">=</span> <span class="st">"nox"</span>,</span>
 <span>  train.frac <span class="op">=</span> <span class="fl">0.8</span>,</span>
-<span>  n.trees <span class="op">=</span> <span class="fl">200</span>,</span>
+<span>  n.trees <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  shrinkage <span class="op">=</span> <span class="fl">0.1</span>,</span>
+<span>  interaction.depth <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>  bag.fraction <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  n.minobsinnode <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  cv.folds <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>  seed <span class="op">=</span> <span class="fl">123</span>,</span>
 <span>  plot <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -91,7 +96,42 @@ against the withheld 0.2 proportion.</p></dd>
 
 
 <dt>n.trees</dt>
-<dd><p>Number of trees to use.</p></dd>
+<dd><p>Number of trees to use. If <code>n.trees = NA</code> then the
+function will conduct cross-validation to calculate the optimum number.</p></dd>
+
+
+<dt>shrinkage</dt>
+<dd><p>a shrinkage parameter applied to each tree in the expansion.
+Also known as the learning rate or step-size reduction; 0.001 to 0.1
+usually work, but a smaller learning rate typically requires more trees.
+Default is 0.1.</p></dd>
+
+
+<dt>interaction.depth</dt>
+<dd><p>Integer specifying the maximum depth of each tree
+(i.e., the highest level of variable interactions allowed). A value of 1
+implies an additive model, a value of 2 implies a model with up to 2-way
+interactions, etc. Default is 5.</p></dd>
+
+
+<dt>bag.fraction</dt>
+<dd><p>he fraction of the training set observations randomly
+selected to propose the next tree in the expansion. This introduces
+randomnesses into the model fit. If bag.fraction &lt; 1 then running the same
+model twice will result in similar but different.</p></dd>
+
+
+<dt>n.minobsinnode</dt>
+<dd><p>Integer specifying the minimum number of observations
+in the terminal nodes of the trees. Note that this is the actual number of
+observations, not the total weight.</p></dd>
+
+
+<dt>cv.folds</dt>
+<dd><p>Number of cross-validation folds to perform if <code>n.trees
+  = NA</code>. If <code>cv.folds &gt; 1</code> then gbm, in addition to the usual fit, will
+perform a cross-validation, calculate an estimate of generalization error
+returned in <code>cv.error</code>.</p></dd>
 
 
 <dt>seed</dt>
@@ -99,9 +139,8 @@ against the withheld 0.2 proportion.</p></dd>
 
 
 <dt>plot</dt>
-<dd><p>The default, <code>TRUE</code>, automatically prints a plot and two
-tables of statistics to review the model output. <code>FALSE</code> disables this
-behaviour.</p></dd>
+<dd><p>The default, <code>TRUE</code>, automatically prints a plot and two tables
+of statistics to review the model output. <code>FALSE</code> disables this behaviour.</p></dd>
 
 </dl></div>
     <div class="section level2">
