@@ -129,11 +129,11 @@ testMod <- function(input_data,
     openair::modStats(pred_train, obs = pollutant, mod = "pred")
   
   stats_train <- stats_train %>% 
-    pivot_longer(cols= -1) %>% 
-    rename(statistic = name) %>% 
-    select(-1) %>% 
-    mutate(value = round(value, 2)) %>% 
-    filter(!statistic %in% c("P", "COE", "IOA"))
+    tidyr::pivot_longer(cols= -1) %>% 
+    dplyr::rename(statistic = name) %>% 
+    dplyr::select(-1) %>% 
+    dplyr::mutate(value = round(value, 2)) %>% 
+    dplyr::filter(!statistic %in% c("P", "COE", "IOA"))
   
   # predictions based on test data
 
@@ -184,11 +184,11 @@ testMod <- function(input_data,
   stats <- openair::modStats(pred, obs = pollutant, mod = "pred")
   
   stats <- stats %>% 
-    pivot_longer(cols= -1) %>% 
-    rename(statistic = name) %>% 
-    select(-1) %>% 
-    mutate(value = round(value, 2)) %>% 
-    filter(!statistic %in% c("P", "COE", "IOA"))
+    tidyr::pivot_longer(cols= -1) %>% 
+    dplyr::rename(statistic = name) %>% 
+    dplyr::select(-1) %>% 
+    dplyr::mutate(value = round(value, 2)) %>% 
+    dplyr::filter(!statistic %in% c("P", "COE", "IOA"))
 
   stats_both <-
     dplyr::left_join(
