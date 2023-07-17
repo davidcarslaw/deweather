@@ -105,8 +105,8 @@ testMod <- function(input_data,
   
   if (is.na(n.trees)) {
     n.trees <- min_MSE
-    print(paste("Optimum number of trees is", n.trees))
-    print(paste("RMSE from cross-validation is", round(sqrt(CV_mod$cv.error[min_MSE]), 2)))
+    cli::cli_inform(c("i" = "Optimum number of trees is {.strong {n.trees}}"))
+    cli::cli_inform(c("i" = "RMSE from cross-validation is {.strong {round(sqrt(CV_mod$cv.error[min_MSE]), 2)}}"))
   }
 
   # predictions based on training data
