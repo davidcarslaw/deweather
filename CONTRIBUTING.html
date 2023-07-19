@@ -64,7 +64,7 @@
 <p>If you want to make a bigger change, it’s a good idea to first file an issue and make sure someone from the team agrees that it’s needed. If you’ve found a bug, please file an issue that illustrates the bug with a minimal <a href="https://www.tidyverse.org/help/#reprex" class="external-link">reprex</a>.</p>
 <div class="section level3">
 <h3 id="pull-request-process">Pull request process<a class="anchor" aria-label="anchor" href="#pull-request-process"></a></h3>
-<ul><li><p>Fork the package and clone onto your computer. If you haven’t done this before, we recommend using <code>usethis::create_from_github("davidcarslaw/openair", fork = TRUE)</code>.</p></li>
+<ul><li><p>Fork the package and clone onto your computer. If you haven’t done this before, we recommend using <code>usethis::create_from_github("davidcarslaw/deweather", fork = TRUE)</code>.</p></li>
 <li><p>Install all development dependencies with <code>devtools::install_dev_deps()</code>, and then make sure the package passes R CMD check by running <code>devtools::check()</code>. If R CMD check doesn’t pass cleanly, it’s a good idea to ask for help before continuing.</p></li>
 <li><p>Create a Git branch for your pull request (PR). We recommend using <code>usethis::pr_init("brief-description-of-change")</code>.</p></li>
 <li><p>Make your changes, commit to git, and then create a PR by running <code>usethis::pr_push()</code>, and following the prompts in your browser. The title of your PR should briefly describe the change. The body of your PR should contain <code>Fixes #issue-number</code>.</p></li>
@@ -72,7 +72,7 @@
 </ul></div>
 <div class="section level3">
 <h3 id="code-style">Code style<a class="anchor" aria-label="anchor" href="#code-style"></a></h3>
-<ul><li><p>Care should be taken such that new code follows a style similar to the rest of <a href="https://davidcarslaw.github.io/openair/" class="external-link">openair</a>. The most user-facing example of this is that exported functions should be written in “lowerCamelCase” (i.e., <code>polarPlot()</code> rather than <code>polar_plot()</code>).</p></li>
+<ul><li><p>Care should be taken such that new code follows a style similar to the rest of the <a href="https://davidcarslaw.github.io/openair/" class="external-link">openair</a> family. The most user-facing example of this is that exported functions should be written in “lowerCamelCase” (i.e., <code>polarPlot()</code> rather than <code>polar_plot()</code>).</p></li>
 <li><p>We use <a href="https://cran.r-project.org/package=roxygen2" class="external-link">roxygen2</a>, with <a href="https://cran.r-project.org/web/packages/roxygen2/vignettes/rd-formatting.html" class="external-link">Markdown syntax</a>, for documentation.</p></li>
 </ul></div>
 </div>
