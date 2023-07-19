@@ -1,6 +1,6 @@
-# Contributing to openairmaps
+# Contributing to deweather
 
-This outlines how to propose a change to `{openairmaps}`. 
+This outlines how to propose a change to `{deweather}`. 
 
 ## Fixing typos
 
