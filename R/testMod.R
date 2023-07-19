@@ -221,6 +221,7 @@ testMod <- function(input_data,
   invisible(list(
     pred = dplyr::tibble(pred),
     stats = stats_both,
-    plot = plt
+    plot = plt,
+    optimum_trees = n.trees
   ))
 }
