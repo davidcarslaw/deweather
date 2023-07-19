@@ -213,7 +213,7 @@ runGbm <-
     )
 
     ## extract partial dependence components
-    pd <- purrr::map(vars, extractPD, mod = mod, .progress = "Extracting PD") %>%
+    pd <- purrr::map(vars, extractPD, mod = mod) %>%
       purrr::map(~ dplyr::nest_by(.x, var, var_type) %>%
         tidyr::pivot_wider(
           names_from = "var_type",
