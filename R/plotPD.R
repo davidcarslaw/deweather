@@ -89,7 +89,7 @@ plot_pd_helper <- function(dw_model,
   dat <- dw_model$pd
 
   ## variables to be treated specifically
-  special <- c("trend", "weekday", "wd")
+  special <- c("wd")
 
   ## select influence of interest
   influ <- influ[influ$var == variable, ]
@@ -114,38 +114,70 @@ plot_pd_helper <- function(dw_model,
   # get ylim range if needed
   if (is.null(ylim)) ylim <- rng(dat)
 
-  # function to theme a partial dep plot
-  theme_pd_plot <- function(polar = FALSE) {
-    theme <-
-      list(
-        ggplot2::xlab(openair::quickText(variable)),
-        ggplot2::ylab(openair::quickText(poll, auto.text = auto.text)),
-        ggplot2::ggtitle(title),
-        ggplot2::theme(plot.title = ggplot2::element_text(lineheight = 0.8, face = "bold"))
-      )
+  # function to plot a PD base graph
+  plot_pd_skeleton <- function(dat, polar = FALSE, factor = FALSE) {
+    plt <-
+      ggplot2::ggplot(
+        dat,
+        ggplot2::aes(
+          .data$x,
+          .data$mean,
+          ymin = .data$lower,
+          ymax = .data$upper
+        )
+      ) +
+      ggplot2::xlab(openair::quickText(variable)) +
+      ggplot2::ylab(openair::quickText(poll, auto.text = auto.text)) +
+      ggplot2::ggtitle(title) +
+      ggplot2::theme(plot.title = ggplot2::element_text(lineheight = 0.8, face = "bold"))
 
-    if (!polar) {
-      append(theme, ggplot2::coord_cartesian(ylim = ylim))
+    if (factor) {
+      plt <- plt +
+        ggplot2::geom_point(size = 2, col = col) +
+        ggplot2::geom_crossbar(alpha = 0.4, color = NA, fill = col)
     } else {
-      append(theme, ggplot2::coord_polar())
+      plt <- plt +
+        ggplot2::geom_line(size = 1, col = col) +
+        ggplot2::geom_ribbon(alpha = 0.3, fill = col)
     }
+
+    if (polar) {
+      plt <- plt + ggplot2::coord_polar()
+    } else {
+      plt <- plt + ggplot2::coord_cartesian(ylim = ylim)
+    }
+
+    return(plt)
   }
 
-  if (!variable %in% special && is.numeric(data[[variable]])) {
-    quants <- data.frame(x = stats::quantile(data[[as.character(variable)]],
-      probs = 0:10 / 10, na.rm = TRUE
-    ))
+  # calculate quantiles of numeric variable
+  if (is.numeric(data[[variable]])) {
+    quants <-
+      data.frame(x = stats::quantile(data[[as.character(variable)]],
+        probs = 0:10 / 10, na.rm = TRUE
+      ))
+  }
 
-    plt <- ggplot2::ggplot(dat, ggplot2::aes(.data$x, .data$mean,
-      ymin = .data$lower, ymax = .data$upper
-    )) +
-      ggplot2::geom_line(size = 1, col = col) +
-      ggplot2::geom_ribbon(alpha = 0.3, fill = col) +
-      ggplot2::geom_rug(ggplot2::aes(x = .data$x),
-        data = quants, sides = "b",
-        inherit.aes = FALSE, size = 1
-      ) +
-      theme_pd_plot()
+  # convert trend back to dates
+  if (variable == "trend") {
+    dat <-
+      dplyr::mutate(dat, x = as.POSIXct(as.numeric(.data$x), tz = attr(data$date, "tzone")))
+  }
+
+  # plot numeric variables (not WD)
+  if (!variable %in% special && is.numeric(data[[variable]])) {
+    plt <- plot_pd_skeleton(dat)
+
+    # add rug if not trend
+    if (variable != "trend") {
+      plt <- plt + ggplot2::geom_rug(
+        ggplot2::aes(x = .data$x),
+        data = quants,
+        sides = "b",
+        inherit.aes = FALSE,
+        size = 1
+      )
+    }
 
     ## better hour x-scaling
     if (variable %in% c("hour", "hour.local")) {
@@ -153,33 +185,11 @@ plot_pd_helper <- function(dw_model,
     }
   }
 
-  if (variable == "trend") {
-    dat <-
-      dplyr::mutate(dat, date = as.POSIXct(as.numeric(.data$x), tz = attr(data$date, "tzone")))
-    
-    plt <- ggplot2::ggplot(dat, ggplot2::aes(.data$date, .data$mean,
-      ymin = .data$lower, ymax = .data$upper
-    )) +
-      ggplot2::geom_line(size = 1, col = col) +
-      ggplot2::geom_ribbon(alpha = 0.3, fill = col) +
-      theme_pd_plot()
-  }
-
+  # plot WD (treated separately)
   if (variable == "wd") {
     if (polar.wd) {
       plt <-
-        ggplot2::ggplot(
-          dat,
-          ggplot2::aes(
-            .data$x,
-            .data$mean,
-            ymin = .data$lower,
-            ymax = .data$upper
-          )
-        ) +
-        theme_pd_plot(polar.wd) +
-        ggplot2::geom_line(size = 1, col = col) +
-        ggplot2::geom_ribbon(alpha = 0.3, fill = col) +
+        plot_pd_skeleton(dat, polar = polar.wd) +
         ggplot2::scale_x_continuous(
           limits = c(0, 360),
           labels = c("N", "E", "S", "W"),
@@ -187,57 +197,28 @@ plot_pd_helper <- function(dw_model,
         ) +
         ggplot2::scale_y_continuous(limits = ylim)
     } else {
-      quants <- data.frame(x = stats::quantile(data[[as.character(variable)]],
-        probs = 0:10 / 10, na.rm = TRUE
-      ))
-
-      plt <- ggplot2::ggplot(dat, ggplot2::aes(.data$x, .data$mean,
-        ymin = .data$lower, ymax = .data$upper
-      )) +
-        ggplot2::geom_line(size = 1, col = col) +
-        ggplot2::geom_ribbon(alpha = 0.3, fill = col) +
+      plt <-
+        plot_pd_skeleton(dat, polar = polar.wd) +
         ggplot2::geom_rug(ggplot2::aes(x = .data$x),
           data = quants, sides = "b",
           inherit.aes = FALSE, size = 1
-        ) +
-        theme_pd_plot(FALSE)
+        )
     }
   }
 
-  ## for factors/character variables
-
-  if (!variable %in% special && !is.numeric(data[[variable]])) {
+  # plot factors
+  if (!is.numeric(data[[variable]])) {
     dat$x <- factor(dat$x)
 
-    plt <- ggplot2::ggplot(dat, ggplot2::aes(.data$x, .data$mean,
-      ymin = .data$lower, ymax = .data$upper,
-      xmin = as.numeric(.data$x) - 0.4,
-      xmax = as.numeric(.data$x) + 0.4
-    )) +
-      ggplot2::geom_point(size = 2, col = col) +
-      ggplot2::geom_rect(alpha = 0.4, fill = col) +
-      theme_pd_plot()
+    if (variable == "weekday") {
+      weekday.names <- format(ISOdate(2000, 1, 2:8), "%a")
+      levels(dat$x) <- sort(weekday.names)
+      dat$x <- ordered(dat$x, levels = weekday.names)
+    }
+
+    plt <- plot_pd_skeleton(dat, factor = TRUE)
   }
 
-
-  if (variable == "weekday") {
-    ## change to weekday names
-    dat$x <- factor(dat$x)
-    weekday.names <- format(ISOdate(2000, 1, 2:8), "%a")
-    levels(dat$x) <- sort(weekday.names)
-
-    dat$x <- ordered(dat$x, levels = weekday.names)
-
-    plt <- ggplot2::ggplot(dat, ggplot2::aes(.data$x, .data$mean,
-      ymin = .data$lower,
-      ymax = .data$upper,
-      xmin = as.numeric(.data$x) - 0.4,
-      xmax = as.numeric(.data$x) + 0.4
-    )) +
-      ggplot2::geom_point(size = 2, col = col) +
-      ggplot2::geom_rect(alpha = 0.4, fill = col) +
-      theme_pd_plot()
-  }
-
+  # return
   return(list(plot = plt, data = dplyr::ungroup(dat)))
 }
