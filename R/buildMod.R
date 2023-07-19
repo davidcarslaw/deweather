@@ -314,9 +314,9 @@ partialDep <-
       mod <- pred[[1]]$model
     }
 
-    # TODO
+    # Calculate 95% CI for different vars
     resCI <-
-      dplyr::group_by(pd, var) %>%
+      dplyr::group_by(pd, .data$var) %>%
       dplyr::reframe(
         numeric = list(dplyr::bind_rows(numeric)),
         character = list(dplyr::bind_rows(character))
