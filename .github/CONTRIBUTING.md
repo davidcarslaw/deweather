@@ -16,7 +16,7 @@ If you’ve found a bug, please file an issue that illustrates the bug with a mi
 
 ### Pull request process
 
-*   Fork the package and clone onto your computer. If you haven't done this before, we recommend using `usethis::create_from_github("davidcarslaw/openair", fork = TRUE)`.
+*   Fork the package and clone onto your computer. If you haven't done this before, we recommend using `usethis::create_from_github("davidcarslaw/deweather", fork = TRUE)`.
 
 *   Install all development dependencies with `devtools::install_dev_deps()`, and then make sure the package passes R CMD check by running `devtools::check()`. 
     If R CMD check doesn't pass cleanly, it's a good idea to ask for help before continuing. 
@@ -30,7 +30,7 @@ If you’ve found a bug, please file an issue that illustrates the bug with a mi
 
 ### Code style
 
-*   Care should be taken such that new code follows a style similar to the rest of `{openair}`. The most user-facing example of this is that exported functions should be written in "lowerCamelCase" (i.e., `polarPlot()` rather than `polar_plot()`).
+*   Care should be taken such that new code follows a style similar to the rest of the `{openair}` family. The most user-facing example of this is that exported functions should be written in "lowerCamelCase" (i.e., `polarPlot()` rather than `polar_plot()`).
 
 *  We use [roxygen2](https://cran.r-project.org/package=roxygen2), with [Markdown syntax](https://cran.r-project.org/web/packages/roxygen2/vignettes/rd-formatting.html), for documentation.
 
