@@ -154,8 +154,9 @@ plot_pd_helper <- function(dw_model,
   }
 
   if (variable == "trend") {
-    dat <- dplyr::mutate(dat, date = as.POSIXct(as.numeric(x), tz = attr(data$date, "tzone")))
-
+    dat <-
+      dplyr::mutate(dat, date = as.POSIXct(as.numeric(.data$x), tz = attr(data$date, "tzone")))
+    
     plt <- ggplot2::ggplot(dat, ggplot2::aes(.data$date, .data$mean,
       ymin = .data$lower, ymax = .data$upper
     )) +
