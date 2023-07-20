@@ -1,4 +1,3 @@
-utils::globalVariables("where")
 
 #' y range taking account of expanded uncertainties
 #' @noRd

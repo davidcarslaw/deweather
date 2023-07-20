@@ -85,7 +85,7 @@ diurnalGbm <-
 
     results <-
       dplyr::group_by(results, .data$Weekday, .data$Hour) %>%
-      dplyr::summarise(dplyr::across(where(is.numeric), ~ mean(.x, na.rm = TRUE)))
+      dplyr::summarise(dplyr::across(dplyr::where(is.numeric), ~ mean(.x, na.rm = TRUE)))
 
     results$Weekday <- ordered(
       results$Weekday,
@@ -102,9 +102,7 @@ diurnalGbm <-
       names_to = "variable"
     )
 
-    ylim <- range(c(results$difference, results$value)) * 1.03
-
-    # data sets that provide postive and negative differences
+    # data sets that provide positive and negative differences
     id <- which(results$difference > 0)
     data_neg <- results
     data_neg$difference[id] <- 0
