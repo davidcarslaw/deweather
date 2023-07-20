@@ -108,7 +108,7 @@ testMod <- function(input_data,
     cli::cli_inform(c("i" = "Optimum number of trees is {.strong {n.trees}}"))
     cli::cli_inform(c("i" = "RMSE from cross-validation is {.strong {round(sqrt(CV_mod$cv.error[min_MSE]), 2)}}"))
   }
-
+  
   # predictions based on training data
   pred_train <-
     gbm::predict.gbm(
@@ -130,13 +130,13 @@ testMod <- function(input_data,
   
   stats_train <- stats_train %>% 
     tidyr::pivot_longer(cols= -1) %>% 
-    dplyr::rename(statistic = name) %>% 
+    dplyr::rename(statistic = "name") %>% 
     dplyr::select(-1) %>% 
     dplyr::mutate(value = round(value, 2)) %>% 
     dplyr::filter(!statistic %in% c("P", "COE", "IOA"))
   
   # predictions based on test data
-
+  
   pred <-
     gbm::predict.gbm(
       CV_mod,
@@ -185,11 +185,11 @@ testMod <- function(input_data,
   
   stats <- stats %>% 
     tidyr::pivot_longer(cols= -1) %>% 
-    dplyr::rename(statistic = name) %>% 
+    dplyr::rename(statistic = "name") %>% 
     dplyr::select(-1) %>% 
     dplyr::mutate(value = round(value, 2)) %>% 
     dplyr::filter(!statistic %in% c("P", "COE", "IOA"))
-
+  
   stats_both <-
     dplyr::left_join(
       dplyr::rename(stats_train, "train" = .data$value),
@@ -221,6 +221,7 @@ testMod <- function(input_data,
   invisible(list(
     pred = dplyr::tibble(pred),
     stats = stats_both,
-    plot = plt
+    plot = plt,
+    optimum_trees = n.trees
   ))
 }
