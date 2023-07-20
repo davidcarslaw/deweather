@@ -111,12 +111,14 @@ buildMod <- function(input_data,
   }
 
   # if model needs to be run multiple times
-  res <- partialDep(input_data, eq, vars, B, n.core, n.trees = n.trees, 
-                    shrinkage = shrinkage,
-                    interaction.depth = interaction.depth,
-                    bag.fraction = bag.fraction,
-                    n.minobsinnode = n.minobsinnode,
-                    cv.folds = cv.folds, seed = seed)
+  res <- partialDep(input_data, eq, vars, B, n.core,
+    n.trees = n.trees,
+    shrinkage = shrinkage,
+    interaction.depth = interaction.depth,
+    bag.fraction = bag.fraction,
+    n.minobsinnode = n.minobsinnode,
+    cv.folds = cv.folds, seed = seed
+  )
 
   if (B != 1) {
     Mod <- mod$model
@@ -186,7 +188,7 @@ runGbm <-
     if (simulate) {
       dat <- dat[sample(nrow(dat), nrow(dat), replace = TRUE), ]
     }
-    
+
     # these models for AQ data are not very sensitive to tree sizes > 1000
     # make reproducible
     if (!simulate) {
@@ -194,7 +196,7 @@ runGbm <-
     } else {
       set.seed(stats::runif(1))
     }
-    
+
     mod <- gbm::gbm(
       eq,
       data = dat,
@@ -209,22 +211,26 @@ runGbm <-
       keep.data = TRUE,
       verbose = FALSE
     )
-    
-    ## extract partial dependnece componets
-    
-    pd <- lapply(vars, extractPD, mod)
-    pd <- do.call(rbind, pd)
-    
+
+    ## extract partial dependence components
+    pd <- purrr::map(vars, extractPD, mod = mod) %>%
+      purrr::map(~ dplyr::nest_by(.x, var, var_type) %>%
+        tidyr::pivot_wider(
+          names_from = "var_type",
+          values_from = "data"
+        )) %>%
+      dplyr::bind_rows()
+
     ## relative influence
     ri <- summary(mod, plotit = FALSE)
     ri$var <- stats::reorder(ri$var, ri$rel.inf)
-    
+
     if (return.mod) {
-      result <- list(pd = pd, ri = ri, model = mod)
-      
+      result <- list("pd" = pd, "ri" = ri, "model" = mod)
+
       return(result)
     } else {
-      return(list(pd, ri))
+      return(list("pd" = pd, "ri" = ri))
     }
   }
 
@@ -248,7 +254,7 @@ partialDep <-
     } else {
       return.mod <- FALSE
     }
-    
+
     if (B == 1) {
       pred <- runGbm(
         dat,
@@ -267,7 +273,7 @@ partialDep <-
     } else {
       cl <- parallel::makeCluster(n.core)
       doParallel::registerDoParallel(cl)
-      
+
       pred <- foreach::foreach(
         i = 1:B,
         .inorder = FALSE,
@@ -287,45 +293,63 @@ partialDep <-
           n.minobsinnode = n.minobsinnode,
           cv.folds = cv.folds
         )
-      
+
       parallel::stopCluster(cl)
     }
-    
+
     # partial dependence plots
-    
+
     if (B == 1) {
       pd <- pred$pd
       ri <- pred$ri
       mod <- pred$model
     } else {
-      pd <- lapply(pred, "[[", 1)
-      pd <- do.call(rbind, pd)
-      
+      pd <- purrr::map(pred, "pd") %>%
+        dplyr::bind_rows()
+
       ## relative influence
-      ri <- lapply(pred, "[[", 2)
-      ri <- do.call(rbind, ri)
-      
+      ri <- purrr::map(pred, "ri") %>%
+        dplyr::bind_rows()
+
       mod <- pred[[1]]$model
     }
-    
-    # TODO
-    # note that because of do.call the x value is character
-    # x can take many intervals but we want to cut up into a sensible number
-    # a better way would be not to use do.call and keep in lists
+
+    # Calculate 95% CI for different vars
     resCI <-
-      dplyr::group_by(pd, var, var_type) %>%
-      dplyr::mutate(x_bin = ifelse(var_type == "numeric", as.character(
-        cut(as.numeric(x), 50, include.lowest = TRUE)
-      ), x)) %>%
-      dplyr::group_by(var, var_type, x_bin) %>%
-      dplyr::summarise(
-        x = ifelse(is.numeric(x), mean(x), x),
-        mean = mean(y),
-        lower = quantile(y, probs = 0.025),
-        upper = quantile(y, probs = 0.975)
+      dplyr::group_by(pd, .data$var) %>%
+      dplyr::reframe(
+        numeric = list(dplyr::bind_rows(numeric)),
+        character = list(dplyr::bind_rows(character))
       ) %>%
-      dplyr::ungroup()
-    
+      dplyr::mutate(
+        numeric = purrr::map(
+          numeric,
+          purrr::possibly(
+            ~ dplyr::mutate(.x, x_bin = cut(.data$x, 50, include.lowest = TRUE)) %>%
+              dplyr::group_by(x_bin) %>%
+              dplyr::summarise(
+                x = mean(x),
+                mean = mean(y),
+                lower = quantile(y, probs = 0.025),
+                upper = quantile(y, probs = 0.975)
+              ) %>%
+              dplyr::ungroup()
+          )
+        ),
+        character = purrr::map(
+          character,
+          purrr::possibly(
+            ~ dplyr::group_by(.x, x) %>%
+              dplyr::summarise(
+                mean = mean(y),
+                lower = quantile(y, probs = 0.025),
+                upper = quantile(y, probs = 0.975)
+              ) %>%
+              dplyr::ungroup()
+          )
+        )
+      )
+
     resRI <- dplyr::group_by(ri, .data$var) %>%
       dplyr::summarise(
         mean = mean(.data$rel.inf),
@@ -333,7 +357,7 @@ partialDep <-
         upper = stats::quantile(.data$rel.inf, probs = c(0.975))
       ) %>%
       dplyr::ungroup()
-    
+
     if (return.mod) {
       return(list(resCI, resRI, mod))
     } else {
