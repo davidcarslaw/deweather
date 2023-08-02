@@ -141,7 +141,11 @@
 <span>  vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"trend"</span>, <span class="st">"ws"</span>, <span class="st">"wd"</span>, <span class="st">"hour"</span>, <span class="st">"weekday"</span>, <span class="st">"air_temp"</span>, <span class="st">"week"</span><span class="op">)</span>,</span>
 <span>  pollutant <span class="op">=</span> <span class="st">"no2"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-testMod-1.png" width="100%"></p>
+<div class="figure">
+<img src="reference/figures/README-testMod-1.png" alt="A scatter plot showing predicted nitrogen dioxide on the x-axis and measured nitrogen dioxide on the y-axis. Alongside is a table of statistical values describing the model performance, including R, RMSE, NMGE, NMB, MGE, MB, FAC2 and n." width="100%"><p class="caption">
+A statistical summary of a <a href="https://davidcarslaw.github.io/deweather/">deweather</a> model test.
+</p>
+</div>
 <p>The output shows by default the performance of the model when applied to a withheld random 20% (by default) of the data, i.e., the model is evaluated against data not used to build the model. Common model evaluation metrics are also given.</p>
 </div>
 <div class="section level2">
@@ -165,8 +169,12 @@
 </h3>
 <p>One of the benefits of the boosted regression tree approach is that the <em>partial dependencies</em> can be explored. In simple terms, the partial dependencies show the relationship between the pollutant of interest and the covariates used in the model while holding the value of other covariates at their mean level.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/plotPD.html">plotPD</a></span><span class="op">(</span><span class="va">mod_no2</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-plotAll-1.png" width="100%"></p>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/plotPD.html">plotPD</a></span><span class="op">(</span><span class="va">mod_no2</span>, nrow <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></code></pre></div>
+<div class="figure">
+<img src="reference/figures/README-plotAll-1.png" alt="Seven line charts showing the partial dependencies of the deweather model. In order of influence: wind direction, hour of day, long-term trend, weekday, wind speed, week of the year, and finally air temperature." width="100%"><p class="caption">
+The 7 partial dependencies of the deweather model.
+</p>
+</div>
 </div>
 <div class="section level3">
 <h3 id="plot-two-way-interactions">Plot two-way interactions<a class="anchor" aria-label="anchor" href="#plot-two-way-interactions"></a>
@@ -174,7 +182,11 @@
 <p>It can be very useful to plot important two-way interactions. In this example the interaction between <code>"ws"</code> and <code>"air_temp"</code> is considered. The plot shows that NO<sub>2</sub> tends to be high when the wind speed is low and the temperature is low, i.e., stable atmospheric conditions. Also NO<sub>2</sub> tends to be high when the temperature is high, which is most likely due to more O<sub>3</sub> available to convert NO to NO<sub>2</sub>. In fact, background O<sub>3</sub> would probably be a useful covariate to add to the model.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/plot2Way.html">plot2Way</a></span><span class="op">(</span><span class="va">mod_no2</span>, variable <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ws"</span>, <span class="st">"air_temp"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-plot2way-1.png" width="100%"></p>
+<div class="figure">
+<img src="reference/figures/README-plot2way-1.png" alt="A heatmap showing the interaction between air temperature and wind speed in the deweather model. Nitrogen dioixde is shown to be high when wind speed is low and temperature is either very low or above around 25 degrees Celcius." width="100%"><p class="caption">
+A two-way interaction plot showing the interaction between wind speed and air temperature
+</p>
+</div>
 </div>
 </div>
 <div class="section level2">
@@ -190,15 +202,24 @@
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">demet</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">date</span>, <span class="va">no2</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-plotTrend-1.png" width="100%"></p>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fu"><a href="https://davidcarslaw.github.io/openair/reference/quickText.html" class="external-link">quickText</a></span><span class="op">(</span><span class="st">"Deweathered no2 (ug/m3)"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="figure">
+<img src="reference/figures/README-plotTrend-1.png" alt="A line chart with date on the x-axis and deweathered NO2 on the y-axis. The trend is very noisy, but shows an increase in concentrations in 2003." width="100%"><p class="caption">
+A deweathered nitrogen dioxide trend.
+</p>
+</div>
 <p>The plot is rather noisy due to relatively few samples of meteorology being considered (200 by default, set with <code>B = 200</code>). The noise could be reduced by increasing the simulations, but this would add to run time. Alternatively, it can be useful to simply average the results. For example:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://davidcarslaw.github.io/openair/reference/timeAverage.html" class="external-link">timeAverage</a></span><span class="op">(</span><span class="va">demet</span>, <span class="st">"day"</span><span class="op">)</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">date</span>, <span class="va">no2</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"dodgerblue"</span>, size <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fu"><a href="https://davidcarslaw.github.io/openair/reference/quickText.html" class="external-link">quickText</a></span><span class="op">(</span><span class="st">"no2 (ug/m3)"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-plotTrendAve-1.png" width="100%"></p>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fu"><a href="https://davidcarslaw.github.io/openair/reference/quickText.html" class="external-link">quickText</a></span><span class="op">(</span><span class="st">"Deweathered NO2 (ug/m3)"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="figure">
+<img src="reference/figures/README-plotTrendAve-1.png" alt="A line chart with date on the x-axis and deweathered NO2 on the y-axis. The trend has been time averaged to show daily mean concentrations, clearly illustrating a sharp increase in 2003." width="100%"><p class="caption">
+A time-averaged deweathered nitrogen dioxide trend.
+</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
@@ -253,6 +274,7 @@
 <ul class="list-unstyled">
 <li><a href="https://github.com/davidcarslaw/deweather/actions" class="external-link"><img src="https://github.com/davidcarslaw/deweather/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
 <li><a href="https://CRAN.R-project.org/package=deweather" class="external-link"><img src="https://www.r-pkg.org/badges/version/deweather" alt="CRAN status"></a></li>
+<li><a href="https://github.com/davidcarslaw/deweather/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/davidcarslaw/deweather/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
 </ul>
 </div>
 
