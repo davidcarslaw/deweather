@@ -8,6 +8,7 @@
 [![R-CMD-check](https://github.com/davidcarslaw/deweather/workflows/R-CMD-check/badge.svg)](https://github.com/davidcarslaw/deweather/actions)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/deweather)](https://CRAN.R-project.org/package=deweather)
+[![R-CMD-check](https://github.com/davidcarslaw/deweather/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/davidcarslaw/deweather/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 **deweather** is an R package developed for the purpose of “removing”
@@ -103,7 +104,14 @@ testMod(
 )
 ```
 
-<img src="man/figures/README-testMod-1.png" width="100%" />
+<div class="figure">
+
+<img src="man/figures/README-testMod-1.png" alt="A scatter plot showing predicted nitrogen dioxide on the x-axis and measured nitrogen dioxide on the y-axis. Alongside is a table of statistical values describing the model performance, including R, RMSE, NMGE, NMB, MGE, MB, FAC2 and n." width="100%" />
+<p class="caption">
+A statistical summary of a `{deweather}` model test.
+</p>
+
+</div>
 
 The output shows by default the performance of the model when applied to
 a withheld random 20% (by default) of the data, i.e., the model is
@@ -138,10 +146,17 @@ the covariates used in the model while holding the value of other
 covariates at their mean level.
 
 ``` r
-plotPD(mod_no2)
+plotPD(mod_no2, nrow = 4)
 ```
 
-<img src="man/figures/README-plotAll-1.png" width="100%" />
+<div class="figure">
+
+<img src="man/figures/README-plotAll-1.png" alt="Seven line charts showing the partial dependencies of the deweather model. In order of influence: wind direction, hour of day, long-term trend, weekday, wind speed, week of the year, and finally air temperature." width="100%" />
+<p class="caption">
+The 7 partial dependencies of the deweather model.
+</p>
+
+</div>
 
 ### Plot two-way interactions
 
@@ -158,7 +173,15 @@ useful covariate to add to the model.
 plot2Way(mod_no2, variable = c("ws", "air_temp"))
 ```
 
-<img src="man/figures/README-plot2way-1.png" width="100%" />
+<div class="figure">
+
+<img src="man/figures/README-plot2way-1.png" alt="A heatmap showing the interaction between air temperature and wind speed in the deweather model. Nitrogen dioixde is shown to be high when wind speed is low and temperature is either very low or above around 25 degrees Celcius." width="100%" />
+<p class="caption">
+A two-way interaction plot showing the interaction between wind speed
+and air temperature
+</p>
+
+</div>
 
 ## Apply meteorological averaging
 
@@ -181,10 +204,18 @@ Now it is possible to plot the resulting trend.
 ``` r
 library(ggplot2)
 ggplot(demet, aes(date, no2)) +
-  geom_line()
+  geom_line() +
+  labs(y = quickText("Deweathered no2 (ug/m3)"))
 ```
 
-<img src="man/figures/README-plotTrend-1.png" width="100%" />
+<div class="figure">
+
+<img src="man/figures/README-plotTrend-1.png" alt="A line chart with date on the x-axis and deweathered NO2 on the y-axis. The trend is very noisy, but shows an increase in concentrations in 2003." width="100%" />
+<p class="caption">
+A deweathered nitrogen dioxide trend.
+</p>
+
+</div>
 
 The plot is rather noisy due to relatively few samples of meteorology
 being considered (200 by default, set with `B = 200`). The noise could
@@ -196,10 +227,17 @@ example:
 library(ggplot2)
 ggplot(timeAverage(demet, "day"), aes(date, no2)) +
   geom_line(col = "dodgerblue", size = 1) +
-  labs(y = quickText("no2 (ug/m3)"))
+  labs(y = quickText("Deweathered NO2 (ug/m3)"))
 ```
 
-<img src="man/figures/README-plotTrendAve-1.png" width="100%" />
+<div class="figure">
+
+<img src="man/figures/README-plotTrendAve-1.png" alt="A line chart with date on the x-axis and deweathered NO2 on the y-axis. The trend has been time averaged to show daily mean concentrations, clearly illustrating a sharp increase in 2003." width="100%" />
+<p class="caption">
+A time-averaged deweathered nitrogen dioxide trend.
+</p>
+
+</div>
 
 ## References
 
