@@ -2,7 +2,6 @@ Type: Package
 Package: deweather
 Title: Remove the influence of weather on air quality data
 Version: 0.7.2
-Date: 2022-11-09
 Authors@R: 
     person("David", "Carslaw", , "david.carslaw@york.ac.uk", role = c("aut", "cre"))
 Maintainer: David Carslaw <david.carslaw@york.ac.uk>
@@ -11,7 +10,8 @@ Description: Model and account for (or remove) the effect of meteorology
     trees based on the gbm package. Code can also be run using multiple
     cores if available.
 License: GPL (>= 2)
-URL: https://davidcarslaw.github.io/deweather/
+URL: https://davidcarslaw.github.io/deweather/,
+    https://github.com/davidcarslaw/deweather
 BugReports: https://github.com/davidcarslaw/deweather/issues
 Depends:
     R (>= 2.15.1)
