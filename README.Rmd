@@ -4,7 +4,9 @@ output: github_document
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-```{r setup, include = FALSE}
+```{r}
+#| label: "setup"
+#| include: FALSE
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -22,6 +24,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/davidcarslaw/deweather/workflows/R-CMD-check/badge.svg)](https://github.com/davidcarslaw/deweather/actions)
 [![CRAN status](https://www.r-pkg.org/badges/version/deweather)](https://CRAN.R-project.org/package=deweather)
+[![R-CMD-check](https://github.com/davidcarslaw/deweather/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/davidcarslaw/deweather/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 **deweather** is an R package developed for the purpose of "removing" the influence of meteorology from air quality time series data. It is part of the [openair](http://davidcarslaw.github.io/openair/) suite of packages designed to support the analysis of air quality data and related data.
@@ -34,7 +37,8 @@ The modelling can be computationally intensive and therefore **deweather** makes
 
 Installation of **deweather** from GitHub should be easy using the `{pak}` package. 
 
-```{r install}
+```{r}
+#| label: "install"
 # install.packages("pak")
 pak::pak("davidcarslaw/deweather")
 ```
@@ -51,7 +55,9 @@ The **deweather** package comes with a comprehensive data set of air quality and
 
 The `road_data` data frame contains various pollutants such a NO~x~, NO~2~, ethane and isoprene as well as meteorological data including wind speed, wind direction, relative humidity, ambient temperature and cloud cover. Code to obtain this data directly can be found [here](https://github.com/davidcarslaw/deweather/blob/master/data-raw/road_data.R).
 
-```{r load-pkg, eval=TRUE}
+```{r}
+#| label: "load-pkg"
+#| eval: TRUE
 library(deweather)
 head(road_data)
 ```
@@ -62,7 +68,15 @@ The `testMod()` function is used to build and test various models to help derive
 
 In this example, we will restrict the data to model to 4 years. Note that variables such as `"hour"` and `"weekday"` are used as variables that can be used to explain some of the variation. `"hour"` for example very usefully acts as a proxy for the diurnal variation in emissions.
 
-```{r testMod, eval = TRUE, fig.height=4.5}
+```{r}
+#| label: "testMod"
+#| eval: TRUE
+#| fig.height: 4.5
+#| fig.cap: "A statistical summary of a `{deweather}` model test."
+#| fig.alt: "A scatter plot showing predicted nitrogen dioxide on the
+#| x-axis and measured nitrogen dioxide on the y-axis. Alongside is a table
+#| of statistical values describing the model performance, including R,
+#| RMSE, NMGE, NMB, MGE, MB, FAC2 and n."
 library(openair)
 # select only part of the data set
 dat_part <- selectByDate(road_data, year = 2001:2004)
@@ -81,7 +95,9 @@ The output shows by default the performance of the model when applied to a withh
 
 Assuming that a good model can be developed, it can now be explored in more detail.
 
-```{r buildMod, eval = TRUE}
+```{r}
+#| label: "buildMod"
+#| eval: TRUE
 mod_no2 <- buildMod(
   dat_part,
   vars = c("trend", "ws", "wd", "hour", "weekday", "air_temp", "week"),
@@ -98,15 +114,34 @@ This function returns a `deweather` object that can be interrogated as shown bel
 
 One of the benefits of the boosted regression tree approach is that the *partial dependencies* can be explored. In simple terms, the partial dependencies show the relationship between the pollutant of interest and the covariates used in the model while holding the value of other covariates at their mean level.
 
-```{r plotAll, eval = TRUE, fig.width=7, fig.height=9}
-plotPD(mod_no2)
+```{r}
+#| label: "plotAll"
+#| eval: TRUE
+#| fig.width: 7
+#| fig.height: 11
+#| fig.cap: "The 7 partial dependencies of the deweather model."
+#| fig.alt: "Seven line charts showing the partial dependencies of the
+#| deweather model. In order of influence: wind direction, hour of day,
+#| long-term trend, weekday, wind speed, week of the year, and finally air
+#| temperature."
+plotPD(mod_no2, nrow = 4)
 ```
 
 ### Plot two-way interactions
 
 It can be very useful to plot important two-way interactions. In this example the interaction between `"ws"` and `"air_temp"` is considered. The plot shows that NO~2~ tends to be high when the wind speed is low and the temperature is low, i.e., stable atmospheric conditions. Also NO~2~ tends to be high when the temperature is high, which is most likely due to more O~3~ available to convert NO to NO~2~. In fact, background O~3~ would probably be a useful covariate to add to the model.
 
-```{r plot2way, eval = TRUE, fig.width=5, fig.height=4.5}
+```{r}
+#| label: "plot2way"
+#| eval: TRUE
+#| fig.width: 5
+#| fig.height: 4.5
+#| fig.cap: "A two-way interaction plot showing the interaction between
+#| wind speed and air temperature"
+#| fig.alt: "A heatmap showing the interaction between air temperature and
+#| wind speed in the deweather model. Nitrogen dioixde is shown to be high
+#| when wind speed is low and temperature is either very low or above around
+#| 25 degrees Celcius."
 plot2Way(mod_no2, variable = c("ws", "air_temp"))
 ```
 
@@ -114,7 +149,9 @@ plot2Way(mod_no2, variable = c("ws", "air_temp"))
 
 An indication of the meteorologically-averaged trend is given by the `plotAllPD()` function above. A better indication is given by using the model to predict many times with random sampling of meteorological conditions. This sampling is carried out by the `metSim()` function. Note that in this case there is no need to supply the `"trend"` component because it is calculated using `metSim()`.
 
-```{r metSim, eval=TRUE}
+```{r}
+#| label: "metSim"
+#| eval: TRUE
 demet <- metSim(mod_no2,
   newdata = dat_part,
   metVars = c("ws", "wd", "hour", "weekday", "air_temp", "week")
@@ -123,19 +160,36 @@ demet <- metSim(mod_no2,
 
 Now it is possible to plot the resulting trend.
 
-```{r plotTrend, eval=TRUE, fig.width=7, fig.height=3.5}
+```{r}
+#| label: "plotTrend"
+#| eval: TRUE
+#| fig.width: 7
+#| fig.height: 3.5
+#| fig.cap: "A deweathered nitrogen dioxide trend."
+#| fig.alt: "A line chart with date on the x-axis and deweathered NO2 on
+#| the y-axis. The trend is very noisy, but shows an increase in
+#| concentrations in 2003."
 library(ggplot2)
 ggplot(demet, aes(date, no2)) +
-  geom_line()
+  geom_line() +
+  labs(y = quickText("Deweathered no2 (ug/m3)"))
 ```
 
 The plot is rather noisy due to relatively few samples of meteorology being considered (200 by default, set with `B = 200`). The noise could be reduced by increasing the simulations, but this would add to run time. Alternatively, it can be useful to simply average the results. For example:
 
-```{r plotTrendAve, eval=TRUE,fig.width=7,fig.height=3.5}
+```{r}
+#| label: "plotTrendAve"
+#| eval: TRUE
+#| fig.width: 7
+#| fig.height: 3.5
+#| fig.cap: "A time-averaged deweathered nitrogen dioxide trend."
+#| fig.alt: "A line chart with date on the x-axis and deweathered NO2 on
+#| the y-axis. The trend has been time averaged to show daily mean
+#| concentrations, clearly illustrating a sharp increase in 2003."
 library(ggplot2)
 ggplot(timeAverage(demet, "day"), aes(date, no2)) +
   geom_line(col = "dodgerblue", size = 1) +
-  labs(y = quickText("no2 (ug/m3)"))
+  labs(y = quickText("Deweathered NO2 (ug/m3)"))
 ```
 
 ## References
