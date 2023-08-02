@@ -161,7 +161,11 @@ plot_pd_helper <- function(dw_model,
   # convert trend back to dates
   if (variable == "trend") {
     dat <-
-      dplyr::mutate(dat, x = as.POSIXct(as.numeric(.data$x), tz = attr(data$date, "tzone")))
+      dplyr::mutate(dat, x = as.POSIXct(
+        as.numeric(.data$x),
+        tz = attr(data$date, "tzone"),
+        origin = "1970-01-01"
+      ))
   }
 
   # plot numeric variables (not WD)
