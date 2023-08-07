@@ -1,3 +1,9 @@
+# deweather (development version)
+
+## Bug fixes
+
+* Fixed an issue where `buildMod()` would fail if there wasn't a character variable (e.g., "weekday").
+
 # deweather 0.7.2
 
 ## Breaking changes
