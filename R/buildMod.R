@@ -313,7 +313,16 @@ partialDep <-
 
       mod <- pred[[1]]$model
     }
-
+    
+    # if either character/numeric not in the output df, add dummy col
+    if (!"character" %in% names(pd)) {
+      pd$character <- rep(list(data.frame()), nrow(pd))
+    }
+    
+    if (!"numeric" %in% names(pd)) {
+      pd$numeric <- rep(list(data.frame()), nrow(pd))
+    }
+    
     # Calculate 95% CI for different vars
     resCI <-
       dplyr::group_by(pd, .data$var) %>%
