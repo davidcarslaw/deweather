@@ -117,6 +117,8 @@ plot_pd_helper <- function(dw_model,
 
   # get ylim range if needed
   if (is.null(ylim)) ylim <- rng(dat)
+  
+  if (is.null(ylab)) ylab <- poll
 
   # function to plot a PD base graph
   plot_pd_skeleton <- function(dat, polar = FALSE, ylab, factor = FALSE) {
