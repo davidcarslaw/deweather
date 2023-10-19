@@ -3,6 +3,7 @@
 ## Bug fixes
 
 * Fixed an issue where `buildMod()` would fail if there wasn't a character variable (e.g., "weekday").
+* added `ylab` back as an explicit option for `plotPD`.
 
 # deweather 0.7.2
 

@@ -4,6 +4,7 @@
 #' @param variable The variable(s) to plot. Defaults to `"all"`, which plots all
 #'   variables.
 #' @param ylim user-specified `ylim`.
+#' @param ylab y-axis label. By default this is the pollutant name.
 #' @param intervals Number of intervals to to calculate partial dependence over.
 #' @param col Colour(s) to use for the lines/points/uncertainty ribbons. If
 #'   multiple colours are provided (e.g., `cols = c("tomato", "royalblue")`),
@@ -26,6 +27,7 @@ plotPD <- function(dw_model,
                    variable = "all",
                    intervals = 40,
                    ylim = NULL,
+                   ylab = NULL,
                    col = "tomato",
                    nrow = NULL,
                    polar.wd = FALSE,
@@ -48,6 +50,7 @@ plotPD <- function(dw_model,
     .f = ~ plot_pd_helper(
       dw_model = dw_model,
       ylim = ylim,
+      ylab = ylab,
       variable = .x,
       col = .y,
       polar.wd = polar.wd,
@@ -78,6 +81,7 @@ plotPD <- function(dw_model,
 plot_pd_helper <- function(dw_model,
                            variable,
                            ylim,
+                           ylab,
                            col,
                            intervals,
                            polar.wd,
@@ -115,7 +119,7 @@ plot_pd_helper <- function(dw_model,
   if (is.null(ylim)) ylim <- rng(dat)
 
   # function to plot a PD base graph
-  plot_pd_skeleton <- function(dat, polar = FALSE, factor = FALSE) {
+  plot_pd_skeleton <- function(dat, polar = FALSE, ylab, factor = FALSE) {
     plt <-
       ggplot2::ggplot(
         dat,
@@ -127,7 +131,7 @@ plot_pd_helper <- function(dw_model,
         )
       ) +
       ggplot2::xlab(openair::quickText(variable)) +
-      ggplot2::ylab(openair::quickText(poll, auto.text = auto.text)) +
+      ggplot2::ylab(openair::quickText(ylab, auto.text = auto.text)) +
       ggplot2::ggtitle(title) +
       ggplot2::theme(plot.title = ggplot2::element_text(lineheight = 0.8, face = "bold"))
 
@@ -170,7 +174,7 @@ plot_pd_helper <- function(dw_model,
 
   # plot numeric variables (not WD)
   if (!variable %in% special && is.numeric(data[[variable]])) {
-    plt <- plot_pd_skeleton(dat)
+    plt <- plot_pd_skeleton(dat, ylab = ylab)
 
     # add rug if not trend
     if (variable != "trend") {
@@ -193,7 +197,7 @@ plot_pd_helper <- function(dw_model,
   if (variable == "wd") {
     if (polar.wd) {
       plt <-
-        plot_pd_skeleton(dat, polar = polar.wd) +
+        plot_pd_skeleton(dat, ylab = ylab, polar = polar.wd) +
         ggplot2::scale_x_continuous(
           limits = c(0, 360),
           labels = c("N", "E", "S", "W"),
@@ -202,7 +206,7 @@ plot_pd_helper <- function(dw_model,
         ggplot2::scale_y_continuous(limits = ylim)
     } else {
       plt <-
-        plot_pd_skeleton(dat, polar = polar.wd) +
+        plot_pd_skeleton(dat, ylab = ylab, polar = polar.wd) +
         ggplot2::geom_rug(ggplot2::aes(x = .data$x),
           data = quants, sides = "b",
           inherit.aes = FALSE, size = 1

@@ -9,6 +9,7 @@ plotPD(
   variable = "all",
   intervals = 40,
   ylim = NULL,
+  ylab = NULL,
   col = "tomato",
   nrow = NULL,
   polar.wd = FALSE,
@@ -25,6 +26,8 @@ variables.}
 \item{intervals}{Number of intervals to to calculate partial dependence over.}
 
 \item{ylim}{user-specified \code{ylim}.}
+
+\item{ylab}{y-axis label. By default this is the pollutant name.}
 
 \item{col}{Colour(s) to use for the lines/points/uncertainty ribbons. If
 multiple colours are provided (e.g., \code{cols = c("tomato", "royalblue")}),
