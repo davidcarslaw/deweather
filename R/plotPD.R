@@ -226,7 +226,7 @@ plot_pd_helper <- function(dw_model,
       dat$x <- ordered(dat$x, levels = weekday.names)
     }
 
-    plt <- plot_pd_skeleton(dat, factor = TRUE)
+    plt <- plot_pd_skeleton(dat, ylab = ylab, factor = TRUE)
   }
 
   # return
