@@ -136,7 +136,7 @@ testMod <- function(input_data,
       seed = seed
     )
   
-  pred_train <- tibble(train.dat, pred = pred_train)
+  pred_train <- dplyr::tibble(train.dat, pred = pred_train)
   
   ## calculate key model statistics
   stats_train <-
