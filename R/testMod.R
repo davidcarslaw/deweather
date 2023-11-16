@@ -206,8 +206,8 @@ testMod <- function(input_data,
   
   stats_both <-
     dplyr::left_join(
-      dplyr::rename(stats_train, "train" = .data$value),
-      dplyr::rename(stats, "test" = .data$value),
+      dplyr::rename(stats_train, "train" = "value"),
+      dplyr::rename(stats, "test" = "value"),
       by = "statistic"
     ) %>%
     dplyr::tibble()
