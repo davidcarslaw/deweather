@@ -78,17 +78,17 @@ testMod <- function(input_data,
     # if n.trees = NA, calculate optimum number using CV; use all data for this
     # because it will be randomly split select maximum of 10000 rows
     if (nrow(train.dat) > 10000) {
-      data_for_CV <- train.dat %>%
+      train.dat <- train.dat %>%
         dplyr::slice_sample(n = 10000)
     } else {
-      data_for_CV <- train.dat
+      train.dat <- train.dat
     }
     
     CV_mod <- 
       gbm::gbm(
         eq,
         distribution = "gaussian",
-        data = data_for_CV,
+        data = train.dat,
         n.trees = 5000,
         shrinkage = shrinkage,
         interaction.depth = interaction.depth,
@@ -106,7 +106,7 @@ testMod <- function(input_data,
       gbm::gbm(
         eq,
         distribution = "gaussian",
-        data = data_for_CV,
+        data = train.dat,
         n.trees = n.trees,
         shrinkage = shrinkage,
         interaction.depth = interaction.depth,
@@ -127,7 +127,7 @@ testMod <- function(input_data,
   pred_train <-
     gbm::predict.gbm(
       CV_mod,
-      newdata = data_for_CV,
+      newdata = train.dat,
       n.trees = n.trees,
       shrinkage = shrinkage,
       interaction.depth = interaction.depth,
@@ -136,7 +136,7 @@ testMod <- function(input_data,
       seed = seed
     )
   
-  pred_train <- tibble(data_for_CV, pred = pred_train)
+  pred_train <- tibble(train.dat, pred = pred_train)
   
   ## calculate key model statistics
   stats_train <-
