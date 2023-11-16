@@ -101,6 +101,20 @@ testMod <- function(input_data,
     # find index for n trees with minimum CV error
     min_MSE <- which.min(CV_mod$cv.error)
     
+  } else {
+    mod <- 
+      gbm::gbm(
+        eq,
+        distribution = "gaussian",
+        data = data_for_CV,
+        n.trees = n.trees,
+        shrinkage = shrinkage,
+        interaction.depth = interaction.depth,
+        bag.fraction = bag.fraction,
+        n.minobsinnode = n.minobsinnode,
+        cv.folds = cv.folds,
+        verbose = FALSE
+      ) 
   }
   
   if (is.na(n.trees)) {
