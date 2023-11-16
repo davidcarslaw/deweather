@@ -84,7 +84,7 @@ testMod <- function(input_data,
       train.dat <- train.dat
     }
     
-    CV_mod <- 
+    mod <- 
       gbm::gbm(
         eq,
         distribution = "gaussian",
@@ -99,7 +99,7 @@ testMod <- function(input_data,
       )  
     
     # find index for n trees with minimum CV error
-    min_MSE <- which.min(CV_mod$cv.error)
+    min_MSE <- which.min(mod$cv.error)
     
   } else {
     mod <- 
@@ -120,13 +120,13 @@ testMod <- function(input_data,
   if (is.na(n.trees)) {
     n.trees <- min_MSE
     cli::cli_inform(c("i" = "Optimum number of trees is {.strong {n.trees}}"))
-    cli::cli_inform(c("i" = "RMSE from cross-validation is {.strong {round(sqrt(CV_mod$cv.error[min_MSE]), 2)}}"))
+    cli::cli_inform(c("i" = "RMSE from cross-validation is {.strong {round(sqrt(mod$cv.error[min_MSE]), 2)}}"))
   }
   
   # predictions based on training data
   pred_train <-
     gbm::predict.gbm(
-      CV_mod,
+      mod,
       newdata = train.dat,
       n.trees = n.trees,
       shrinkage = shrinkage,
@@ -153,7 +153,7 @@ testMod <- function(input_data,
   
   pred <-
     gbm::predict.gbm(
-      CV_mod,
+      mod,
       newdata = pred.dat,
       n.trees = n.trees,
       shrinkage = shrinkage,
