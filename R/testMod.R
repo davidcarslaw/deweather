@@ -78,17 +78,17 @@ testMod <- function(input_data,
     # if n.trees = NA, calculate optimum number using CV; use all data for this
     # because it will be randomly split select maximum of 10000 rows
     if (nrow(train.dat) > 10000) {
-      data_for_CV <- train.dat %>%
+      train.dat <- train.dat %>%
         dplyr::slice_sample(n = 10000)
     } else {
-      data_for_CV <- train.dat
+      train.dat <- train.dat
     }
     
-    CV_mod <- 
+    mod <- 
       gbm::gbm(
         eq,
         distribution = "gaussian",
-        data = data_for_CV,
+        data = train.dat,
         n.trees = 5000,
         shrinkage = shrinkage,
         interaction.depth = interaction.depth,
@@ -99,21 +99,35 @@ testMod <- function(input_data,
       )  
     
     # find index for n trees with minimum CV error
-    min_MSE <- which.min(CV_mod$cv.error)
+    min_MSE <- which.min(mod$cv.error)
     
+  } else {
+    mod <- 
+      gbm::gbm(
+        eq,
+        distribution = "gaussian",
+        data = train.dat,
+        n.trees = n.trees,
+        shrinkage = shrinkage,
+        interaction.depth = interaction.depth,
+        bag.fraction = bag.fraction,
+        n.minobsinnode = n.minobsinnode,
+        cv.folds = cv.folds,
+        verbose = FALSE
+      ) 
   }
   
   if (is.na(n.trees)) {
     n.trees <- min_MSE
     cli::cli_inform(c("i" = "Optimum number of trees is {.strong {n.trees}}"))
-    cli::cli_inform(c("i" = "RMSE from cross-validation is {.strong {round(sqrt(CV_mod$cv.error[min_MSE]), 2)}}"))
+    cli::cli_inform(c("i" = "RMSE from cross-validation is {.strong {round(sqrt(mod$cv.error[min_MSE]), 2)}}"))
   }
   
   # predictions based on training data
   pred_train <-
     gbm::predict.gbm(
-      CV_mod,
-      newdata = data_for_CV,
+      mod,
+      newdata = train.dat,
       n.trees = n.trees,
       shrinkage = shrinkage,
       interaction.depth = interaction.depth,
@@ -122,7 +136,7 @@ testMod <- function(input_data,
       seed = seed
     )
   
-  pred_train <- tibble(data_for_CV, pred = pred_train)
+  pred_train <- dplyr::tibble(train.dat, pred = pred_train)
   
   ## calculate key model statistics
   stats_train <-
@@ -139,7 +153,7 @@ testMod <- function(input_data,
   
   pred <-
     gbm::predict.gbm(
-      CV_mod,
+      mod,
       newdata = pred.dat,
       n.trees = n.trees,
       shrinkage = shrinkage,
@@ -192,8 +206,8 @@ testMod <- function(input_data,
   
   stats_both <-
     dplyr::left_join(
-      dplyr::rename(stats_train, "train" = .data$value),
-      dplyr::rename(stats, "test" = .data$value),
+      dplyr::rename(stats_train, "train" = "value"),
+      dplyr::rename(stats, "test" = "value"),
       by = "statistic"
     ) %>%
     dplyr::tibble()
