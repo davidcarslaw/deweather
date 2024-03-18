@@ -334,7 +334,7 @@ partialDep <-
         numeric = purrr::map(
           numeric,
           purrr::possibly(
-            ~ dplyr::mutate(.x, x_bin = cut(.data$x, 50, include.lowest = TRUE)) %>%
+            ~ dplyr::mutate(.x, x_bin = cut(.data$x, 100, include.lowest = TRUE)) %>%
               dplyr::group_by(x_bin) %>%
               dplyr::summarise(
                 x = mean(x),
