@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">deweather</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.2.9100</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.2.9101</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -56,8 +56,9 @@
 <h2 class="pkg-version" data-toc-text="development version" id="deweather-development-version">deweather (development version)<a class="anchor" aria-label="anchor" href="#deweather-development-version"></a></h2>
 <div class="section level3">
 <h3 id="bug-fixes-development-version">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h3>
-<ul><li>Fixed an issue where <code><a href="../reference/buildMod.html">buildMod()</a></code> would fail if there wasn’t a character variable (e.g., “weekday”).</li>
-<li>added <code>ylab</code> back as an explicit option for <code>plotPD</code>.</li>
+<ul><li><p>Fixed an issue where <code><a href="../reference/buildMod.html">buildMod()</a></code> would fail if there wasn’t a character variable (e.g., “weekday”).</p></li>
+<li><p>added <code>ylab</code> back as an explicit option for <code>plotPD</code>.</p></li>
+<li><p>Fixed a bug where <code><a href="../reference/plotPD.html">plotPD()</a></code> would work differently if the input to <code><a href="../reference/buildMod.html">buildMod()</a></code> was a <code>data.frame</code> rather than a <code>tibble</code>.</p></li>
 </ul></div>
 </div>
     <div class="section level2">
