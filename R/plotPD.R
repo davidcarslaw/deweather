@@ -157,7 +157,7 @@ plot_pd_helper <- function(dw_model,
   }
 
   # calculate quantiles of numeric variable
-  if (is.numeric(data[[variable]])) {
+  if (is.numeric(data[[as.character(variable)]])) {
     quants <-
       data.frame(x = stats::quantile(data[[as.character(variable)]],
         probs = 0:10 / 10, na.rm = TRUE
@@ -175,7 +175,7 @@ plot_pd_helper <- function(dw_model,
   }
 
   # plot numeric variables (not WD)
-  if (!variable %in% special && is.numeric(data[[variable]])) {
+  if (!variable %in% special && is.numeric(data[[as.character(variable)]])) {
     plt <- plot_pd_skeleton(dat, ylab = ylab)
 
     # add rug if not trend
@@ -217,7 +217,7 @@ plot_pd_helper <- function(dw_model,
   }
 
   # plot factors
-  if (!is.numeric(data[[variable]])) {
+  if (!is.numeric(data[[as.character(variable)]])) {
     dat$x <- factor(dat$x)
 
     if (variable == "weekday") {
