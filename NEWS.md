@@ -3,7 +3,10 @@
 ## Bug fixes
 
 * Fixed an issue where `buildMod()` would fail if there wasn't a character variable (e.g., "weekday").
+
 * added `ylab` back as an explicit option for `plotPD`.
+
+* Fixed a bug where `plotPD()` would work differently if the input to `buildMod()` was a `data.frame` rather than a `tibble`.
 
 # deweather 0.7.2
 
