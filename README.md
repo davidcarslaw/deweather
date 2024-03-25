@@ -102,6 +102,9 @@ testMod(
   vars = c("trend", "ws", "wd", "hour", "weekday", "air_temp", "week"),
   pollutant = "no2"
 )
+#> ℹ Optimum number of trees is 2483
+#> ℹ RMSE from cross-validation is 20.97
+#> ℹ Percent increase in RMSE using test data is 33.3%
 ```
 
 <div class="figure">
@@ -121,13 +124,14 @@ evaluation metrics are also given.
 ## Build a model
 
 Assuming that a good model can be developed, it can now be explored in
-more detail.
+more detailusing the optinum number of trees from `testMod`..
 
 ``` r
 mod_no2 <- buildMod(
   dat_part,
   vars = c("trend", "ws", "wd", "hour", "weekday", "air_temp", "week"),
   pollutant = "no2",
+  n.trees = 2483, 
   n.core = 6
 )
 ```
@@ -175,7 +179,7 @@ plot2Way(mod_no2, variable = c("ws", "air_temp"))
 
 <div class="figure">
 
-<img src="man/figures/README-plot2way-1.png" alt="A heatmap showing the interaction between air temperature and wind speed in the deweather model. Nitrogen dioixde is shown to be high when wind speed is low and temperature is either very low or above around 25 degrees Celcius." width="100%" />
+<img src="man/figures/README-plot2way-1.png" alt="A heatmap showing the interaction between air temperature and wind speed in the deweather model. Nitrogen dioixde is shown to be high when wind speed is low and temperature is either very low or above around 25 degrees Celcius." width="50%" />
 <p class="caption">
 A two-way interaction plot showing the interaction between wind speed
 and air temperature
