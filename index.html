@@ -140,7 +140,10 @@
 <span>  <span class="va">dat_part</span>,</span>
 <span>  vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"trend"</span>, <span class="st">"ws"</span>, <span class="st">"wd"</span>, <span class="st">"hour"</span>, <span class="st">"weekday"</span>, <span class="st">"air_temp"</span>, <span class="st">"week"</span><span class="op">)</span>,</span>
 <span>  pollutant <span class="op">=</span> <span class="st">"no2"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; ℹ Optimum number of trees is 2483</span></span>
+<span><span class="co">#&gt; ℹ RMSE from cross-validation is 20.97</span></span>
+<span><span class="co">#&gt; ℹ Percent increase in RMSE using test data is 33.3%</span></span></code></pre></div>
 <div class="figure">
 <img src="reference/figures/README-testMod-1.png" alt="A scatter plot showing predicted nitrogen dioxide on the x-axis and measured nitrogen dioxide on the y-axis. Alongside is a table of statistical values describing the model performance, including R, RMSE, NMGE, NMB, MGE, MB, FAC2 and n." width="100%"><p class="caption">
 A statistical summary of a <a href="https://davidcarslaw.github.io/deweather/">deweather</a> model test.
@@ -151,12 +154,13 @@ A statistical summary of a <a href="https://davidcarslaw.github.io/deweather/">d
 <div class="section level2">
 <h2 id="build-a-model">Build a model<a class="anchor" aria-label="anchor" href="#build-a-model"></a>
 </h2>
-<p>Assuming that a good model can be developed, it can now be explored in more detail.</p>
+<p>Assuming that a good model can be developed, it can now be explored in more detailusing the optinum number of trees from <code>testMod</code>..</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mod_no2</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/buildMod.html">buildMod</a></span><span class="op">(</span></span>
 <span>  <span class="va">dat_part</span>,</span>
 <span>  vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"trend"</span>, <span class="st">"ws"</span>, <span class="st">"wd"</span>, <span class="st">"hour"</span>, <span class="st">"weekday"</span>, <span class="st">"air_temp"</span>, <span class="st">"week"</span><span class="op">)</span>,</span>
 <span>  pollutant <span class="op">=</span> <span class="st">"no2"</span>,</span>
+<span>  n.trees <span class="op">=</span> <span class="fl">2483</span>, </span>
 <span>  n.core <span class="op">=</span> <span class="fl">6</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>This function returns a <code>deweather</code> object that can be interrogated as shown below.</p>
@@ -183,7 +187,7 @@ The 7 partial dependencies of the deweather model.
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/plot2Way.html">plot2Way</a></span><span class="op">(</span><span class="va">mod_no2</span>, variable <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ws"</span>, <span class="st">"air_temp"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="reference/figures/README-plot2way-1.png" alt="A heatmap showing the interaction between air temperature and wind speed in the deweather model. Nitrogen dioixde is shown to be high when wind speed is low and temperature is either very low or above around 25 degrees Celcius." width="100%"><p class="caption">
+<img src="reference/figures/README-plot2way-1.png" alt="A heatmap showing the interaction between air temperature and wind speed in the deweather model. Nitrogen dioixde is shown to be high when wind speed is low and temperature is either very low or above around 25 degrees Celcius." width="50%"><p class="caption">
 A two-way interaction plot showing the interaction between wind speed and air temperature
 </p>
 </div>
