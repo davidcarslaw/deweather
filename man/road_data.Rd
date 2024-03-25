@@ -5,19 +5,19 @@
 \alias{road_data}
 \title{Example data for deweather}
 \format{
-Data frame with 65533 observations (rows) on the following 10
-variables: \describe{ \item{list("date")}{Observation date/time stamp in
+Data frame with 65533 observations (rows) and the following 10
+variables: \describe{ \item{date}{Observation date/time stamp in
 year-month-day hour:minute:second format (POSIXct). }
-\item{list("ws")}{Wind speed, in m/s, as numeric vector.}
-\item{list("wd")}{Wind direction, in degrees from North, as a numeric
-vector.} \item{list("nox")}{Oxides of nitrogen concentration, in ppb, as a
-numeric vector.} \item{list("no2")}{Nitrogen dioxide concentration, in ppb,
-as a numeric vector.} \item{list("o3")}{Ozone concentration, in ppb, as a
-numeric vector.} \item{list("pm10")}{Particulate PM10 fraction measurement,
-in ug/m3 (raw TEOM), as a numeric vector.} \item{list("so2")}{Sulfur
+\item{ws}{Wind speed, in m/s, as numeric vector.}
+\item{wd}{Wind direction, in degrees from North, as a numeric
+vector.} \item{nox}{Oxides of nitrogen concentration, in ppb, as a
+numeric vector.} \item{no2}{Nitrogen dioxide concentration, in ppb,
+as a numeric vector.} \item{o3}{Ozone concentration, in ppb, as a
+numeric vector.} \item{pm10}{Particulate PM10 fraction measurement,
+in ug/m3 (raw TEOM), as a numeric vector.} \item{so2}{Sulfur
 dioxide concentration, in ppb, as a numeric vector.}
-\item{list("co")}{Carbon monoxide concentration, in ppm, as a numeric
-vector.} \item{list("pm25")}{Particulate PM2.5 fraction measurement, in
+\item{co}{Carbon monoxide concentration, in ppm, as a numeric
+vector.} \item{pm25}{Particulate PM2.5 fraction measurement, in
 ug/m3, as a numeric vector.} }
 }
 \usage{
