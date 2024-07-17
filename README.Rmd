@@ -71,6 +71,7 @@ In this example, we will restrict the data to model to 4 years. Note that variab
 ```{r}
 #| label: "testMod"
 #| eval: TRUE
+#| message: TRUE
 #| fig.height: 4.5
 #| fig.cap: "A statistical summary of a `{deweather}` model test."
 #| fig.alt: "A scatter plot showing predicted nitrogen dioxide on the
@@ -93,7 +94,7 @@ The output shows by default the performance of the model when applied to a withh
 
 ## Build a model
 
-Assuming that a good model can be developed, it can now be explored in more detail.
+Assuming that a good model can be developed, it can now be explored in more detailusing the optinum number of trees from `testMod`..
 
 ```{r}
 #| label: "buildMod"
@@ -102,6 +103,7 @@ mod_no2 <- buildMod(
   dat_part,
   vars = c("trend", "ws", "wd", "hour", "weekday", "air_temp", "week"),
   pollutant = "no2",
+  n.trees = 2483, 
   n.core = 6
 )
 ```
@@ -136,6 +138,7 @@ It can be very useful to plot important two-way interactions. In this example th
 #| eval: TRUE
 #| fig.width: 5
 #| fig.height: 4.5
+#| out.width: "50%"
 #| fig.cap: "A two-way interaction plot showing the interaction between
 #| wind speed and air temperature"
 #| fig.alt: "A heatmap showing the interaction between air temperature and
