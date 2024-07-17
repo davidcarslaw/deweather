@@ -20,7 +20,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: David Carslaw \email{david.carslaw@york.ac.uk}
+\strong{Maintainer}: David Carslaw \email{david.carslaw@york.ac.uk} (\href{https://orcid.org/0000-0003-0991-950X}{ORCID})
 
 }
 \keyword{internal}

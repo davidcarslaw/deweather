@@ -3,7 +3,8 @@ Package: deweather
 Title: Remove the influence of weather on air quality data
 Version: 0.7.2.9101
 Authors@R: 
-    person("David", "Carslaw", , "david.carslaw@york.ac.uk", role = c("aut", "cre"))
+    person("David", "Carslaw", , "david.carslaw@york.ac.uk", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0003-0991-950X"))
 Maintainer: David Carslaw <david.carslaw@york.ac.uk>
 Description: Model and account for (or remove) the effect of meteorology
     on atmospheric composition data. The technique uses boosted regression
@@ -40,4 +41,4 @@ Language: en-GB
 LazyData: yes
 LazyLoad: yes
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
