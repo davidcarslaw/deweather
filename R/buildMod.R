@@ -366,8 +366,8 @@ partialDep <-
         upper = stats::quantile(.data$rel.inf, probs = c(0.975))
       ) %>%
       dplyr::ungroup() %>%
-      dplyr::mutate(var = stats::reorder(var, mean)) %>%
-      dplyr::arrange(dplyr::desc(var))
+      dplyr::mutate(var = stats::reorder(.data$var, mean)) %>%
+      dplyr::arrange(dplyr::desc(.data$var))
 
     if (return.mod) {
       return(list(resCI, resRI, mod))
