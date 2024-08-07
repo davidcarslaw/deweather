@@ -10,3 +10,4 @@ deweather.Rproj
 README_cache/*
 docs
 .DS_Store
+inst/doc

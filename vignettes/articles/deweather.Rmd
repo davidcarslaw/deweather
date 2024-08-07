@@ -1,53 +1,25 @@
 ---
-output: github_document
+title: "Meteorological Normalisation with {deweather}"
 ---
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
-```{r}
-#| label: "setup"
-#| include: FALSE
+```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>",
-  fig.path = "man/figures/README-",
-  out.width = "100%",
-  warning = FALSE,
-  message = FALSE,
-  eval = FALSE,
-  cache = TRUE
+  comment = "#>"
 )
+
+set.seed(123)
 ```
 
-# deweather: remove meteorological variation from air quality data <a href="https://davidcarslaw.github.io/deweather/"><img src="man/figures/logo.png" align="right" height="100" alt="deweather website" /></a>
-
-<!-- badges: start -->
-[![R-CMD-check](https://github.com/davidcarslaw/deweather/workflows/R-CMD-check/badge.svg)](https://github.com/davidcarslaw/deweather/actions)
-[![CRAN status](https://www.r-pkg.org/badges/version/deweather)](https://CRAN.R-project.org/package=deweather)
-[![R-CMD-check](https://github.com/davidcarslaw/deweather/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/davidcarslaw/deweather/actions/workflows/R-CMD-check.yaml)
-<!-- badges: end -->
-
-**deweather** is an R package developed for the purpose of "removing" the influence of meteorology from air quality time series data. It is part of the [openair](http://davidcarslaw.github.io/openair/) suite of packages designed to support the analysis of air quality data and related data.
-
-The **deweather** package uses a *boosted regression tree* approach for modelling air quality data. These and similar techniques provide powerful tools for building statistical models of air quality data. They are able to take account of the many complex interactions between variables as well as non-linear relationships between the variables.
-
-The modelling can be computationally intensive and therefore **deweather** makes use of the parallel processing, which should work on Windows, Linux and Mac OSX.
-
-## Installation
-
-Installation of **deweather** from GitHub should be easy using the `{pak}` package. 
-
-```{r}
-#| label: "install"
-# install.packages("pak")
-pak::pak("davidcarslaw/deweather")
+```{r setup}
+library(deweather)
 ```
 
-## Description
+## Introduction
 
 Meteorology plays a central role in affecting the concentrations of pollutants in the atmosphere. When considering trends in air pollutants it can be very difficult to know whether a change in concentration is due to emissions or meteorology.
 
-The **deweather** package uses a powerful statistical technique based on *boosted regression trees* using the `{gbm}` package (Ridgeway, 2017). Statistical models are developed to explain concentrations using meteorological and other variables. These models can be tested on randomly withheld data with the aim of developing the most appropriate model.
+The **deweather** package uses a powerful statistical technique based on *boosted regression trees* using the `{gbm}` package ^[Ridgeway G, Developers G (2024). _gbm: Generalized Boosted Regression Models_. R package version 2.2.2, <https://CRAN.R-project.org/package=gbm>]. Statistical models are developed to explain concentrations using meteorological and other variables. These models can be tested on randomly withheld data with the aim of developing the most appropriate model.
 
 ## Example data set
 
@@ -58,9 +30,10 @@ The `road_data` data frame contains various pollutants such a NO~x~, NO~2~, etha
 ```{r}
 #| label: "load-pkg"
 #| eval: TRUE
-library(deweather)
 head(road_data)
 ```
+
+To speed up the examples in this article we'll randomly sample some of `road_data`.
 
 ## Construct and test model(s)
 
@@ -82,19 +55,24 @@ library(openair)
 # select only part of the data set
 dat_part <- selectByDate(road_data, year = 2001:2004)
 
+# to speed up the example, sample rows in `dat_part`
+# not needed in reality
+dat_part <- dplyr::slice_sample(dat_part, prop = 1/10)
+
 # test a model with commonly used covariates
-testMod(
-  dat_part,
-  vars = c("trend", "ws", "wd", "hour", "weekday", "air_temp", "week"),
-  pollutant = "no2"
-)
+mod_test <-
+  testMod(
+    dat_part,
+    vars = c("trend", "ws", "wd", "hour", "weekday", "air_temp", "week"),
+    pollutant = "no2"
+  )
 ```
 
 The output shows by default the performance of the model when applied to a withheld random 20% (by default) of the data, i.e., the model is evaluated against data not used to build the model. Common model evaluation metrics are also given.
 
 ## Build a model
 
-Assuming that a good model can be developed, it can now be explored in more detailusing the optinum number of trees from `testMod`..
+Assuming that a good model can be developed, it can now be explored in more detail using the optimum number of trees from `testMod()`.
 
 ```{r}
 #| label: "buildMod"
@@ -103,7 +81,7 @@ mod_no2 <- buildMod(
   dat_part,
   vars = c("trend", "ws", "wd", "hour", "weekday", "air_temp", "week"),
   pollutant = "no2",
-  n.trees = 2483, 
+  n.trees = mod_test$optimum_trees, 
   n.core = 6
 )
 ```
@@ -150,7 +128,7 @@ plot2Way(mod_no2, variable = c("ws", "air_temp"))
 
 ## Apply meteorological averaging
 
-An indication of the meteorologically-averaged trend is given by the `plotAllPD()` function above. A better indication is given by using the model to predict many times with random sampling of meteorological conditions. This sampling is carried out by the `metSim()` function. Note that in this case there is no need to supply the `"trend"` component because it is calculated using `metSim()`.
+An indication of the meteorologically-averaged trend is given by the `plotPD()` function above (and can even be isolated using the `variable` argument). A better indication is given by using the model to predict many times with random sampling of meteorological conditions. This sampling is carried out by the `metSim()` function. Note that in this case there is no need to supply the `"trend"` component because it is calculated using `metSim()`.
 
 ```{r}
 #| label: "metSim"
@@ -187,21 +165,10 @@ The plot is rather noisy due to relatively few samples of meteorology being cons
 #| fig.height: 3.5
 #| fig.cap: "A time-averaged deweathered nitrogen dioxide trend."
 #| fig.alt: "A line chart with date on the x-axis and deweathered NO2 on
-#| the y-axis. The trend has been time averaged to show daily mean
+#| the y-axis. The trend has been time averaged to show weekly mean
 #| concentrations, clearly illustrating a sharp increase in 2003."
 library(ggplot2)
-ggplot(timeAverage(demet, "day"), aes(date, no2)) +
+ggplot(timeAverage(demet, "week"), aes(date, no2)) +
   geom_line(col = "dodgerblue", size = 1) +
   labs(y = quickText("Deweathered NO2 (ug/m3)"))
 ```
-
-## References
-
-* Grange, S. K. and Carslaw, D. C. (2019) [Using meteorological normalisation to detect interventions in air quality time series](https://www.sciencedirect.com/science/article/pii/S004896971834244X), Science of The Total Environment. 653, pp. 578–588. doi: 10.1016/j.scitotenv.2018.10.344.
-
-* Carslaw, D.C., Williams, M.L. and B. Barratt (2012) [A short-term intervention study — impact of airport closure on near-field air quality due to the eruption of Eyjafjallajökull](https://www.sciencedirect.com/science/article/abs/pii/S1352231012001355), Atmospheric Environment, Vol. 54, 328–336.
-
-* Carslaw, D.C. and P.J. Taylor (2009). [Analysis of air pollution data at a mixed source location using boosted regression trees](https://www.sciencedirect.com/science/article/abs/pii/S1352231009003069), Atmospheric Environment.  Vol. 43, pp. 3563–3570.
-
-* Greenwell B, Boehmke B, Cunningham J, Developers G (2022). _gbm: Generalized Boosted Regression Models_. R
-  package version 2.1.8.1, <https://CRAN.R-project.org/package=gbm>.

@@ -1,25 +1,36 @@
 url: https://davidcarslaw.github.io/deweather/
+
 template:
   bootstrap: 5
+  bslib:
+    bootswatch: lumen
+    pkgdown-nav-height: 100px
+
 navbar:
   title: deweather
-  type: default
-  left:
-  - text: Functions
-    href: reference/index.html
-  - text: News
-    href: news/index.html
-  - text: Case Studies (External)
-    menu:
-    - text: (2019) Using meteorological normalisation to detect interventions in air quality time series
-      href: https://www.sciencedirect.com/science/article/pii/S004896971834244X
-    - text: (2012) A short-term intervention study — Impact of airport closure due to the eruption of Eyjafjallajökull on near-field air quality
-      href: https://www.sciencedirect.com/science/article/abs/pii/S1352231012001355
-    - text: (2009) Analysis of air pollution data at a mixed source location using boosted regression trees
-      href: https://www.sciencedirect.com/science/article/abs/pii/S1352231009003069
-  right:
-  - icon: fa-github fa-lg
-    href: https://github.com/davidcarslaw/deweather
+  structure:
+    left:  [intro, reference, news, articles, tutorials, book, casestudy]
+    right: [search, github]
+  components:
+    reference:
+      text: Functions
+      href: reference/index.html
+    news:
+      text: News
+      href: news/index.html
+    book:
+      text: Book (External)
+      href: https://bookdown.org/david_carslaw/openair/
+    casestudy:
+      text: Case Studies (External)
+      menu:
+      - text: (2019) Using meteorological normalisation to detect interventions in air quality time series
+        href: https://www.sciencedirect.com/science/article/pii/S004896971834244X
+      - text: (2012) A short-term intervention study — Impact of airport closure due to the eruption of Eyjafjallajökull on near-field air quality
+        href: https://www.sciencedirect.com/science/article/abs/pii/S1352231012001355
+      - text: (2009) Analysis of air pollution data at a mixed source location using boosted regression trees
+        href: https://www.sciencedirect.com/science/article/abs/pii/S1352231009003069
+
 reference:
 - title: Data
   desc: In-built data to demonstrate deweather functions.
