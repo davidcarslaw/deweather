@@ -150,10 +150,7 @@ Now it is possible to plot the resulting trend.
 #| fig.alt: "A line chart with date on the x-axis and deweathered NO2 on
 #| the y-axis. The trend is very noisy, but shows an increase in
 #| concentrations in 2003."
-library(ggplot2)
-ggplot(demet, aes(date, no2)) +
-  geom_line() +
-  labs(y = quickText("Deweathered no2 (ug/m3)"))
+openair::timePlot(demet, "no2", ylab = "Deweathered no2 (ug/m3)")
 ```
 
 The plot is rather noisy due to relatively few samples of meteorology being considered (200 by default, set with `B = 200`). The noise could be reduced by increasing the simulations, but this would add to run time. Alternatively, it can be useful to simply average the results. For example:
@@ -167,8 +164,5 @@ The plot is rather noisy due to relatively few samples of meteorology being cons
 #| fig.alt: "A line chart with date on the x-axis and deweathered NO2 on
 #| the y-axis. The trend has been time averaged to show weekly mean
 #| concentrations, clearly illustrating a sharp increase in 2003."
-library(ggplot2)
-ggplot(timeAverage(demet, "week"), aes(date, no2)) +
-  geom_line(col = "dodgerblue", size = 1) +
-  labs(y = quickText("Deweathered NO2 (ug/m3)"))
+openair::timePlot(demet, "no2", avg.time = "week", ylab = "Deweathered no2 (ug/m3)")
 ```
