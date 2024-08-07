@@ -9,8 +9,7 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/davidcarslaw/deweather/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/davidcarslaw/deweather/actions/workflows/R-CMD-check.yaml)
-[![CRAN
-status](https://www.r-pkg.org/badges/version/deweather)](https://CRAN.R-project.org/package=deweather)
+[![CRAN status](https://www.r-pkg.org/badges/version/deweather)](https://CRAN.R-project.org/package=deweather)
 
 [![github](https://img.shields.io/badge/CODE-github-black?logo=github)](https://github.com/davidcarslaw/deweather)
 [![website](https://img.shields.io/badge/DOCS-website-black)](https://davidcarslaw.github.io/deweather)
