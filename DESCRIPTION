@@ -29,6 +29,7 @@ Imports:
     mgcv,
     openair,
     parallel,
+    patchwork,
     purrr,
     rlang,
     scales,
