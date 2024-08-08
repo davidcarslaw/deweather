@@ -29,9 +29,7 @@ variables.}
 
 \item{ylab}{y-axis label. By default this is the pollutant name.}
 
-\item{col}{Colour(s) to use for the lines/points/uncertainty ribbons. If
-multiple colours are provided (e.g., \code{cols = c("tomato", "royalblue")}),
-they will be cycled through until all variables are plotted.}
+\item{col}{Colour for the panels. Passed to \code{\link[openair:openColours]{openair::openColours()}}.}
 
 \item{nrow}{Number of rows for the plots.}
 
@@ -46,8 +44,11 @@ properly, e.g., by subscripting the "2" in "NO2".}
 data to extract plot components and plotting them in other ways.}
 }
 \value{
-Invisibly returns a list containing the plot and the data used to
-make the plot to allow post processing, e.g., modifying the \code{ggplot}.
+Invisibly returns a list containing the plot, \code{plot}, a list of
+individual plots, \code{panels}, and a list of the data used to create them,
+\code{data}. \code{plot} is a \link[patchwork:patchwork-package]{patchwork} object, so
+can be further manipulated using \code{&} and
+\link[ggplot2:ggplot2-package]{ggplot2}.
 }
 \description{
 Function to plot partial dependence plots with bootstrap uncertainties
