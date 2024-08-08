@@ -46,6 +46,10 @@
 
 Modelling can be computationally intensive and therefore **deweather** makes use of the parallel processing, which should work on Windows, Linux and Mac OSX.
 
+<div align="center">
+<img src="man/figures/feature-banner.png" width="800">
+</div>
+
 <hr>
 
 ## 📖 Documentation
