@@ -120,7 +120,7 @@ testMod <- function(input_data,
     openair::modStats(pred_train, obs = pollutant, mod = "pred")
   
   stats_train <- stats_train %>% 
-    tidyr::pivot_longer(cols= -1) %>% 
+    tidyr::pivot_longer(cols = -1) %>% 
     dplyr::rename(statistic = "name") %>% 
     dplyr::select(-1) %>% 
     dplyr::mutate(value = round(value, 2)) %>% 
@@ -175,7 +175,7 @@ testMod <- function(input_data,
   stats <- openair::modStats(pred, obs = pollutant, mod = "pred")
   
   stats <- stats %>% 
-    tidyr::pivot_longer(cols= -1) %>% 
+    tidyr::pivot_longer(cols = -1) %>% 
     dplyr::rename(statistic = "name") %>% 
     dplyr::select(-1) %>% 
     dplyr::mutate(value = round(value, 2)) %>% 
@@ -206,7 +206,7 @@ testMod <- function(input_data,
       rows = NULL)
     
     # print plot
-    gridExtra::grid.arrange(plt, tbl, nrow = 1, as.table = TRUE)
+    patchwork::wrap_plots(plt, tbl, nrow = 1)
   }
   
   invisible(list(

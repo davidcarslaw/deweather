@@ -20,8 +20,11 @@
 #' @export
 #' @importFrom rlang .data
 #' @family deweather model plotting functions
-#' @return Invisibly returns a list containing the plot and the data used to
-#'   make the plot to allow post processing, e.g., modifying the `ggplot`.
+#' @return Invisibly returns a list containing the plot, `plot`, a list of
+#'   individual plots, `panels`, and a list of the data used to create them,
+#'   `data`. `plot` is a [patchwork][patchwork::patchwork-package] object, so
+#'   can be further manipulated using `&` and
+#'   [ggplot2][ggplot2::ggplot2-package].
 #' @author David Carslaw
 plotPD <- function(dw_model,
                    variable = "all",
@@ -34,7 +37,7 @@ plotPD <- function(dw_model,
                    auto.text = TRUE,
                    plot = TRUE) {
   check_dwmod(dw_model)
-
+  
   ## plot most influencial predictor first
   influ <- dw_model$influence
   influ <- dplyr::arrange(influ, dplyr::desc(mean))
@@ -42,11 +45,13 @@ plotPD <- function(dw_model,
   if (!"all" %in% variable) {
     influ <- dplyr::filter(influ, .data$var %in% variable)
   }
+  
+  col <- openair::openColours(scheme = col, n = length(influ$var))
 
   ## plot everything
   plots <- purrr::map2(
     .x = influ$var,
-    .y = rep(col, length(influ$var))[seq_along(influ$var)],
+    .y = col,
     .f = ~ plot_pd_helper(
       dw_model = dw_model,
       ylim = ylim,
@@ -63,17 +68,31 @@ plotPD <- function(dw_model,
   thedata <- sapply(plots, "[", 2)
   plots <- sapply(plots, "[", 1)
 
-  # plot all outputs
-  if (plot) {
-    do.call(gridExtra::grid.arrange, c(plots, nrow = nrow))
-  }
-
   # name plots & data for easy indexing
   names(thedata) <- influ$var
   names(plots) <- influ$var
-
+  
+  # combine all outputs
+  printplots <- plots
+  if ("wd" %in% names(printplots) & polar.wd) {
+    printplots$wd <- patchwork::free(printplots$wd)
+    pw <- patchwork::wrap_plots(printplots, nrow = nrow)
+  } else {
+    pw <- patchwork::wrap_plots(printplots, nrow = nrow) +
+      patchwork::plot_layout(axes = "collect", axis_titles = "collect")
+  }
+  
+  # plot if `plot`
+  if (plot) {
+    plot(pw)
+  }
+  
   # invisibly return list
-  invisible(list(plot = plots, data = thedata))
+  invisible(list(
+    plot = pw,
+    panels = plots,
+    data = thedata
+  ))
 }
 
 #' helper function to plot partial dependencies
