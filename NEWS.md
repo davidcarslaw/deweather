@@ -1,5 +1,9 @@
 # deweather (development version)
 
+## New Features
+
+* The plot assemblies in `plotPD()` and `testMod()` are now powered by `{patchwork}`. This will allow for more post-hoc control of the plot assembly using `&` for example.
+
 ## Bug fixes
 
 * Fixed an issue where `buildMod()` would fail if there wasn't a character variable (e.g., "weekday").
@@ -56,4 +60,4 @@
 
 # deweather 0.7-1
 
-* Development version of `{deweather}`.
+* First development version of `{deweather}`.

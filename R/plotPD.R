@@ -6,9 +6,7 @@
 #' @param ylim user-specified `ylim`.
 #' @param ylab y-axis label. By default this is the pollutant name.
 #' @param intervals Number of intervals to to calculate partial dependence over.
-#' @param col Colour(s) to use for the lines/points/uncertainty ribbons. If
-#'   multiple colours are provided (e.g., `cols = c("tomato", "royalblue")`),
-#'   they will be cycled through until all variables are plotted.
+#' @param col Colour for the panels. Passed to [openair::openColours()].
 #' @param nrow Number of rows for the plots.
 #' @param polar.wd Plot the any wind direction components, labelled "wd", on a
 #'   polar axis? Defaults to `FALSE`.
