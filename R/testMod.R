@@ -1,33 +1,10 @@
 #' Function to test different meteorological normalisation models.
-#'
-#' @param input_data Data frame to analyse.
-#' @param vars Explanatory variables to use.
-#' @param pollutant The name of the variable to apply meteorological
-#'   normalisation to.
+#' 
+#' @inheritParams buildMod
 #' @param train.frac Fraction of data to train a model on. The model is tested
 #'   against the withheld 0.2 proportion.
-#' @param n.trees Number of trees to use. If \code{n.trees = NA} then the
+#' @param n.trees Number of trees to use. If `n.trees = NA` then the
 #'   function will conduct cross-validation to calculate the optimum number.
-#' @param shrinkage a shrinkage parameter applied to each tree in the expansion.
-#'   Also known as the learning rate or step-size reduction; 0.001 to 0.1
-#'   usually work, but a smaller learning rate typically requires more trees.
-#'   Default is 0.1.
-#' @param interaction.depth Integer specifying the maximum depth of each tree
-#'   (i.e., the highest level of variable interactions allowed). A value of 1
-#'   implies an additive model, a value of 2 implies a model with up to 2-way
-#'   interactions, etc. Default is 5.
-#' @param bag.fraction he fraction of the training set observations randomly
-#'   selected to propose the next tree in the expansion. This introduces
-#'   randomnesses into the model fit. If bag.fraction < 1 then running the same
-#'   model twice will result in similar but different.
-#' @param n.minobsinnode Integer specifying the minimum number of observations
-#'   in the terminal nodes of the trees. Note that this is the actual number of
-#'   observations, not the total weight.
-#' @param cv.folds Number of cross-validation folds to perform if \code{n.trees
-#'   = NA}. If \code{cv.folds > 1} then gbm, in addition to the usual fit, will
-#'   perform a cross-validation, calculate an estimate of generalization error
-#'   returned in \code{cv.error}.
-#' @param seed Random number seed for reproducibility in returned model.
 #' @param plot The default, `TRUE`, automatically prints a plot and two tables
 #'   of statistics to review the model output. `FALSE` disables this behaviour.
 #' @export

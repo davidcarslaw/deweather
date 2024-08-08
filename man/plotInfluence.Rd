@@ -10,8 +10,8 @@ plotInfluence(dw_model, col = "grey30", sort = TRUE)
 \item{dw_model}{Model object from running \code{\link[=buildMod]{buildMod()}}.}
 
 \item{col}{Colour to use to use to colour the bars. Alternatively, users can
-provide "var" which will colour each bar differently, or "mean" which will
-colour each bar by its mean relative variable influence.}
+provide \code{"var"} which will colour each bar differently, or \code{"mean"} which
+will colour each bar by its mean relative variable influence.}
 
 \item{sort}{Sort the variables by their relative variable influences?
 Defaults to \code{TRUE}. \code{FALSE} displays them alphabetically.}

@@ -14,7 +14,7 @@
 #'   polar axis? Defaults to `FALSE`.
 #' @param auto.text Either `TRUE` (default) or `FALSE`. If `TRUE` titles and
 #'   axis labels will automatically try and format pollutant names and units
-#'   properly e.g.  by subscripting the `2' in NO2.
+#'   properly, e.g., by subscripting the "2" in "NO2".
 #' @param plot Should a plot be produced? `FALSE` can be useful when analysing
 #'   data to extract plot components and plotting them in other ways.
 #' @export

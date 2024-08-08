@@ -1,13 +1,13 @@
 #' Function to apply meteorological normalisation
 #'
-#' This is the main function to apply a gbm model to a data set.
+#' This is the main function to apply a [gbm::gbm()] model to a data set.
 #'
 #' @param input_data Data frame to analyse. Must contain a POSIXct field called
 #'   `date`.
 #' @param vars Explanatory variables to use. These variables will be used to
-#'   build the gbm model. Note that the model must include a trend component.
-#'   Several variables can be automatically calculated (see [prepData()] for
-#'   details).
+#'   build the [gbm::gbm()] model. Note that the model must include a trend
+#'   component. Several variables can be automatically calculated (see
+#'   [prepData()] for details).
 #' @param pollutant The name of the variable to apply meteorological
 #'   normalisation to.
 #' @param sam.size The number of random samples to extract from the data for
@@ -24,24 +24,25 @@
 #'   = runif(1)`.
 #' @param B Number of bootstrap simulations for partial dependence plots.
 #' @param n.core Number of cores to use for parallel processing.
-#' @param shrinkage a shrinkage parameter applied to each tree in the expansion.
-#'   Also known as the learning rate or step-size reduction; 0.001 to 0.1
+#' @param shrinkage A shrinkage parameter applied to each tree in the expansion.
+#'   Also known as the learning rate or step-size reduction; `0.001` to `0.1`
 #'   usually work, but a smaller learning rate typically requires more trees.
-#'   Default is 0.1.
+#'   Default is `0.1`.
 #' @param interaction.depth Integer specifying the maximum depth of each tree
-#'   (i.e., the highest level of variable interactions allowed). A value of 1
-#'   implies an additive model, a value of 2 implies a model with up to 2-way
-#'   interactions, etc. Default is 5.
-#' @param bag.fraction he fraction of the training set observations randomly
+#'   (i.e., the highest level of variable interactions allowed). A value of `1`
+#'   implies an additive model, a value of `2` implies a model with up to 2-way
+#'   interactions, etc. Default is `5`.
+#' @param bag.fraction The fraction of the training set observations randomly
 #'   selected to propose the next tree in the expansion. This introduces
-#'   randomnesses into the model fit. If bag.fraction < 1 then running the same
+#'   randomness into the model fit. If `bag.fraction < 1` then running the same
 #'   model twice will result in similar but different.
 #' @param n.minobsinnode Integer specifying the minimum number of observations
 #'   in the terminal nodes of the trees. Note that this is the actual number of
 #'   observations, not the total weight.
-#' @param cv.folds Number of cross-validation folds to perform. If cv.folds>1
-#'   then gbm, in addition to the usual fit, will perform a cross-validation,
-#'   calculate an estimate of generalization error returned in \code{cv.error}.
+#' @param cv.folds Number of cross-validation folds to perform. If `cv.folds >
+#'   1` then [gbm::gbm()], in addition to the usual fit, will perform a
+#'   cross-validation, calculate an estimate of generalization error returned in
+#'   `cv.error`.
 #' @param seed Random number seed for reproducibility in returned model.
 #'
 #' @export

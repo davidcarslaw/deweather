@@ -4,8 +4,8 @@
 #' @param sort Sort the variables by their relative variable influences?
 #'   Defaults to `TRUE`. `FALSE` displays them alphabetically.
 #' @param col Colour to use to use to colour the bars. Alternatively, users can
-#'   provide "var" which will colour each bar differently, or "mean" which will
-#'   colour each bar by its mean relative variable influence.
+#'   provide `"var"` which will colour each bar differently, or `"mean"` which
+#'   will colour each bar by its mean relative variable influence.
 #' @export
 #' @return Plot
 #' @family deweather model plotting functions

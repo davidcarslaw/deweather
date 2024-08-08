@@ -26,9 +26,9 @@ buildMod(
 \code{date}.}
 
 \item{vars}{Explanatory variables to use. These variables will be used to
-build the gbm model. Note that the model must include a trend component.
-Several variables can be automatically calculated (see \code{\link[=prepData]{prepData()}} for
-details).}
+build the \code{\link[gbm:gbm]{gbm::gbm()}} model. Note that the model must include a trend
+component. Several variables can be automatically calculated (see
+\code{\link[=prepData]{prepData()}} for details).}
 
 \item{pollutant}{The name of the variable to apply meteorological
 normalisation to.}
@@ -42,28 +42,28 @@ number of rows of data is used instead.}
 
 \item{n.trees}{Number of trees to fit.}
 
-\item{shrinkage}{a shrinkage parameter applied to each tree in the expansion.
-Also known as the learning rate or step-size reduction; 0.001 to 0.1
+\item{shrinkage}{A shrinkage parameter applied to each tree in the expansion.
+Also known as the learning rate or step-size reduction; \code{0.001} to \code{0.1}
 usually work, but a smaller learning rate typically requires more trees.
-Default is 0.1.}
+Default is \code{0.1}.}
 
 \item{interaction.depth}{Integer specifying the maximum depth of each tree
-(i.e., the highest level of variable interactions allowed). A value of 1
-implies an additive model, a value of 2 implies a model with up to 2-way
-interactions, etc. Default is 5.}
+(i.e., the highest level of variable interactions allowed). A value of \code{1}
+implies an additive model, a value of \code{2} implies a model with up to 2-way
+interactions, etc. Default is \code{5}.}
 
-\item{bag.fraction}{he fraction of the training set observations randomly
+\item{bag.fraction}{The fraction of the training set observations randomly
 selected to propose the next tree in the expansion. This introduces
-randomnesses into the model fit. If bag.fraction < 1 then running the same
+randomness into the model fit. If \code{bag.fraction < 1} then running the same
 model twice will result in similar but different.}
 
 \item{n.minobsinnode}{Integer specifying the minimum number of observations
 in the terminal nodes of the trees. Note that this is the actual number of
 observations, not the total weight.}
 
-\item{cv.folds}{Number of cross-validation folds to perform. If cv.folds>1
-then gbm, in addition to the usual fit, will perform a cross-validation,
-calculate an estimate of generalization error returned in \code{cv.error}.}
+\item{cv.folds}{Number of cross-validation folds to perform. If \code{cv.folds > 1} then \code{\link[gbm:gbm]{gbm::gbm()}}, in addition to the usual fit, will perform a
+cross-validation, calculate an estimate of generalization error returned in
+\code{cv.error}.}
 
 \item{simulate}{Should the original time series be randomly sampled with
 replacement? The default is \code{FALSE}. Setting \code{simulate = TRUE} can be
@@ -81,7 +81,7 @@ Returns a list including the model, influence data frame and partial
 dependence data frame.
 }
 \description{
-This is the main function to apply a gbm model to a data set.
+This is the main function to apply a \code{\link[gbm:gbm]{gbm::gbm()}} model to a data set.
 }
 \seealso{
 \code{\link[=testMod]{testMod()}} for testing models before they are built.

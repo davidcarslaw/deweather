@@ -33,29 +33,19 @@ This function takes a data frame that contains a field \code{date} and other
 variables and adds other common variables needed by the modelling functions.
 This function is run automatically by \code{\link[=buildMod]{buildMod()}} but can be used separately
 for further analysis. These variables include:
-}
-\details{
 \itemize{
-
-\item hour The hour of the day from 0 to 23.
-
-\item hour.local The hour in the local time zone. Note that the local time
+\item \strong{hour} - The hour of the day from 0 to 23.
+\item \strong{hour.local} - The hour in the local time zone. Note that the local time
 zone will need to be supplied (see \code{local.tz}). The purpose of using
 local time rather than UTC is that emissions can vary more strongly by local
 time rather than UTC.
-
-\item weekday The day of the week.
-
-\item trend The trend is calculated as a decimal year.
-
-\item week The week of the year. Useful for taking account of long-term
+\item \strong{weekday} - The day of the week.
+\item \strong{trend} - The trend is calculated as a decimal year.
+\item \strong{week} - The week of the year. Useful for taking account of long-term
 seasonal variations.
-
-\item jday The Julian Day number.
-
-\item month month of the year. Useful for taking account of long-term
+\item \strong{jday} - The Julian Day number.
+\item \strong{month} - month of the year. Useful for taking account of long-term
 seasonal variations.
-
 }
 }
 \author{
