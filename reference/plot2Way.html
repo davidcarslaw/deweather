@@ -67,31 +67,28 @@
 
 
 <dt id="arg-variable">variable<a class="anchor" aria-label="anchor" href="#arg-variable"></a></dt>
-<dd><p>The variables to plot. Must be of length two e.g. <code>variables = c("ws", "wd"</code>.</p></dd>
+<dd><p>The variables to plot. Must be of length two e.g. <code>variables = c("ws", "wd")</code>.</p></dd>
 
 
 <dt id="arg-res">res<a class="anchor" aria-label="anchor" href="#arg-res"></a></dt>
-<dd><p>Resolution in x-y i.e. number of points in each dimension.</p></dd>
+<dd><p>Resolution in x-y, i.e., number of points in each dimension.</p></dd>
 
 
 <dt id="arg-exclude">exclude<a class="anchor" aria-label="anchor" href="#arg-exclude"></a></dt>
-<dd><p>Should surfaces exclude predictions too far from original data?
-The default is <code>TRUE</code>.</p></dd>
+<dd><p>Should surfaces exclude predictions too far from original
+data? The default is <code>TRUE</code>.</p></dd>
 
 
 <dt id="arg-cols">cols<a class="anchor" aria-label="anchor" href="#arg-cols"></a></dt>
-<dd><p>Colours to be used for plotting. Options include
-“default”, “increment”, “heat”, “jet” and user
-defined. For user defined the user can supply a list of colour names
-recognised by R (type <code><a href="https://rdrr.io/r/grDevices/colors.html" class="external-link">colours()</a></code> to see the full list). An example would
-be <code>cols = c("yellow", "green", "blue")</code></p></dd>
+<dd><p>Colours to be used for plotting, passed to
+<code><a href="https://davidcarslaw.github.io/openair/reference/openColours.html" class="external-link">openair::openColours()</a></code>.</p></dd>
 
 
 <dt id="arg-dist">dist<a class="anchor" aria-label="anchor" href="#arg-dist"></a></dt>
 <dd><p>When plotting surfaces, <code>dist</code> controls how far from the original
 data the predictions should be made. See <code>exclude.too.far</code> from the <code>mgcv</code>
 package. Data are first transformed to a unit square. Values should be
-between 0 and 1.</p></dd>
+between <code>0</code> and <code>1</code>.</p></dd>
 
 
 <dt id="arg-plot">plot<a class="anchor" aria-label="anchor" href="#arg-plot"></a></dt>

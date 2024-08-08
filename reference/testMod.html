@@ -67,11 +67,15 @@
 
 
 <dl><dt id="arg-input-data">input_data<a class="anchor" aria-label="anchor" href="#arg-input-data"></a></dt>
-<dd><p>Data frame to analyse.</p></dd>
+<dd><p>Data frame to analyse. Must contain a POSIXct field called
+<code>date</code>.</p></dd>
 
 
 <dt id="arg-vars">vars<a class="anchor" aria-label="anchor" href="#arg-vars"></a></dt>
-<dd><p>Explanatory variables to use.</p></dd>
+<dd><p>Explanatory variables to use. These variables will be used to
+build the <code><a href="https://rdrr.io/pkg/gbm/man/gbm.html" class="external-link">gbm::gbm()</a></code> model. Note that the model must include a trend
+component. Several variables can be automatically calculated (see
+<code><a href="prepData.html">prepData()</a></code> for details).</p></dd>
 
 
 <dt id="arg-pollutant">pollutant<a class="anchor" aria-label="anchor" href="#arg-pollutant"></a></dt>
@@ -90,23 +94,23 @@ function will conduct cross-validation to calculate the optimum number.</p></dd>
 
 
 <dt id="arg-shrinkage">shrinkage<a class="anchor" aria-label="anchor" href="#arg-shrinkage"></a></dt>
-<dd><p>a shrinkage parameter applied to each tree in the expansion.
-Also known as the learning rate or step-size reduction; 0.001 to 0.1
+<dd><p>A shrinkage parameter applied to each tree in the expansion.
+Also known as the learning rate or step-size reduction; <code>0.001</code> to <code>0.1</code>
 usually work, but a smaller learning rate typically requires more trees.
-Default is 0.1.</p></dd>
+Default is <code>0.1</code>.</p></dd>
 
 
 <dt id="arg-interaction-depth">interaction.depth<a class="anchor" aria-label="anchor" href="#arg-interaction-depth"></a></dt>
 <dd><p>Integer specifying the maximum depth of each tree
-(i.e., the highest level of variable interactions allowed). A value of 1
-implies an additive model, a value of 2 implies a model with up to 2-way
-interactions, etc. Default is 5.</p></dd>
+(i.e., the highest level of variable interactions allowed). A value of <code>1</code>
+implies an additive model, a value of <code>2</code> implies a model with up to 2-way
+interactions, etc. Default is <code>5</code>.</p></dd>
 
 
 <dt id="arg-bag-fraction">bag.fraction<a class="anchor" aria-label="anchor" href="#arg-bag-fraction"></a></dt>
-<dd><p>he fraction of the training set observations randomly
+<dd><p>The fraction of the training set observations randomly
 selected to propose the next tree in the expansion. This introduces
-randomnesses into the model fit. If bag.fraction &lt; 1 then running the same
+randomness into the model fit. If <code>bag.fraction &lt; 1</code> then running the same
 model twice will result in similar but different.</p></dd>
 
 
@@ -117,10 +121,9 @@ observations, not the total weight.</p></dd>
 
 
 <dt id="arg-cv-folds">cv.folds<a class="anchor" aria-label="anchor" href="#arg-cv-folds"></a></dt>
-<dd><p>Number of cross-validation folds to perform if <code>n.trees
-  = NA</code>. If <code>cv.folds &gt; 1</code> then gbm, in addition to the usual fit, will
-perform a cross-validation, calculate an estimate of generalization error
-returned in <code>cv.error</code>.</p></dd>
+<dd><p>Number of cross-validation folds to perform. If <code>cv.folds &gt; 1</code> then <code><a href="https://rdrr.io/pkg/gbm/man/gbm.html" class="external-link">gbm::gbm()</a></code>, in addition to the usual fit, will perform a
+cross-validation, calculate an estimate of generalization error returned in
+<code>cv.error</code>.</p></dd>
 
 
 <dt id="arg-seed">seed<a class="anchor" aria-label="anchor" href="#arg-seed"></a></dt>
