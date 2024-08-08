@@ -86,9 +86,7 @@ variables.</p></dd>
 
 
 <dt id="arg-col">col<a class="anchor" aria-label="anchor" href="#arg-col"></a></dt>
-<dd><p>Colour(s) to use for the lines/points/uncertainty ribbons. If
-multiple colours are provided (e.g., <code>cols = c("tomato", "royalblue")</code>),
-they will be cycled through until all variables are plotted.</p></dd>
+<dd><p>Colour for the panels. Passed to <code><a href="https://davidcarslaw.github.io/openair/reference/openColours.html" class="external-link">openair::openColours()</a></code>.</p></dd>
 
 
 <dt id="arg-nrow">nrow<a class="anchor" aria-label="anchor" href="#arg-nrow"></a></dt>
@@ -113,8 +111,11 @@ data to extract plot components and plotting them in other ways.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Invisibly returns a list containing the plot and the data used to
-make the plot to allow post processing, e.g., modifying the <code>ggplot</code>.</p>
+    <p>Invisibly returns a list containing the plot, <code>plot</code>, a list of
+individual plots, <code>panels</code>, and a list of the data used to create them,
+<code>data</code>. <code>plot</code> is a <a href="https://patchwork.data-imaginist.com/reference/patchwork-package.html" class="external-link">patchwork</a> object, so
+can be further manipulated using <code>&amp;</code> and
+<a href="https://ggplot2.tidyverse.org/reference/ggplot2-package.html" class="external-link">ggplot2</a>.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
