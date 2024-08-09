@@ -272,30 +272,27 @@ partialDep <-
         seed
       )
     } else {
-      cl <- parallel::makeCluster(n.core)
-      doParallel::registerDoParallel(cl)
-
-      pred <- foreach::foreach(
-        i = 1:B,
-        .inorder = FALSE,
-        .packages = "gbm",
-        .export = "runGbm"
-      ) %dopar%
-        runGbm(
-          dat,
-          eq,
-          vars,
-          return.mod = FALSE,
-          simulate = TRUE,
-          n.trees = n.trees,
-          shrinkage = shrinkage,
-          interaction.depth = interaction.depth,
-          bag.fraction = bag.fraction,
-          n.minobsinnode = n.minobsinnode,
-          cv.folds = cv.folds
-        )
-
-      parallel::stopCluster(cl)
+      pred <-
+        with(mirai::daemons(n.core),
+             mirai::mirai_map(
+               .x = 1:B,
+               .f = function(x, ...) {
+                 runGbm(...)
+               },
+               .args = list(
+                 dat = dat,
+                 eq = eq,
+                 vars = vars,
+                 return.mod = FALSE,
+                 simulate = TRUE,
+                 n.trees = n.trees,
+                 shrinkage = shrinkage,
+                 interaction.depth = interaction.depth,
+                 bag.fraction = bag.fraction,
+                 n.minobsinnode = n.minobsinnode,
+                 cv.folds = cv.folds
+               )
+             )[c(mirai::.stop, mirai::.progress)])
     }
 
     # partial dependence plots
