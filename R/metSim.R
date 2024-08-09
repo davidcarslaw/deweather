@@ -6,6 +6,8 @@
 #' @param metVars The variables that should be randomly varied.
 #' @param n.core Number of cores to use.
 #' @param B Number of simulations
+#' @param progress When using multiple cores, show a progress indicator for
+#'   bootstrap simulations?
 #' @export
 #' @return a [tibble][tibble::tibble-package]
 #' @seealso [buildMod()] to build a gbm model
@@ -15,7 +17,8 @@ metSim <-
            newdata,
            metVars = c("ws", "wd", "air_temp"),
            n.core = 4,
-           B = 200) {
+           B = 200,
+           progress = TRUE) {
     check_dwmod(dw_model)
     
     ## extract the model
@@ -36,6 +39,12 @@ metSim <-
       newdata <- prepData(newdata)
     }
     
+    if (progress) {
+      ex <- c(mirai::.stop, mirai::.progress)
+    } else {
+      ex <- c(mirai::.stop)
+    }
+    
     prediction <-
       with(
         mirai::daemons(n.core),
@@ -49,7 +58,7 @@ metSim <-
             mod = mod,
             metVars = metVars
           )
-        )[c(mirai::.progress, mirai::.stop)]
+        )[ex]
       ) %>%
       purrr::list_rbind()
     

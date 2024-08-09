@@ -44,6 +44,8 @@
 #'   cross-validation, calculate an estimate of generalization error returned in
 #'   `cv.error`.
 #' @param seed Random number seed for reproducibility in returned model.
+#' @param progress When using multiple cores, show a progress indicator for
+#'   bootstrap simulations?
 #'
 #' @export
 #' @seealso [testMod()] for testing models before they are built.
@@ -69,7 +71,8 @@ buildMod <- function(input_data,
                      simulate = FALSE,
                      B = 100,
                      n.core = 4,
-                     seed = 123) {
+                     seed = 123,
+                     progress = TRUE) {
   ## add other variables, select only those required for modelling
   input_data <- prepData(input_data)
   input_data <-
@@ -112,15 +115,22 @@ buildMod <- function(input_data,
   }
 
   # if model needs to be run multiple times
-  res <- partialDep(input_data, eq, vars, B, n.core,
+  res <- partialDep(
+    input_data,
+    eq,
+    vars,
+    B,
+    n.core,
     n.trees = n.trees,
     shrinkage = shrinkage,
     interaction.depth = interaction.depth,
     bag.fraction = bag.fraction,
     n.minobsinnode = n.minobsinnode,
-    cv.folds = cv.folds, seed = seed
+    cv.folds = cv.folds,
+    seed = seed,
+    progress = progress
   )
-
+  
   if (B != 1) {
     Mod <- mod$model
   } else {
@@ -249,7 +259,8 @@ partialDep <-
            bag.fraction = bag.fraction,
            n.minobsinnode = n.minobsinnode,
            cv.folds = cv.folds,
-           seed) {
+           seed,
+           progress = progress) {
     if (B == 1) {
       return.mod <- TRUE
     } else {
@@ -272,6 +283,11 @@ partialDep <-
         seed
       )
     } else {
+      if (progress) {
+        ex <- c(mirai::.stop, mirai::.progress)
+      } else {
+        ex <- c(mirai::.stop)
+      }
       pred <-
         with(mirai::daemons(n.core),
              mirai::mirai_map(
@@ -292,7 +308,7 @@ partialDep <-
                  n.minobsinnode = n.minobsinnode,
                  cv.folds = cv.folds
                )
-             )[c(mirai::.stop, mirai::.progress)])
+             )[ex])
     }
 
     # partial dependence plots
