@@ -35,11 +35,6 @@ Imports:
     tibble,
     tidyr,
     utils
-Suggests: 
-    knitr,
-    rmarkdown
-VignetteBuilder: 
-    knitr
 Encoding: UTF-8
 Language: en-GB
 LazyData: yes
