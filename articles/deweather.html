@@ -146,9 +146,13 @@ diurnal variation in emissions.</p>
 <span>    vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"trend"</span>, <span class="st">"ws"</span>, <span class="st">"wd"</span>, <span class="st">"hour"</span>, <span class="st">"weekday"</span>, <span class="st">"air_temp"</span>, <span class="st">"week"</span><span class="op">)</span>,</span>
 <span>    pollutant <span class="op">=</span> <span class="st">"no2"</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Optimum number of trees is <span style="font-weight: bold;">398</span></span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> RMSE from cross-validation is <span style="font-weight: bold;">23.59</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Optimum number of trees is <span style="font-weight: bold;">398</span>. RMSE from cross-validation is <span style="font-weight: bold;">23.59</span>.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Percent increase in RMSE using test data is <span style="font-weight: bold;">28.0%</span></span></span></code></pre></div>
+<div class="figure">
+<img src="deweather_files/figure-html/testMod-1.png" alt="A scatter plot showing predicted nitrogen dioxide on the x-axis and measured nitrogen dioxide on the y-axis. Alongside is a table of statistical values describing the model performance, including R, RMSE, NMGE, NMB, MGE, MB, FAC2 and n." width="700"><p class="caption">
+A statistical summary of a <a href="https://davidcarslaw.github.io/deweather/">deweather</a> model test.
+</p>
+</div>
 <p>The output shows by default the performance of the model when applied
 to a withheld random 20% (by default) of the data, i.e., the model is
 evaluated against data not used to build the model. Common model
