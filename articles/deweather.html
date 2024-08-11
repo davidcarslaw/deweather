@@ -220,20 +220,27 @@ and air temperature
 <h2 id="apply-meteorological-averaging">Apply meteorological averaging<a class="anchor" aria-label="anchor" href="#apply-meteorological-averaging"></a>
 </h2>
 <p>An indication of the meteorologically-averaged trend is given by the
-<code><a href="../reference/plotPD.html">plotPD()</a></code> function above (and can even be isolated using the
-<code>variable</code> argument). A better indication is given by using
-the model to predict many times with random sampling of meteorological
-conditions. This sampling is carried out by the <code><a href="../reference/metSim.html">metSim()</a></code>
-function. Note that in this case there is no need to supply the
-<code>"trend"</code> component because it is calculated using
-<code><a href="../reference/metSim.html">metSim()</a></code>.</p>
+<code><a href="../reference/plotPD.html">plotPD()</a></code> function above, and can even be isolated using the
+<code>variable</code> argument.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plotPD.html">plotPD</a></span><span class="op">(</span><span class="va">mod_no2</span>, variable <span class="op">=</span> <span class="st">"trend"</span><span class="op">)</span></span></code></pre></div>
+<div class="figure">
+<img src="deweather_files/figure-html/pd-trend-1.png" alt="Patial dependence plot of the 'trend' component of the deweather model with date on the x-axis and NO2 on the y-axis. The trend is jagged, but shows an increase in 2003." width="672"><p class="caption">
+The partial dependence plot of the ‘trend’ component.
+</p>
+</div>
+<p>A better indication is given by using the model to predict many times
+with random sampling of meteorological conditions. This sampling is
+carried out by the <code><a href="../reference/metSim.html">metSim()</a></code> function. Note that in this
+case there is no need to supply the <code>"trend"</code> component
+because it is calculated using <code><a href="../reference/metSim.html">metSim()</a></code>.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">demet</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/metSim.html">metSim</a></span><span class="op">(</span><span class="va">mod_no2</span>,</span>
 <span>  newdata <span class="op">=</span> <span class="va">dat_part</span>,</span>
 <span>  metVars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ws"</span>, <span class="st">"wd"</span>, <span class="st">"hour"</span>, <span class="st">"weekday"</span>, <span class="st">"air_temp"</span>, <span class="st">"week"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>Now it is possible to plot the resulting trend.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">openair</span><span class="fu">::</span><span class="fu"><a href="https://davidcarslaw.github.io/openair/reference/timePlot.html" class="external-link">timePlot</a></span><span class="op">(</span><span class="va">demet</span>, <span class="st">"no2"</span>, ylab <span class="op">=</span> <span class="st">"Deweathered no2 (ug/m3)"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
 <img src="deweather_files/figure-html/plotTrend-1.png" alt="A line chart with date on the x-axis and deweathered NO2 on the y-axis. The trend is very noisy, but shows an increase in concentrations in 2003." width="672"><p class="caption">
@@ -245,7 +252,7 @@ being considered (200 by default, set with <code>B = 200</code>). The
 noise could be reduced by increasing the simulations, but this would add
 to run time. Alternatively, it can be useful to simply average the
 results. For example:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">openair</span><span class="fu">::</span><span class="fu"><a href="https://davidcarslaw.github.io/openair/reference/timePlot.html" class="external-link">timePlot</a></span><span class="op">(</span><span class="va">demet</span>, <span class="st">"no2"</span>, avg.time <span class="op">=</span> <span class="st">"week"</span>, ylab <span class="op">=</span> <span class="st">"Deweathered no2 (ug/m3)"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
 <img src="deweather_files/figure-html/plotTrendAve-1.png" alt="A line chart with date on the x-axis and deweathered NO2 on the y-axis. The trend has been time averaged to show weekly mean concentrations, clearly illustrating a sharp increase in 2003." width="672"><p class="caption">
