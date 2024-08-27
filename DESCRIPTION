@@ -1,7 +1,7 @@
 Type: Package
 Package: deweather
 Title: Remove the influence of weather on air quality data
-Version: 0.7.2.9101
+Version: 0.7.2.9102
 Authors@R: 
     person("David", "Carslaw", , "david.carslaw@york.ac.uk", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-0991-950X"))
@@ -18,17 +18,15 @@ Depends:
     R (>= 2.15.1)
 Imports:
     cli,
-    doParallel,
     dplyr,
-    foreach,
     gbm,
     ggplot2,
     gridExtra,
     lubridate,
     magrittr,
     mgcv,
+    mirai,
     openair,
-    parallel,
     patchwork,
     purrr,
     rlang,
@@ -37,9 +35,6 @@ Imports:
     tibble,
     tidyr,
     utils
-Suggests: 
-    knitr,
-    rmarkdown
 Encoding: UTF-8
 Language: en-GB
 LazyData: yes

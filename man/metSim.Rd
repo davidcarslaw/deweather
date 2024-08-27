@@ -9,7 +9,8 @@ metSim(
   newdata,
   metVars = c("ws", "wd", "air_temp"),
   n.core = 4,
-  B = 200
+  B = 200,
+  progress = TRUE
 )
 }
 \arguments{
@@ -23,6 +24,9 @@ to build the model in the first place will be used.}
 \item{n.core}{Number of cores to use.}
 
 \item{B}{Number of simulations}
+
+\item{progress}{When using multiple cores, show a progress indicator for
+bootstrap simulations?}
 }
 \value{
 a \link[tibble:tibble-package]{tibble}

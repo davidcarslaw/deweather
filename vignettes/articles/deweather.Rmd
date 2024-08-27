@@ -128,7 +128,19 @@ plot2Way(mod_no2, variable = c("ws", "air_temp"))
 
 ## Apply meteorological averaging
 
-An indication of the meteorologically-averaged trend is given by the `plotPD()` function above (and can even be isolated using the `variable` argument). A better indication is given by using the model to predict many times with random sampling of meteorological conditions. This sampling is carried out by the `metSim()` function. Note that in this case there is no need to supply the `"trend"` component because it is calculated using `metSim()`.
+An indication of the meteorologically-averaged trend is given by the `plotPD()` function above, and can even be isolated using the `variable` argument. 
+
+```{r}
+#| label: "pd-trend"
+#| fig.width: 7
+#| fig.height: 3.5
+#| fig.cap: "The partial dependence plot of the 'trend' component."
+#| fig.alt: "Patial dependence plot of the 'trend' component of the deweather model 
+#| with date on the x-axis and NO2 on the y-axis. The trend is jagged, but shows an increase in 2003."
+plotPD(mod_no2, variable = "trend")
+```
+
+A better indication is given by using the model to predict many times with random sampling of meteorological conditions. This sampling is carried out by the `metSim()` function. Note that in this case there is no need to supply the `"trend"` component because it is calculated using `metSim()`.
 
 ```{r}
 #| label: "metSim"

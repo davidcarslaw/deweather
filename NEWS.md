@@ -4,6 +4,8 @@
 
 * The plot assemblies in `plotPD()` and `testMod()` are now powered by `{patchwork}`. This will allow for more post-hoc control of the plot assembly using `&` for example.
 
+* Parallel processing is now managed by `{mirai}`. This has fewer dependencies and provides a helpful progress indicator, which can be disabled using the `progress` argument.
+
 ## Bug fixes
 
 * Fixed an issue where `buildMod()` would fail if there wasn't a character variable (e.g., "weekday").

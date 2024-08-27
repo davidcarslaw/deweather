@@ -74,11 +74,8 @@ plotPD <- function(dw_model,
   printplots <- plots
   if ("wd" %in% names(printplots) & polar.wd) {
     printplots$wd <- patchwork::free(printplots$wd)
-    pw <- patchwork::wrap_plots(printplots, nrow = nrow)
-  } else {
-    pw <- patchwork::wrap_plots(printplots, nrow = nrow) +
-      patchwork::plot_layout(axes = "collect", axis_titles = "collect")
   }
+  pw <- patchwork::wrap_plots(printplots, nrow = nrow)
   
   # plot if `plot`
   if (plot) {
