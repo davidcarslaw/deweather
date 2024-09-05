@@ -44,5 +44,8 @@ plotInfluence <- function(dw_model,
       y = "variable",
       fill = lab
     ) +
-    ggplot2::scale_x_continuous(labels = scales::label_percent(scale = 1))
+    ggplot2::scale_x_continuous(
+      labels = scales::label_percent(scale = 1),
+      expand = ggplot2::expansion(mult = c(0, .1))
+    )
 }
