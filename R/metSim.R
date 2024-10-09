@@ -39,12 +39,6 @@ metSim <-
       newdata <- prepData(newdata)
     }
     
-    if (progress) {
-      ex <- c(mirai::.stop, mirai::.progress)
-    } else {
-      ex <- c(mirai::.stop)
-    }
-    
     prediction <-
       with(
         mirai::daemons(n.core),
@@ -58,7 +52,7 @@ metSim <-
             mod = mod,
             metVars = metVars
           )
-        )[ex]
+        )[.stop, if (progress) .progress]
       ) %>%
       purrr::list_rbind()
     
