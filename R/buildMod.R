@@ -283,11 +283,6 @@ partialDep <-
         seed
       )
     } else {
-      if (progress) {
-        ex <- c(mirai::.stop, mirai::.progress)
-      } else {
-        ex <- c(mirai::.stop)
-      }
       pred <-
         with(mirai::daemons(n.core),
              mirai::mirai_map(
@@ -308,7 +303,7 @@ partialDep <-
                  n.minobsinnode = n.minobsinnode,
                  cv.folds = cv.folds
                )
-             )[ex])
+             )[.stop, if (progress) .progress])
     }
 
     # partial dependence plots
