@@ -110,7 +110,8 @@ buildMod <- function(input_data,
       bag.fraction = bag.fraction,
       n.minobsinnode = n.minobsinnode,
       cv.folds = cv.folds,
-      seed
+      seed,
+      n.cores = NULL
     )
   }
 
@@ -194,7 +195,8 @@ runGbm <-
            bag.fraction = bag.fraction,
            n.minobsinnode = n.minobsinnode,
            cv.folds = cv.folds,
-           seed = seed) {
+           seed = seed,
+           n.cores) {
     ## sub-sample the data for bootstrapping
     if (simulate) {
       dat <- dat[sample(nrow(dat), nrow(dat), replace = TRUE), ]
@@ -220,7 +222,8 @@ runGbm <-
       n.minobsinnode = n.minobsinnode,
       cv.folds = cv.folds,
       keep.data = TRUE,
-      verbose = FALSE
+      verbose = FALSE,
+      n.cores = n.cores
     )
 
     ## extract partial dependence components
@@ -280,7 +283,8 @@ partialDep <-
         bag.fraction = bag.fraction,
         n.minobsinnode = n.minobsinnode,
         cv.folds = cv.folds,
-        seed
+        seed,
+        n.cores = NULL
       )
     } else {
       pred <-
@@ -301,7 +305,8 @@ partialDep <-
                  interaction.depth = interaction.depth,
                  bag.fraction = bag.fraction,
                  n.minobsinnode = n.minobsinnode,
-                 cv.folds = cv.folds
+                 cv.folds = cv.folds,
+                 n.cores = 1L
                )
              )[.stop, if (progress) .progress])
     }
