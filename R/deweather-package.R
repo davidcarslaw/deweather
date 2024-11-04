@@ -2,6 +2,7 @@
 "_PACKAGE"
 
 ## usethis namespace: start
+#' @importFrom foreach %dopar%
 #' @importFrom rlang :=
 #' @importFrom tibble tibble
 #' @importFrom utils head
