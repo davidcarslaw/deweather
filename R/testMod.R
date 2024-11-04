@@ -26,6 +26,9 @@ testMod <- function(input_data,
                     cv.folds = 5,
                     seed = 123,
                     plot = TRUE) {
+  ## silence R check
+  statistic <- value <- NULL
+
   ## add other variables, select only those required for modelling
   input_data <- prepData(input_data)
   input_data <- input_data[(c("date", vars, pollutant))]
@@ -58,7 +61,7 @@ testMod <- function(input_data,
       train.dat <- train.dat
     }
     
-    mod <-
+    mod <- 
       gbm::gbm(
         eq,
         distribution = "gaussian",
@@ -70,17 +73,11 @@ testMod <- function(input_data,
         n.minobsinnode = n.minobsinnode,
         cv.folds = cv.folds,
         verbose = FALSE
-      )
+      )  
     
     # find index for n trees with minimum CV error
-    n.trees <- which.min(mod$cv.error)
+    min_MSE <- which.min(mod$cv.error)
     
-    # plot
-    if (plot) {
-      cli::cli_inform(
-        c("i" = "Optimum number of trees is {.strong {n.trees}}. RMSE from cross-validation is {.strong {round(sqrt(mod$cv.error[n.trees]), 2)}}.")
-      )
-    }
   } else {
     mod <- 
       gbm::gbm(
@@ -95,6 +92,12 @@ testMod <- function(input_data,
         cv.folds = cv.folds,
         verbose = FALSE
       ) 
+  }
+  
+  if (is.na(n.trees)) {
+    n.trees <- min_MSE
+    cli::cli_inform(c("i" = "Optimum number of trees is {.strong {n.trees}}"))
+    cli::cli_inform(c("i" = "RMSE from cross-validation is {.strong {round(sqrt(mod$cv.error[min_MSE]), 2)}}"))
   }
   
   # predictions based on training data
@@ -118,10 +121,10 @@ testMod <- function(input_data,
   
   stats_train <- stats_train %>% 
     tidyr::pivot_longer(cols = -1) %>% 
-    dplyr::rename("statistic" = "name") %>% 
+    dplyr::rename(statistic = "name") %>% 
     dplyr::select(-1) %>% 
-    dplyr::mutate(value = round(.data$value, 2)) %>% 
-    dplyr::filter(!.data$statistic %in% c("P", "COE", "IOA"))
+    dplyr::mutate(value = round(value, 2)) %>% 
+    dplyr::filter(!statistic %in% c("P", "COE", "IOA"))
   
   # predictions based on test data
   
@@ -173,10 +176,10 @@ testMod <- function(input_data,
   
   stats <- stats %>% 
     tidyr::pivot_longer(cols = -1) %>% 
-    dplyr::rename("statistic" = "name") %>% 
+    dplyr::rename(statistic = "name") %>% 
     dplyr::select(-1) %>% 
-    dplyr::mutate(value = round(.data$value, 2)) %>% 
-    dplyr::filter(!.data$statistic %in% c("P", "COE", "IOA"))
+    dplyr::mutate(value = round(value, 2)) %>% 
+    dplyr::filter(!statistic %in% c("P", "COE", "IOA"))
   
   stats_both <-
     dplyr::left_join(
@@ -203,8 +206,7 @@ testMod <- function(input_data,
       rows = NULL)
     
     # print plot
-    pw <- patchwork::wrap_plots(plt, tbl, nrow = 1)
-    print(pw)
+    patchwork::wrap_plots(plt, tbl, nrow = 1)
   }
   
   invisible(list(
