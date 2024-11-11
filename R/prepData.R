@@ -1,7 +1,7 @@
 #' Function to prepare data frame for modelling
-#' 
+#'
 #' @description
-#' 
+#'
 #' This function takes a data frame that contains a field `date` and other
 #' variables and adds other common variables needed by the modelling functions.
 #' This function is run automatically by [buildMod()] but can be used separately
@@ -44,23 +44,47 @@ prepData <- function(mydata, add = c(
                      ), local.tz = "Europe/London",
                      lag = NULL) {
   ## Some cheack to make sure data are OK.
-  if (!"date" %in% names(mydata)) stop("No date field supplied.")
-
-  if ("hour" %in% add) mydata$hour <- lubridate::hour(mydata$date)
+  # does `date` exist?
+  if (!"date" %in% names(mydata)) {
+    cli::cli_abort("No mydata${.field date} field supplied.")
+  }
+  # is `date` a date?
+  if (inherits(mydata$date, "character") |
+      inherits(mydata$date, "factor") |
+      inherits(mydata$date, "numeric")) {
+    cli::cli_abort(
+      c("x" = "mydata{.field $date} is of class {.code {class(mydata$date)}}",
+        "i" = "Please ensure mydata{.field $data} is class {.code Date} or {.code POSIXt} (e.g., with {.fun as.POSIXct} or {.pkg lubridate})")
+    )
+  }
+  
+  if ("hour" %in% add) {
+    mydata$hour <- lubridate::hour(mydata$date)
+  }
 
   if ("hour.local" %in% add) {
     mydata$hour.local <- lubridate::hour(lubridate::with_tz(mydata$date, local.tz))
   }
 
-  if ("weekday" %in% add) mydata$weekday <- as.factor(format(mydata$date, "%A"))
+  if ("weekday" %in% add) {
+    mydata$weekday <- as.factor(format(mydata$date, "%A"))
+  }
 
-  if ("trend" %in% add) mydata$trend <- as.numeric(mydata$date)
+  if ("trend" %in% add) {
+    mydata$trend <- as.numeric(mydata$date)
+  }
 
-  if ("week" %in% add) mydata$week <- as.numeric(format(mydata$date, "%W"))
+  if ("week" %in% add) {
+    mydata$week <- as.numeric(format(mydata$date, "%W"))
+  }
 
-  if ("jday" %in% add) mydata$jday <- as.numeric(format(mydata$date, "%j"))
+  if ("jday" %in% add) {
+    mydata$jday <- as.numeric(format(mydata$date, "%j"))
+  }
 
-  if ("month" %in% add) mydata$month <- as.factor(format(mydata$date, "%b"))
+  if ("month" %in% add) {
+    mydata$month <- as.factor(format(mydata$date, "%b"))
+  }
 
   ## add lagged variables
   if (!is.null(lag)) {

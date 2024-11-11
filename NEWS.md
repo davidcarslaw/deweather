@@ -8,7 +8,9 @@
 
 * Fixed an issue where `buildMod()` would fail if there wasn't a character variable (e.g., "weekday").
 
-* added `ylab` back as an explicit option for `plotPD`.
+* Added `ylab` back as an explicit option for `plotPD()`.
+
+* `prepData()` will now formally error if `mydata$date` is numeric/character/factor (i.e., not a date/datetime).
 
 * Fixed a bug where `plotPD()` would work differently if the input to `buildMod()` was a `data.frame` rather than a `tibble`.
 
