@@ -48,7 +48,8 @@
 <div class="section level3">
 <h3 id="bug-fixes-development-version">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h3>
 <ul><li><p>Fixed an issue where <code><a href="../reference/buildMod.html">buildMod()</a></code> would fail if there wasn’t a character variable (e.g., “weekday”).</p></li>
-<li><p>added <code>ylab</code> back as an explicit option for <code>plotPD</code>.</p></li>
+<li><p>Added <code>ylab</code> back as an explicit option for <code><a href="../reference/plotPD.html">plotPD()</a></code>.</p></li>
+<li><p><code><a href="../reference/prepData.html">prepData()</a></code> will now formally error if <code>mydata$date</code> is numeric/character/factor (i.e., not a date/datetime).</p></li>
 <li><p>Fixed a bug where <code><a href="../reference/plotPD.html">plotPD()</a></code> would work differently if the input to <code><a href="../reference/buildMod.html">buildMod()</a></code> was a <code>data.frame</code> rather than a <code>tibble</code>.</p></li>
 </ul></div>
 </div>
