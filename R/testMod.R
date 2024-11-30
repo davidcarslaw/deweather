@@ -206,7 +206,8 @@ testMod <- function(input_data,
       rows = NULL)
     
     # print plot
-    patchwork::wrap_plots(plt, tbl, nrow = 1)
+    pw <- patchwork::wrap_plots(plt, tbl, nrow = 1)
+    plot(pw)
   }
   
   invisible(list(
