@@ -3,7 +3,9 @@
 #' @param dw_model Model object from running [buildMod()].
 #' @param newdata Data set to which to apply the model. If missing the data used
 #'   to build the model in the first place will be used.
-#' @param metVars The variables that should be randomly varied.
+#' @param metVars The variables that should be randomly varied. Note that these
+#'   should typically be meteorological variables and not temporal emission
+#'   proxies such as "hour", "weekday" or "week".
 #' @param n.core Number of cores to use.
 #' @param B Number of simulations
 #' @export

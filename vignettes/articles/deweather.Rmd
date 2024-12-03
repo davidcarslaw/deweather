@@ -39,7 +39,7 @@ To speed up the examples in this article we'll randomly sample some of `road_dat
 
 The `testMod()` function is used to build and test various models to help derive the most appropriate.
 
-In this example, we will restrict the data to model to 4 years. Note that variables such as `"hour"` and `"weekday"` are used as variables that can be used to explain some of the variation. `"hour"` for example very usefully acts as a proxy for the diurnal variation in emissions.
+In this example, we will restrict the data to model to 4 years. Note that variables such as `"hour"` and `"weekday"` are used as variables that can be used to explain some of the variation. `"hour"` for example very usefully acts as a proxy for the diurnal variation in emissions. These temporal emission proxies are also important to include to help the model differentiate between emission versus weather-related changes. For example, emissions tend to change throughout a day and so do variables such as wind speed and ambient temperature.
 
 ```{r}
 #| label: "testMod"
@@ -128,7 +128,7 @@ plot2Way(mod_no2, variable = c("ws", "air_temp"))
 
 ## Apply meteorological averaging
 
-An indication of the meteorologically-averaged trend is given by the `plotPD()` function above, and can even be isolated using the `variable` argument. 
+An *indication* of the meteorologically-averaged trend is given by the `plotPD()` function above, and can even be isolated using the `variable` argument. 
 
 ```{r}
 #| label: "pd-trend"
@@ -140,14 +140,14 @@ An indication of the meteorologically-averaged trend is given by the `plotPD()` 
 plotPD(mod_no2, variable = "trend")
 ```
 
-A better indication is given by using the model to predict many times with random sampling of meteorological conditions. This sampling is carried out by the `metSim()` function. Note that in this case there is no need to supply the `"trend"` component because it is calculated using `metSim()`.
+A much better indication is given by using the model to predict many times with random sampling of **meteorological** conditions. This sampling is carried out by the `metSim()` function. Note that in this case there is no need to supply the `"trend"` component because it is calculated using `metSim()`.
 
 ```{r}
 #| label: "metSim"
 #| eval: TRUE
 demet <- metSim(mod_no2,
   newdata = dat_part,
-  metVars = c("ws", "wd", "hour", "weekday", "air_temp", "week")
+  metVars = c("ws", "wd", "air_temp")
 )
 ```
 
@@ -165,7 +165,7 @@ Now it is possible to plot the resulting trend.
 openair::timePlot(demet, "no2", ylab = "Deweathered no2 (ug/m3)")
 ```
 
-The plot is rather noisy due to relatively few samples of meteorology being considered (200 by default, set with `B = 200`). The noise could be reduced by increasing the simulations, but this would add to run time. Alternatively, it can be useful to simply average the results. For example:
+The plot shows the trend in NO~2~ controlling for the main weather variables. The plot now reveals the strong diurnal and weekly cycle in NO~2~ that is driven by variations in the sources of NO~2~ (NO~x~) rather than meteorology i.e. road traffic which has strong hourly and daily variations throughout the year. It can be useful to simply average the results to provide a better indication of the overall trend. For example:
 
 ```{r}
 #| label: "plotTrendAve"
