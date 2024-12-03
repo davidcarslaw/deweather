@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">deweather</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.2.9103</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.2.9104</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -129,7 +129,11 @@ models to help derive the most appropriate.</p>
 that variables such as <code>"hour"</code> and <code>"weekday"</code>
 are used as variables that can be used to explain some of the variation.
 <code>"hour"</code> for example very usefully acts as a proxy for the
-diurnal variation in emissions.</p>
+diurnal variation in emissions. These temporal emission proxies are also
+important to include to help the model differentiate between emission
+versus weather-related changes. For example, emissions tend to change
+throughout a day and so do variables such as wind speed and ambient
+temperature.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://davidcarslaw.github.io/openair/" class="external-link">openair</a></span><span class="op">)</span></span>
 <span><span class="co"># select only part of the data set</span></span>
@@ -220,9 +224,9 @@ and air temperature
 <div class="section level2">
 <h2 id="apply-meteorological-averaging">Apply meteorological averaging<a class="anchor" aria-label="anchor" href="#apply-meteorological-averaging"></a>
 </h2>
-<p>An indication of the meteorologically-averaged trend is given by the
-<code><a href="../reference/plotPD.html">plotPD()</a></code> function above, and can even be isolated using the
-<code>variable</code> argument.</p>
+<p>An <em>indication</em> of the meteorologically-averaged trend is
+given by the <code><a href="../reference/plotPD.html">plotPD()</a></code> function above, and can even be
+isolated using the <code>variable</code> argument.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plotPD.html">plotPD</a></span><span class="op">(</span><span class="va">mod_no2</span>, variable <span class="op">=</span> <span class="st">"trend"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
@@ -230,15 +234,16 @@ and air temperature
 The partial dependence plot of the ‘trend’ component.
 </p>
 </div>
-<p>A better indication is given by using the model to predict many times
-with random sampling of meteorological conditions. This sampling is
-carried out by the <code><a href="../reference/metSim.html">metSim()</a></code> function. Note that in this
-case there is no need to supply the <code>"trend"</code> component
-because it is calculated using <code><a href="../reference/metSim.html">metSim()</a></code>.</p>
+<p>A much better indication is given by using the model to predict many
+times with random sampling of <strong>meteorological</strong>
+conditions. This sampling is carried out by the <code><a href="../reference/metSim.html">metSim()</a></code>
+function. Note that in this case there is no need to supply the
+<code>"trend"</code> component because it is calculated using
+<code><a href="../reference/metSim.html">metSim()</a></code>.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">demet</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/metSim.html">metSim</a></span><span class="op">(</span><span class="va">mod_no2</span>,</span>
 <span>  newdata <span class="op">=</span> <span class="va">dat_part</span>,</span>
-<span>  metVars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ws"</span>, <span class="st">"wd"</span>, <span class="st">"hour"</span>, <span class="st">"weekday"</span>, <span class="st">"air_temp"</span>, <span class="st">"week"</span><span class="op">)</span></span>
+<span>  metVars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ws"</span>, <span class="st">"wd"</span>, <span class="st">"air_temp"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>Now it is possible to plot the resulting trend.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
@@ -248,11 +253,13 @@ because it is calculated using <code><a href="../reference/metSim.html">metSim()
 A deweathered nitrogen dioxide trend.
 </p>
 </div>
-<p>The plot is rather noisy due to relatively few samples of meteorology
-being considered (200 by default, set with <code>B = 200</code>). The
-noise could be reduced by increasing the simulations, but this would add
-to run time. Alternatively, it can be useful to simply average the
-results. For example:</p>
+<p>The plot shows the trend in NO<sub>2</sub> controlling for the main
+weather variables. The plot now reveals the strong diurnal and weekly
+cycle in NO<sub>2</sub> that is driven by variations in the sources of
+NO<sub>2</sub> (NO<sub>x</sub>) rather than meteorology i.e. road
+traffic which has strong hourly and daily variations throughout the
+year. It can be useful to simply average the results to provide a better
+indication of the overall trend. For example:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">openair</span><span class="fu">::</span><span class="fu"><a href="https://davidcarslaw.github.io/openair/reference/timePlot.html" class="external-link">timePlot</a></span><span class="op">(</span><span class="va">demet</span>, <span class="st">"no2"</span>, avg.time <span class="op">=</span> <span class="st">"week"</span>, ylab <span class="op">=</span> <span class="st">"Deweathered no2 (ug/m3)"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
