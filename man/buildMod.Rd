@@ -18,7 +18,8 @@ buildMod(
   simulate = FALSE,
   B = 100,
   n.core = 4,
-  seed = 123
+  seed = 123,
+  type = "PSOCK"
 )
 }
 \arguments{
@@ -75,6 +76,9 @@ run multiple times with \code{B = 1} and a different value of \code{seed} e.g. \
 \item{n.core}{Number of cores to use for parallel processing.}
 
 \item{seed}{Random number seed for reproducibility in returned model.}
+
+\item{type}{One of the supported parallelisation types.
+See parallel::makeCluster()}
 }
 \value{
 Returns a list including the model, influence data frame and partial

@@ -44,6 +44,8 @@
 #'   cross-validation, calculate an estimate of generalization error returned in
 #'   `cv.error`.
 #' @param seed Random number seed for reproducibility in returned model.
+#' @param type One of the supported parallelisation types.
+#' See parallel::makeCluster()
 #'
 #' @export
 #' @seealso [testMod()] for testing models before they are built.
@@ -69,7 +71,8 @@ buildMod <- function(input_data,
                      simulate = FALSE,
                      B = 100,
                      n.core = 4,
-                     seed = 123) {
+                     seed = 123,
+                     type = "PSOCK") {
   ## add other variables, select only those required for modelling
   input_data <- prepData(input_data)
   input_data <-
@@ -119,7 +122,8 @@ buildMod <- function(input_data,
     interaction.depth = interaction.depth,
     bag.fraction = bag.fraction,
     n.minobsinnode = n.minobsinnode,
-    cv.folds = cv.folds, seed = seed
+    cv.folds = cv.folds, seed = seed,
+    type = type
   )
 
   if (B != 1) {
@@ -252,7 +256,8 @@ partialDep <-
            bag.fraction = bag.fraction,
            n.minobsinnode = n.minobsinnode,
            cv.folds = cv.folds,
-           seed) {
+           seed,
+           type = "PSOCK") {
     if (B == 1) {
       return.mod <- TRUE
     } else {
@@ -276,7 +281,7 @@ partialDep <-
         n.core = n.core
       )
     } else {
-      cl <- parallel::makeCluster(n.core)
+      cl <- parallel::makeCluster(n.core, type = type)
       doParallel::registerDoParallel(cl)
 
       pred <- foreach::foreach(
