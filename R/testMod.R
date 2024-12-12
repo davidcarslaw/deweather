@@ -7,6 +7,7 @@
 #'   function will conduct cross-validation to calculate the optimum number.
 #' @param plot The default, `TRUE`, automatically prints a plot and two tables
 #'   of statistics to review the model output. `FALSE` disables this behaviour.
+#' @param n.core Number of cores to use for parallel processing.
 #' @export
 #' @seealso [buildMod()] for fitting a final model
 #' @return Returns to be added.

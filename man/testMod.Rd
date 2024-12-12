@@ -16,6 +16,7 @@ testMod(
   n.minobsinnode = 10,
   cv.folds = 5,
   seed = 123,
+  n.core = 4,
   plot = TRUE
 )
 }
@@ -61,6 +62,8 @@ cross-validation, calculate an estimate of generalization error returned in
 \code{cv.error}.}
 
 \item{seed}{Random number seed for reproducibility in returned model.}
+
+\item{n.core}{Number of cores to use for parallel processing.}
 
 \item{plot}{The default, \code{TRUE}, automatically prints a plot and two tables
 of statistics to review the model output. \code{FALSE} disables this behaviour.}
