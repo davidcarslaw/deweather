@@ -107,7 +107,8 @@ buildMod <- function(input_data,
       bag.fraction = bag.fraction,
       n.minobsinnode = n.minobsinnode,
       cv.folds = cv.folds,
-      seed
+      seed,
+      n.core = n.core
     )
   }
 
