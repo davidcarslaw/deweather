@@ -7,6 +7,7 @@
 #'   function will conduct cross-validation to calculate the optimum number.
 #' @param plot The default, `TRUE`, automatically prints a plot and two tables
 #'   of statistics to review the model output. `FALSE` disables this behaviour.
+#' @param n.core Number of cores to use for parallel processing.
 #' @export
 #' @seealso [buildMod()] for fitting a final model
 #' @return Returns to be added.
@@ -25,6 +26,7 @@ testMod <- function(input_data,
                     n.minobsinnode = 10,
                     cv.folds = 5,
                     seed = 123,
+                    n.core = 4,
                     plot = TRUE) {
   ## silence R check
   statistic <- value <- NULL
@@ -72,7 +74,8 @@ testMod <- function(input_data,
         bag.fraction = bag.fraction,
         n.minobsinnode = n.minobsinnode,
         cv.folds = cv.folds,
-        verbose = FALSE
+        verbose = FALSE,
+        n.core = n.core
       )  
     
     # find index for n trees with minimum CV error
@@ -90,7 +93,8 @@ testMod <- function(input_data,
         bag.fraction = bag.fraction,
         n.minobsinnode = n.minobsinnode,
         cv.folds = cv.folds,
-        verbose = FALSE
+        verbose = FALSE,
+        n.core = n.core
       ) 
   }
   
