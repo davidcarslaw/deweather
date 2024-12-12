@@ -271,7 +271,8 @@ partialDep <-
         bag.fraction = bag.fraction,
         n.minobsinnode = n.minobsinnode,
         cv.folds = cv.folds,
-        seed
+        seed,
+        n.core = n.core
       )
     } else {
       cl <- parallel::makeCluster(n.core)
@@ -294,7 +295,8 @@ partialDep <-
           interaction.depth = interaction.depth,
           bag.fraction = bag.fraction,
           n.minobsinnode = n.minobsinnode,
-          cv.folds = cv.folds
+          cv.folds = cv.folds,
+          n.core = 1
         )
 
       parallel::stopCluster(cl)
