@@ -184,7 +184,8 @@ runGbm <-
            bag.fraction = bag.fraction,
            n.minobsinnode = n.minobsinnode,
            cv.folds = cv.folds,
-           seed = seed) {
+           seed = seed,
+           n.core = 4) {
     ## sub-sample the data for bootstrapping
     if (simulate) {
       dat <- dat[sample(nrow(dat), nrow(dat), replace = TRUE), ]
@@ -210,7 +211,8 @@ runGbm <-
       n.minobsinnode = n.minobsinnode,
       cv.folds = cv.folds,
       keep.data = TRUE,
-      verbose = FALSE
+      verbose = FALSE,
+      n.cores = n.core
     )
 
     ## extract partial dependence components
