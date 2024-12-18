@@ -128,6 +128,22 @@ plot_pd_helper <- function(dw_model,
   }
   dat$character <- dat$numeric <- NULL
   dat <- tidyr::unnest(dat, .data$data)
+  
+  # if data is numeric & not 'trend', apply intervals
+  if (is.numeric(dat$x) & variable != "trend") {
+    dat$x <- as.numeric(dat$x)
+    gap <- prettyGap(dat$x, intervals)
+    dat$x <- round_any(dat$x, gap)
+  }
+  
+  # summarise by interval 
+  dat <- dplyr::group_by(dat, .data$var, .data$x) %>%
+    dplyr::summarise(
+      mean = mean(.data$mean),
+      lower = min(.data$lower),
+      upper = max(.data$upper)
+    ) %>%
+    dplyr::ungroup()
 
   # get ylim range if needed
   if (is.null(ylim)) ylim <- rng(dat)
